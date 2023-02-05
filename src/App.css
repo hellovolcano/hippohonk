@@ -73,7 +73,7 @@ body {
   padding: 0;
 }
 
-.button:hover, .band-row:hover, .band-row-alt:hover {
+.button:hover, .band-row-alt:hover, .band-row:hover {
   color: var(--white);
   animation-duration: 1s;
   animation-fill-mode: forwards;
@@ -92,6 +92,10 @@ body {
 
 .button:active {
   color: var(--darker-color);
+}
+
+div .band-rank {
+  color: black;
 }
 
 .input-wrapper {
