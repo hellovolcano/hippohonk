@@ -1,14 +1,242 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
 
-.App {
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
+:root {
+  --highlight-color: #303b47;
+  --secondary-color: #66454f;
+  --highlight: #666445;
+  --white: white;
+  --borders: #e35a47;
+  --primary-color: #e35a47;
+  --darker-color: #C0311D;
+  --table-headings: #FEF5F4;
+  --grey: rgb(204, 195, 195);
 }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--darker-color);
+  color: white;
+  margin: 0;
+  background: url('./assets/bg2.jpg') no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  }
 
 .App-logo {
   height: 30vmin;
   pointer-events: none;
 }
+
+/* MAIN PAGE */
+
+.hero-section {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100vw;
+  text-align: center;
+}
+
+.hero-text h1 {
+  text-transform: uppercase;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.hero-text p {
+  margin-top: 10px;
+  font-size: 30px;
+}
+
+/* Reviewer Logged In */
+.reviewer-banner {
+  width: 88%;
+  margin: 0 auto;
+  text-align: right;
+}
+
+/* FORM COMPONENTS */
+.button, .drop-down, .input-field {
+  border-radius: 1px;
+  border: 2px solid var(--primary-color);
+  color: var(--white);
+  background-color: rgba(0,0,0,0);
+  padding: 13px;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  margin: 3px;
+}
+
+.button svg {
+  vertical-align: middle;
+  padding: 0;
+}
+
+.button:hover, .band-row:hover, .band-row-alt:hover {
+  color: var(--white);
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-name: fadein;
+}
+
+@keyframes fadein {
+  from {
+      background-color: "";
+  }
+
+  to {
+      background-color: var(--primary-color);
+  }
+}ion
+
+.button:active {
+  color: var(--darker-color);
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  margin-left: 3px;
+
+}
+
+.input-label {
+  text-transform: uppercase;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  margin-left: 4px;
+}
+
+
+/* HEADER */
+header {
+  display:flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+header img {
+  height: 5vmin;
+}
+
+/* BAND LIST */
+.band-row, .band-row-alt {
+  background-color: var(--white);
+  display: flex;
+  justify-content: space-between; 
+  padding: 15px;
+  border-bottom: 1px solid var(--grey);
+  color: black;
+}
+
+/* .band-row-alt {
+  background-color: var(--borders);
+} */
+
+/* .band-row:hover, .band-row-alt:hover {
+  background-color: var(--primary-color);
+} */
+
+.band-name {
+  font-weight: 400;
+  
+}
+
+.band-location {
+  font-weight: 100;
+  margin-left: 8px;
+  font-size: 14px;
+  color: var(--grey);
+}
+
+.band-details {
+  margin-top: 5px;
+}
+
+.band-description {
+  margin-left: 8px;
+  font-weight: 100;
+}
+
+.band-rating {
+  width: 50px;
+  text-align: right;
+}
+
+.band-rank {
+  padding: 5px;
+  background-color: var(--table-headings);
+  border: 1px solid var(--borders);
+  border-radius: 3px;
+}
+
+.band-container {
+  display: flex;
+  margin-right: 5px;
+}
+
+.band-info {
+  margin-left: 10px;
+}
+
+.band-image img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid var(--borders);
+ }
+
+.bandlist-wrapper {
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* BAND PAGE */
+.band-wrapper {
+  display: flex;
+  margin: 0 auto;
+}
+
+.section-title {
+  /* border-top-right-radius: 5px;
+  border-top-left-radius: 6px; */
+  background-color: var(--table-headings);
+  padding: 10px;
+  margin-bottom: 0;
+  border-top-color: var(--borders);
+  border-left-color: var(--borders);
+  border-right-color: var(--borders);
+  border-left: 1px;
+  border-right: 1px;
+  border-top: 1px;
+  margin-top: 0;
+  color: var(--darker-color);
+  font-weight: 100;
+  text-align: center;
+}
+
+.section-wrapper {
+  border: 2px solid var(--borders);
+  padding-top: 0px;
+  border-radius: 2px;
+  margin: 10px;
+}
+
+.section-wrapper p {
+  padding: 10px;
+}
+
+/* GENRES */
+.genre-chip {
+  background-color: white;
+  color: #2a1706;
+}
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -16,15 +244,14 @@
   }
 }
 
-.App-header {
-  background-color: #2a1706;
+.coming-soon {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  text-align: center;
 }
 
 .App-link {
@@ -38,4 +265,12 @@
   to {
     transform: translate3d(0,10px,0);
   }
+}
+
+
+@media screen and (max-width: 700px) {
+  .band-wrapper {
+    flex-direction: column;
+  }
+  
 }

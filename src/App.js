@@ -1,16 +1,22 @@
-import logo from './hippohonk.png';
 import './App.css';
+import { Routes, Route } from 'react-router-dom'
+import Band from './pages/Band'
+import Home from './pages/Home'
+import Header from './components/header'
+import BandList from './pages/BandList';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Festival ratings coming soon.
-        </p>
-      </header>
+    <div>
+      <Header/>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/band" element={<Band/>} />
+        <Route path="/bands" element={<BandList/>} />
+      </Routes>
     </div>
+
+    
   );
 }
 
