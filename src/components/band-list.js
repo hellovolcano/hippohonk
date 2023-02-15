@@ -1,15 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { CircularProgress } from '@mui/material'
 import { Chip, Stack } from '@mui/material'
 import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
 import { Pagination } from '@mui/material'
 import styled from '@emotion/styled'
 
-import SectionWrapper from '../components/common/section-wrapper'
-import BandImage from '../components/band-image'
+import SectionWrapper from './common/section-wrapper'
+import BandImage from './band-image'
 
 
-const BandList = () => {
+const BandList = ({bands, isLoading, title}) => {
+
+    // const {title} = title
+    console.log(bands)
+    if (title !== "Bands") {
+        const {band} = bands
+        console.log(band)
+    }
 
     const MyPagination = styled(Pagination)({
         "& .MuiPaginationItem-root": {
@@ -22,25 +29,11 @@ const BandList = () => {
           color:'#fff',
          }
         
-        })
+    })
 
-    const [bands, setBands] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
     const [bandsPerPage] = useState(10)
 
-    useEffect(() => {
-        // console.log("hello")
-        fetch('http://localhost:3001/api/bands/')
-            .then((response) => response.json())
-            .then((data) => {
-                setBands(data)
-                setIsLoading(false)
-            })
-            .catch((err) => {
-                console.log(err.message);
-            })  
-    }, [])
 
     // Pagination-related variables 
     const indexOfLastBand = currentPage * bandsPerPage
@@ -48,16 +41,15 @@ const BandList = () => {
     const currentBands = bands.slice(indexOfFirstBand, indexOfLastBand)
     const numPages = Math.ceil(bands.length / bandsPerPage)
     const rankMultiplier = (currentPage - 1) * bandsPerPage
-
+   
     const handlePageChange = (event, value) => {
         // console.log(event.target.value)
         setCurrentPage(value)
     }
 
-
     return(
         <div className="bandlist-wrapper">
-        <SectionWrapper title="Bands">
+        <SectionWrapper title={title}>
             <div>
                 {isLoading ? 
                 <Stack alignItems="center" margin="50px">

@@ -1,7 +1,27 @@
 import logo from '../hippohonk.png';
 import Button from '../components/common/forms/button';
+import FestivalItem from '../components/festival-item';
+import { useState, useEffect } from 'react'
+import { Stack, CircularProgress } from '@mui/material';
 
 const Home = () => {
+
+    const [festivals, setFestivals] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        // console.log("hello")
+        fetch('http://localhost:3001/api/festivals/')
+            .then((response) => response.json())
+            .then((data) => {
+                setFestivals(data)
+                setIsLoading(false)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            })  
+    }, [])
+
     return (
         <main>
             <section className="hero-section">
@@ -18,12 +38,12 @@ const Home = () => {
             
             </section>
             <section className="festival-section">
-                <div className="festival-item">
-
-                </div>
-                <div className="festival-item">
-
-                </div>
+                {isLoading ? 
+                <Stack alignItems="center" margin="50px">
+                    <CircularProgress/>
+                </Stack> : festivals.map((festival, i) => (
+                    <FestivalItem key={i} festival={festival} />
+                ))}
             </section>
             <section>
 
