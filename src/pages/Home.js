@@ -33,7 +33,7 @@ const Home = () => {
                 </div>
                 <div className="hero-text">
                     <h1>Music festival ratings</h1>
-                    <p>by fanatics just like you</p>
+                    <p>by fanatics just like you.</p>
                 </div>
                 <div className="hero-cta">
                     <Button>Check it</Button>
