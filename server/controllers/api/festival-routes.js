@@ -16,14 +16,14 @@ router.get('/', (req,res) => {
     })
 })
 
-// find one festival
-router.get('/:id', (req,res) => {
-    Band.findOne({
+// find one festival by slug
+router.get('/:slug', (req,res) => {
+    Festival.findOne({
         where: {
-            id: req.params.id
+            slug: req.params.slug
         },
     })
-    .then(dbBandData => res.json(dbBandData))
+    .then(dbUserData => res.json(dbUserData))
     .catch(err => {
         console.log(err)
         res.status(500).json(err)

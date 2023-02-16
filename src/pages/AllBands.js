@@ -12,7 +12,6 @@ const AllBands = () => {
 
 
     useEffect(() => {
-        // console.log("hello")
         fetch(apiLink)
             .then((response) => response.json())
             .then((data) => {

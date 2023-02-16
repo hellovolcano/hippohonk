@@ -3,6 +3,7 @@ import Button from '../components/common/forms/button';
 import FestivalItem from '../components/festival-item';
 import { useState, useEffect } from 'react'
 import { Stack, CircularProgress } from '@mui/material';
+import HeadphonesIcon from '@mui/icons-material/Headphones';
 
 const Home = () => {
 
@@ -22,6 +23,8 @@ const Home = () => {
             })  
     }, [])
 
+    let festArray = festivals.slice(0,4)
+
     return (
         <main>
             <section className="hero-section">
@@ -37,14 +40,20 @@ const Home = () => {
                 </div>
             
             </section>
-            <section className="festival-section">
-                {isLoading ? 
-                <Stack alignItems="center" margin="50px">
-                    <CircularProgress/>
-                </Stack> : festivals.map((festival, i) => (
-                    <FestivalItem key={i} festival={festival} />
-                ))}
-            </section>
+            {/* <section className="festival-section">
+                <h2><HeadphonesIcon /> Music Festivals <HeadphonesIcon /></h2>
+                <hr />
+                <div class="festivals">
+                    {isLoading ? 
+                    <Stack alignItems="center" margin="50px">
+                        <CircularProgress/>
+                    </Stack> : 
+                    festArray.map((festival, i) => (
+                        
+                        <FestivalItem key={i} festival={festival} />
+                    ))}
+                </div>
+            </section> */}
             <section>
 
             </section>

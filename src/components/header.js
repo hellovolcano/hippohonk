@@ -1,11 +1,14 @@
 import logo from '../hippohonk.png'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import { Link } from 'react-router-dom';
+
+import Home from '../pages/Home';
 
 const Header = () => {
     return (
         <header>
             <div>
-                <img src={logo} className="logo-img" alt="Hippo Horn" />
+                <Link to="/"><img src={logo} className="logo-img" alt="Hippo Horn" /></Link>
             </div>
             <div>
                 <MenuRoundedIcon fontSize='large' />

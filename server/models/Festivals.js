@@ -22,6 +22,9 @@ Festival.init (
         },
         date: {
             type: DataTypes.DATEONLY
+        },
+        slug: {
+            type: DataTypes.STRING
         }
     },
     {

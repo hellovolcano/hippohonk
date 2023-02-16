@@ -11,13 +11,6 @@ import BandImage from './band-image'
 
 const BandList = ({bands, isLoading, title}) => {
 
-    // const {title} = title
-    console.log(bands)
-    if (title !== "Bands") {
-        const {band} = bands
-        console.log(band)
-    }
-
     const MyPagination = styled(Pagination)({
         "& .MuiPaginationItem-root": {
             backgroundColor: "#FEF5F4",

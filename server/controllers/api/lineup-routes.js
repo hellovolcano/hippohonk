@@ -31,7 +31,7 @@ router.get('/:id', (req,res) => {
             festival_id: req.params.id
         },
         attributes: ['id','festival_id', 
-            [Sequelize.col('band.id'), 'id'],
+            [Sequelize.col('band.id'), 'band_id'],
             [Sequelize.col('band.name'), 'name'],
             [Sequelize.col('band.description'), 'description'],
             [Sequelize.col('band.location'), 'location'],
