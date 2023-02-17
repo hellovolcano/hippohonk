@@ -7,9 +7,7 @@ import { useParams } from 'react-router-dom'
 
 const SingleLineup = props => {
 
-    const {slug: slug } = useParams()
-
-    console.log(slug)
+    const { slug } = useParams()
 
     const festivalLink = '/api/festivals/' + slug
 

@@ -5,6 +5,7 @@
   "scripts": {
     "heroku-prebuild": "npm install --dev",
     "start": "node server/server.js",
+    "install": "cd server && npm i && cd ../client && npm i",
     "build": "cd client && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

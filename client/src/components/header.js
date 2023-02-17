@@ -2,8 +2,6 @@ import logo from '../hippohonk.png'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import { Link } from 'react-router-dom';
 
-import Home from '../pages/Home';
-
 const Header = () => {
     return (
         <header>
