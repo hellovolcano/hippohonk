@@ -35,6 +35,10 @@ sequelize.sync({ force: false }).then(() => {
 
 app.use(routes)
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../build')));
+  }
+
 app.get('/', (req, res) => {
     res.send('Server is up, ya turkeysssssss.')
 })

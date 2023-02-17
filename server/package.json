@@ -7,6 +7,7 @@
     "start": "node server.js"
   },
   "keywords": [],
+  "proxy": "http://localhost:3001",
   "author": "",
   "license": "ISC",
   "dependencies": {
