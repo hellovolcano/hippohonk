@@ -10,7 +10,7 @@ const BandImage =(props) => {
 
     return(
         <div className="band-image">
-            <img src={imgSrc} /> 
+            <img src={imgSrc} alt="band" /> 
         </div>
     )
 }
