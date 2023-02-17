@@ -11,8 +11,7 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        // console.log("hello")
-        fetch('http://localhost:3001/api/festivals/')
+        fetch('/api/festivals/')
             .then((response) => response.json())
             .then((data) => {
                 setFestivals(data)
@@ -40,7 +39,7 @@ const Home = () => {
                 </div>
             
             </section>
-            {/* <section className="festival-section">
+            <section className="festival-section">
                 <h2><HeadphonesIcon /> Music Festivals <HeadphonesIcon /></h2>
                 <hr />
                 <div class="festivals">
@@ -53,7 +52,7 @@ const Home = () => {
                         <FestivalItem key={i} festival={festival} />
                     ))}
                 </div>
-            </section> */}
+            </section>
             <section>
 
             </section>

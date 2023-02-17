@@ -5,7 +5,7 @@ import BandList from '../components/band-list'
 const AllBands = () => {
 
 
-    const apiLink = 'http://localhost:3001/api/bands/'
+    const apiLink = '/api/bands/'
 
     const [bands, setBands] = useState([])
     const [isLoading, setIsLoading] = useState(true)

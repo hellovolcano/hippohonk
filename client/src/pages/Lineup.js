@@ -11,7 +11,7 @@ const SingleLineup = props => {
 
     console.log(slug)
 
-    const festivalLink = 'http://localhost:3001/api/festivals/' + slug
+    const festivalLink = '/api/festivals/' + slug
 
     const [bands, setBands] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -20,14 +20,14 @@ const SingleLineup = props => {
 
     useEffect(() => {
         // console.log("hello")
-        fetch('http://localhost:3001/api/festivals/' + slug)
+        fetch('/api/festivals/' + slug)
             .then((response) => response.json())
             .then((data) => {
 
                 const fest_id = data.id
                 setTitle(data.name)
 
-                fetch('http://localhost:3001/api/lineups/' + fest_id)
+                fetch('/api/lineups/' + fest_id)
                     .then((response) => response.json())
                     .then((data) => {
                         setBands(data)
