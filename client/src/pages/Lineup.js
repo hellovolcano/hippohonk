@@ -32,7 +32,7 @@ const SingleLineup = props => {
             .catch((err) => {
                 console.log(err.message)
             })
-    }, [])
+    }, [slug])
 
     return(
         <BandList bands={bands} isLoading={isLoading} title={title} />
