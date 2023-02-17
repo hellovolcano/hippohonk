@@ -14,7 +14,7 @@ const Header = () => {
         background: 'none',
         border: 'none',
         color: 'white',
-        marginTop: 20,
+        marginTop: 5,
         marginRight: 10,
         cursor: 'pointer'
     }

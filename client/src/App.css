@@ -129,6 +129,11 @@ header img {
   height: 5vmin;
 }
 
+.logo-img {
+  margin-top: 8px;
+  margin-left: 10px;
+}
+
 /* MENU */
 
 .main-menu {
@@ -398,6 +403,9 @@ footer a:hover {
 @media screen and (max-width: 700px) {
   .band-wrapper {
     flex-direction: column;
+  }
+  .bandlist-wrapper {
+    width: 95%;
   }
   
 }
