@@ -129,6 +129,47 @@ header img {
   height: 5vmin;
 }
 
+/* MENU */
+
+.main-menu {
+  padding-inline-start: 0px;
+  padding: 10px 40px;
+}
+
+.main-menu li {
+  list-style-type: none;
+}
+
+.main-menu li a, .main-menu li {
+  color: var(--white);
+  font-weight: 700;
+  margin: 5px 0;
+  text-decoration: none;
+}
+
+.main-menu li a {
+  padding: 5px;
+}
+
+.ul-category {
+  padding-left: 5px;
+}
+
+.main-menu li a:hover {
+  background-color: var(--primary-color);
+}
+
+.menu-close {
+  display: flex;
+  justify-content: right;
+  cursor: pointer;
+}
+
+.menu-internal-wrapper {
+  padding: 20px;
+}
+
+
 /* BAND LIST */
 .band-row, .band-row-alt {
   background-color: var(--white);

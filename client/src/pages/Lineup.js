@@ -6,18 +6,15 @@ import { useParams } from 'react-router-dom'
 
 
 const SingleLineup = props => {
-
     const { slug } = useParams()
-
-    const festivalLink = '/api/festivals/' + slug
-
+    
     const [bands, setBands] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [title, setTitle] = useState('')
 
 
     useEffect(() => {
-        // console.log("hello")
+        
         fetch('/api/festivals/' + slug)
             .then((response) => response.json())
             .then((data) => {
