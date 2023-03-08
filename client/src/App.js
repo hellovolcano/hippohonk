@@ -16,7 +16,7 @@ function App() {
         <Header/>
         <Routes>
           <Route path="/" element={<Home/>} />
-          <Route path="/band" element={<Band/>} />
+          <Route path="/band/:id" element={<Band/>} />
           <Route path="/bands" element={<AllBands/>} />
           <Route path="/festivals/:slug" element={<SingleLineup />} />
         </Routes>

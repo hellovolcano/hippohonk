@@ -1,7 +1,7 @@
-const SectionWrapper = ({title, children}) => {
+const SectionWrapper = ({title, children, className}) => {
     return (
         <div className="section-wrapper">
-            <h1 className="section-title">{title}</h1>
+            <h1 className={className ? "section-title " + className : "section-title"}>{title}</h1>
             {children}
         </div>
     )

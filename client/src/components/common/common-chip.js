@@ -1,13 +1,8 @@
-import { Grid, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
 
-const CommonChip = ({ items }) => {
+const CommonChip = ({ genre }) => {
     return (
-        <Grid>
-            {/* Add a chip for each genre */}
-            {items.map((item) => (
-                <Chip key={item} label={item} sx={{color: '#2a1706',backgroundColor: 'white',margin: 1}}/>
-            ))}
-        </Grid>
+                <Chip label={genre} sx={{backgroundColor: '#e35a47',color: 'white',margin: 1, padding: 2}}/>
     )
 }
 
