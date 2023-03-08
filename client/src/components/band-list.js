@@ -7,6 +7,7 @@ import styled from '@emotion/styled'
 
 import SectionWrapper from './common/section-wrapper'
 import BandImage from './band-image'
+import { NavLink } from 'react-router-dom'
 
 
 const BandList = ({bands, isLoading, title}) => {
@@ -50,6 +51,7 @@ const BandList = ({bands, isLoading, title}) => {
                 </Stack> : 
                 currentBands.map((band, i) => (
                     <div key={i} className={i % 2 ? "band-row" : "band-row-alt"}>
+                        {/* <a className="band-list-link" href={'/band/' + band.band_id}> */}
                         <div className="band-container">
                             <BandImage src={band.image} />
                             <div className="band-info">
@@ -64,6 +66,7 @@ const BandList = ({bands, isLoading, title}) => {
                                 </div>
                             </div>
                         </div>
+                        {/* </a> */}
                         <div>
                             <span className="band-rank">#{currentPage === 1 ? i + 1 : i + 1 + rankMultiplier}</span>
                         </div>

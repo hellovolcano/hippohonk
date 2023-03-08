@@ -59,5 +59,17 @@ router.get('/:id', (req,res) => {
 })
 
 
+// Add a band to SXSW 2023 -- CURRENTLY HARDCODED TO SXSW 2023
+router.post('/', (req,res) => {
+    Lineup.create({
+        band_id: req.body.band_id,
+        festival_id: 16
+    })
+    .then(dbLineupData => res.json(dbLineupData))
+    .catch(err => {
+        console.log(err)
+    })
+})
+
 
 module.exports = router

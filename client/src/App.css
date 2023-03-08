@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
 
 :root {
-  --highlight-color: #303b47;
+  --black: #000000;
   --secondary-color: #66454f;
   --highlight: #666445;
   --white: white;
@@ -176,6 +176,11 @@ header img {
 
 
 /* BAND LIST */
+.band-list-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .band-row, .band-row-alt {
   background-color: var(--white);
   display: flex;
@@ -255,6 +260,33 @@ header img {
 .band-wrapper {
   display: flex;
   margin: 0 auto;
+}
+
+.single-band-divs {
+  display: flex;
+
+}
+
+.single-band-main-wrapper {
+  margin: 0 auto;
+}
+
+.single-band-page {
+  display: flex;
+}
+
+.white-bg {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.single-band-description {
+  padding: 20px;
+}
+
+.h3-section-wrapper {
+  font-weight: 100;
+  font-size: 24px;
 }
 
 .pagination {

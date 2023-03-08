@@ -35,6 +35,9 @@ Band.init (
                 isUrl: true
             }
         },
+        genre_id: {
+            type: DataTypes.NUMBER
+        },
         image: {
             type: DataTypes.TEXT
         },
