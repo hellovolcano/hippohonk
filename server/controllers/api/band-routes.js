@@ -51,9 +51,10 @@ router.post('/', (req,res) => {
         location: req.body.location,
         genre_id: req.body.genre_id
     })
-    .then(dbBandData => res.json(dbBandData))
+    .then(dbBandData => res.status(201).json(dbBandData))
     .catch(err => {
         console.log(err)
+        res.status(500).json(err)
     })
 })
 

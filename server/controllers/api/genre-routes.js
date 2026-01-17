@@ -17,9 +17,10 @@ router.post('/', (req,res) => {
     Genre.create({
         name: req.body.name,
     })
-    .then(dbGenreData => res.json(dbGenreData))
+    .then(dbGenreData => res.status(201).json(dbGenreData))
     .catch(err => {
         console.log(err)
+        res.status(500).json({ message: 'Server error', details: err })
     })
 })
 

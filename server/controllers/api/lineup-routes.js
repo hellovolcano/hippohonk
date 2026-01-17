@@ -7,14 +7,14 @@ const Sequelize = require('sequelize')
 router.get('/', (req,res) => {
     Lineup.findAll({
         attributes: ['id','band_id', 'festival_id'],
-        include: {
+        include: [{
             model: Band,
-            attributes: ['id','name']
+            attributes: []
         },
-        include: {
+        {
             model: Festival,
-            attributes: ['name','date']
-        }
+            attributes: []
+        }],
     })
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {

@@ -1,0 +1,442 @@
+openapi: 3.1.0
+info:
+  title: HippoHonk API
+  version: 0.1.0
+  description: OpenAPI spec generated from Express controllers (bands, genres, festivals, lineups, users).
+
+servers:
+  - url: http://localhost:3000
+    description: Local dev
+
+tags:
+  - name: Bands
+  - name: Genres
+  - name: Festivals
+  - name: Lineups
+  - name: Users
+
+paths:
+  /bands:
+    get:
+      tags: [Bands]
+      summary: List bands (sorted by average_rating desc)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BandListItem"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+    post:
+      tags: [Bands]
+      summary: Create a new band
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BandCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Band"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /bands/{id}:
+    get:
+      tags: [Bands]
+      summary: Get band by id
+      parameters:
+        - $ref: "#/components/parameters/IdPathParam"
+      responses:
+        "200":
+          description: OK (null if not found)
+          content:
+            application/json:
+              schema:
+                nullable: true
+                oneOf:
+                  - $ref: "#/components/schemas/BandDetail"
+                  - type: "null"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /genres:
+    get:
+      tags: [Genres]
+      summary: List genres
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Genre"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+    post:
+      tags: [Genres]
+      summary: Create a new genre
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenreCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Genre"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /festivals:
+    get:
+      tags: [Festivals]
+      summary: List festivals (sorted by date desc)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Festival"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /festivals/{slug}:
+    get:
+      tags: [Festivals]
+      summary: Get festival by slug
+      parameters:
+        - $ref: "#/components/parameters/SlugPathParam"
+      responses:
+        "200":
+          description: OK (null if not found)
+          content:
+            application/json:
+              schema:
+                nullable: true
+                oneOf:
+                  - $ref: "#/components/schemas/Festival"
+                  - type: "null"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /users:
+    get:
+      tags: [Users]
+      summary: List users
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /lineups:
+    get:
+      tags: [Lineups]
+      summary: List lineups
+      description: |
+        Note: In the current controller code, `include` is assigned twice, so the first include is overwritten.
+        If you want Band and Festival included, change include to an array: `include: [ { model: Band, ... }, { model: Festival, ... } ]`.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LineupListItem"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+    post:
+      tags: [Lineups]
+      summary: Add a band to a lineup (festival hardcoded to 16)
+      description: Currently hardcoded to festival_id=16 in the controller.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LineupCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lineup"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+  /lineups/{id}:
+    get:
+      tags: [Lineups]
+      summary: List bands in a lineup by festival id
+      description: Uses `{id}` as the festival_id.
+      parameters:
+        - $ref: "#/components/parameters/IdPathParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LineupByFestivalItem"
+        "500":
+          $ref: "#/components/responses/ServerError"
+
+components:
+  parameters:
+    IdPathParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Identifier (often numeric in DB).
+
+    SlugPathParam:
+      name: slug
+      in: path
+      required: true
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+      additionalProperties: true
+
+    # ----------------
+    # Bands
+    # ----------------
+    BandListItem:
+      type: object
+      additionalProperties: false
+      properties:
+        band_id: { type: integer }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        average_rating: { type: number, nullable: true }
+        location: { type: string, nullable: true }
+        url: { type: string, nullable: true }
+        genre_id: { type: integer, nullable: true }
+        genre_name: { type: string, nullable: true }
+        image: { type: string, nullable: true }
+      required: [band_id, name]
+
+    BandDetail:
+      type: object
+      additionalProperties: false
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        average_rating: { type: number, nullable: true }
+        location: { type: string, nullable: true }
+        url: { type: string, nullable: true }
+        genre_id: { type: integer, nullable: true }
+        genre_name: { type: string, nullable: true }
+        image: { type: string, nullable: true }
+      required: [id, name]
+
+    BandCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+        average_rating: { type: number, nullable: true }
+        location: { type: string, nullable: true }
+        genre_id: { type: integer }
+      required: [name, genre_id]
+
+    Band:
+      type: object
+      description: Sequelize Band model as returned by Band.create (fields may include timestamps depending on model).
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        average_rating: { type: number, nullable: true }
+        location: { type: string, nullable: true }
+        url: { type: string, nullable: true }
+        genre_id: { type: integer, nullable: true }
+
+    # ----------------
+    # Genres
+    # ----------------
+    GenreCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        name: { type: string }
+      required: [name]
+
+    Genre:
+      type: object
+      description: Sequelize Genre model (exact fields depend on model definition).
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        name: { type: string }
+
+    # ----------------
+    # Festivals
+    # ----------------
+    Festival:
+      type: object
+      description: Sequelize Festival model (exact fields depend on model definition).
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        name:
+          type: string
+          nullable: true
+          description: Name of the festival
+          example: SXSW 2025
+        slug: { type: string, nullable: true }
+        date:
+          type: string
+          nullable: true
+          description: Festival date (format depends on model; often ISO 8601).
+          examples: ["2026-03-10"]
+
+    # ----------------
+    # Users
+    # ----------------
+    User:
+      type: object
+      description: Sequelize User model.
+      additionalProperties: false
+      properties:
+        id: { type: integer}
+        email: { type: string, description: Email address associated with user }
+        description: { type: text, description: Description for the user }
+        password_digest: { type: string, description: User password for authentication }
+        admin: { type: boolean, description: Specifies if the user has access to administrative functions in the app }
+        reviewer: { type: boolean, description: Specifies if the user has access to the reviewer workflows in the app }
+
+
+    # ----------------
+    # Lineups
+    # ----------------
+    LineupCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        band_id: { type: integer }
+      required: [band_id]
+
+    Lineup:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: Primary key.
+        band_id:
+          type: integer
+          nullable: true
+          description: FK to bands.id
+        festival_id:
+          type: integer
+          nullable: true
+          description: FK to festivals.id
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when created.
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when last updated.
+      required: [id, band_id, festival_id, created_at, updated_at]
+
+    LineupListItem:
+      type: object
+      description: |
+        Returns properties about a specific lineup
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        band_id: { type: integer }
+        festival_id: { type: integer }
+        band:
+          type: object
+          nullable: true
+          additionalProperties: true
+          properties:
+            id: { type: integer }
+            name: { type: string }
+        festival:
+          type: object
+          nullable: true
+          additionalProperties: true
+          properties:
+            name: { type: string, nullable: true }
+            date: { type: string, nullable: true }
+
+    LineupByFestivalItem:
+      type: object
+      additionalProperties: false
+      properties:
+        id: { type: integer }
+        festival_id: { type: integer }
+        band_id: { type: integer }
+        name: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        location: { type: string, nullable: true }
+        average_rating: { type: number, nullable: true }
+        image: { type: string, nullable: true }
+        festival_name: { type: string, nullable: true }
+      required: [id, festival_id, band_id]
