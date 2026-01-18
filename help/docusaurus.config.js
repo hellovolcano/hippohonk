@@ -62,7 +62,7 @@ const config = {
         title: 'Hippohonk Help',
         logo: {
           alt: 'honk',
-          src: 'img/logo.png',
+          src: 'img/hippohonk.png',
         },
         items: [
           {
@@ -77,34 +77,20 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Docs',
-                to: '/docs',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'X',
-                href: 'https://x.com/hippohonk',
-              },
-            ],
-          },
-          {
-            title: 'More',
+            title: 'Links',
             items: [
               {
                 label: 'GitHub',
                 href: 'https://github.com/hellovolcano/hippohonk',
               },
+              {
+                label: 'Portfolio',
+                href: 'https://www.valeriegleason.com',
+              }
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Valerie Gleason. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,

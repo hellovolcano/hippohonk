@@ -29,8 +29,8 @@ _Returns an array_
 | `name`  | string | Name of the band. | `"Faux Real"` |
 | `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
 | `average_rating`  | integer | Average rating for the band. | `4.2` |
-| `location`  | integer | Average rating for the band. | `4.2` |
-| `url`  | integer | Average rating for the band. | `4.2` |
+| `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
+| `url`  | string | URL for the band's website or social media site. | `"https://isthisfauxreal.com/"` |
 | `genre_id`  | integer | Unique ID for a genre. | `2` |
 | `genre_name`  | string | Name for a band's primary genre. | `"Art Pop"` |
 | `image`  | string | (Do not use) Path to the web-hosted image. This image should be pre-processed to the correct size  and hosted in a secure location. | `"Currently not implemented"` |

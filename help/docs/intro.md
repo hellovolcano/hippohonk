@@ -3,7 +3,7 @@ sidebar_position: 1
 ---
 
 # Hippohonk API
-The Hippohonk API allows you to search for bands that are performing in local Austin music festivals, as well as information and 0-5 recommendation about how excited our reviewers are about seeing that band live.
+The Hippohonk API allows you to search for bands that are performing in local Austin music festivals. We'll give you everything you need to know about the band, including where they're from, links to important resources, and a 1-5 rating that documents how excited our reviewers are about seeing that band live.
 
 ### What does the 1-5 rating mean?
 So glad you asked!

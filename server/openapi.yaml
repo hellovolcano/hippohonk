@@ -331,9 +331,9 @@ components:
         average_rating:
           $ref: '#/components/schemas/average_rating'
         location: 
-          $ref: '#/components/schemas/average_rating'
+          $ref: '#/components/schemas/location'
         url: 
-          $ref: '#/components/schemas/average_rating'
+          $ref: '#/components/schemas/url'
         genre_id: 
           $ref: '#/components/schemas/genre_id'
         genre_name: 
