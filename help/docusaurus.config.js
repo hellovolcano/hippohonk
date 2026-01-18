@@ -62,7 +62,7 @@ const config = {
         title: 'Hippohonk Help',
         logo: {
           alt: 'honk',
-          src: 'img/logo.svg',
+          src: 'img/logo.png',
         },
         items: [
           {

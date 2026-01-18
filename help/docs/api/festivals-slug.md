@@ -1,6 +1,7 @@
 ---
 sidebar_position: 8
 ---
+<!-- This file is auto-generated. Edits here will be overwritten. -->
 
 # `/festivals/{slug}`
 
@@ -9,31 +10,36 @@ sidebar_position: 8
 **Summary:** Get festival by slug
 
 
+Returns the festival at the user-specified pretty path.
+
+
 ### Responses
 
-### Response 200
+#### Response 200
 
 OK (null if not found)
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | no | no |  |
-| `name` | string | no | yes | Name of the festival |
-| `slug` | string | no | yes |  |
-| `date` | string | no | yes | Festival date (format depends on model; often ISO 8601). |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id`  | integer |  |  |
+| `name`  | string | Name of the festival | `"SXSW 2025"` |
+| `slug`  | object | Short name to use as the browser path. | `"sxsw-2025"` |
+| `date`  | string | Festival date. | `"2026-03-10"` |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field

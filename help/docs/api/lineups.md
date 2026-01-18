@@ -1,6 +1,7 @@
 ---
 sidebar_position: 10
 ---
+<!-- This file is auto-generated. Edits here will be overwritten. -->
 
 # `/lineups`
 
@@ -9,84 +10,88 @@ sidebar_position: 10
 **Summary:** List lineups
 
 
-Note: In the current controller code, `include` is assigned twice, so the first include is overwritten.
-If you want Band and Festival included, change include to an array: `include: [ { model: Band, ... }, { model: Festival, ... } ]`.
+All lineups in the database. 
 
 
 
 ### Responses
 
-### Response 200
+#### Response 200
 
 OK
 
-### Response fields
-_Array of items_
+#### Response fields
+_Returns an array_
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | no | no |  |
-| `band_id` | integer | no | no |  |
-| `festival_id` | integer | no | no |  |
-| `band` | object | no | yes |  |
-| `festival` | object | no | yes |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id`  | integer | Unique ID for the lineup. |  |
+| `band_id`  | integer | Unique ID for the band. |  |
+| `festival_id`  | integer | Unique ID for the festival. |  |
+| `band`  | object |  |  |
+| `festival`  | object |  |  |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field
 
 ## POST
 
-**Summary:** Add a band to a lineup (festival hardcoded to 16)
+**Summary:** Add a band to a lineup.
 
 
-Currently hardcoded to festival_id=16 in the controller.
+Currently hardcoded to SXSW 2023. The API will eventually be adapted to allow lineup configuration.
 
 
-### Request body fields
+# Request body fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `band_id` | integer | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `band_id` * | integer |  |  |
 
+(*) Required field
 
 ### Responses
 
-### Response 201
+#### Response 201
 
 Created
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | yes | no | Primary key. |
-| `band_id` | integer | yes | yes | FK to bands.id |
-| `festival_id` | integer | yes | yes | FK to festivals.id |
-| `created_at` | string (date-time) | yes | no | Timestamp when created. |
-| `updated_at` | string (date-time) | yes | no | Timestamp when last updated. |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id` * | integer | Primary key. |  |
+| `band_id` * | integer | FK to bands.id |  |
+| `festival_id` * | integer | FK to festivals.id |  |
+| `created_at` * | string (date-time) | Timestamp when created. |  |
+| `updated_at` * | string (date-time) | Timestamp when last updated. |  |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field

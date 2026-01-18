@@ -51,28 +51,36 @@ function renderPropertiesTable(schema) {
   const required = new Set(schema.required || []);
   const rows = Object.entries(schema.properties).map(([field, prop]) => {
     const type = schemaTypeString(prop);
-    const req = required.has(field) ? "yes" : "no";
+    const req = required.has(field) ? "*" : "";
     const nullable = prop.nullable ? "yes" : "no";
     const desc = mdEscape(prop.description || "");
-    return `| \`${field}\` | ${mdEscape(type)} | ${req} | ${nullable} | ${desc} |`;
+    const example =
+        prop.example !== undefined
+            ? `\`${mdEscape(JSON.stringify(prop.example))}\``
+            : Array.isArray(prop.examples)
+            ? `\`${mdEscape(JSON.stringify(prop.examples[0]))}\``
+            : "";
+    return `| \`${field}\` ${req} | ${mdEscape(type)} | ${desc} | ${example} |`;
   });
 
   return [
     "",
-    "| Field | Type | Required | Nullable | Description |",
-    "|------|------|----------|----------|-------------|",
+    "| Field (*) | Type | Description | Example |",
+    "|------|------|---------------|-----------------|",
     ...rows,
     "",
+    "(*) Required field",
   ].join("\n");
 }
 
-function renderJsonSchemaBlock(label, schemaObj) {
+function renderJsonSchemaBlock(title, schemaObj, level=1) {
   if (!schemaObj) return "";
 
   const { isArray, schema } = schemaObj;
+  const heading = `${"#".repeat(level)} ${title}`
   return [
-    `### ${label}`,
-    isArray ? "_Array of items_\n" : "",
+    heading,
+    isArray ? "_Returns an array_\n" : "",
     renderPropertiesTable(schema),
   ].join("\n");
 }
@@ -101,12 +109,12 @@ function renderResponses(operation) {
   for (const [status, resp] of Object.entries(responses)) {
     const content = pickJsonContent(resp);
 
-    parts.push(`### Response ${status}`);
+    parts.push(`#### Response ${status}`);
     if (resp.description) parts.push(resp.description);
 
     if (content?.schema) {
       const schemaObj = normalizeSchema(content.schema);
-      parts.push(renderJsonSchemaBlock("Response fields", schemaObj));
+      parts.push(renderJsonSchemaBlock(`Response fields`, schemaObj, 4));
     } else {
       parts.push("_No JSON response body._\n");
     }
@@ -158,6 +166,7 @@ async function main() {
         "---",
         `sidebar_position: ${index}`,
         "---",
+        "<!-- This file is auto-generated. Edits here will be overwritten. -->",
         "",
     ].join("\n");
 

@@ -1,6 +1,7 @@
 ---
 sidebar_position: 6
 ---
+<!-- This file is auto-generated. Edits here will be overwritten. -->
 
 # `/genres`
 
@@ -11,68 +12,73 @@ sidebar_position: 6
 
 ### Responses
 
-### Response 200
+#### Response 200
 
 OK
 
-### Response fields
-_Array of items_
+#### Response fields
+_Returns an array_
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | no | no |  |
-| `name` | string | no | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id`  | integer | Unique ID for the genre. This is an auto-generated field. |  |
+| `name`  | string | Name for a band's primary genre. | `"Art Pop"` |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field
 
 ## POST
 
 **Summary:** Create a new genre
 
 
-### Request body fields
+# Request body fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `name` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `name` * | string | Name for a band's primary genre. | `"Art Pop"` |
 
+(*) Required field
 
 ### Responses
 
-### Response 201
+#### Response 201
 
 Created
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | no | no |  |
-| `name` | string | no | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id`  | integer | Unique ID for the genre. This is an auto-generated field. |  |
+| `name`  | string | Name for a band's primary genre. | `"Art Pop"` |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field

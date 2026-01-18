@@ -1,94 +1,109 @@
 ---
 sidebar_position: 4
 ---
+<!-- This file is auto-generated. Edits here will be overwritten. -->
 
 # `/bands`
 
 ## GET
 
-**Summary:** List bands (sorted by average_rating desc)
+**Summary:** Get all bands.
+
+
+Used to retrieve all bands in the database.
 
 
 ### Responses
 
-### Response 200
+#### Response 200
 
 OK
 
-### Response fields
-_Array of items_
+#### Response fields
+_Returns an array_
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `band_id` | integer | yes | no |  |
-| `name` | string | yes | no |  |
-| `description` | string | no | yes |  |
-| `average_rating` | number | no | yes |  |
-| `location` | string | no | yes |  |
-| `url` | string | no | yes |  |
-| `genre_id` | integer | no | yes |  |
-| `genre_name` | string | no | yes |  |
-| `image` | string | no | yes |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `band_id`  | integer | Unique ID for the band. |  |
+| `name`  | string | Name of the band. | `"Faux Real"` |
+| `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
+| `average_rating`  | integer | Average rating for the band. | `4.2` |
+| `location`  | integer | Average rating for the band. | `4.2` |
+| `url`  | integer | Average rating for the band. | `4.2` |
+| `genre_id`  | integer | Unique ID for a genre. | `2` |
+| `genre_name`  | string | Name for a band's primary genre. | `"Art Pop"` |
+| `image`  | string | (Do not use) Path to the web-hosted image. This image should be pre-processed to the correct size  and hosted in a secure location. | `"Currently not implemented"` |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field
 
 ## POST
 
 **Summary:** Create a new band
 
 
-### Request body fields
+Creates a new band in the hippohonk database.
+
+Required params: `name`, `genre_id`
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `name` | string | yes | no |  |
-| `description` | string | no | yes |  |
-| `average_rating` | number | no | yes |  |
-| `location` | string | no | yes |  |
-| `genre_id` | integer | yes | no |  |
 
+# Request body fields
+
+
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `name` * | string | Name of the band. |  |
+| `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
+| `average_rating`  | integer | Average rating for the band. | `4.2` |
+| `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
+| `genre_id` * | integer | Unique ID for a genre. | `2` |
+
+(*) Required field
 
 ### Responses
 
-### Response 201
+#### Response 201
 
-Created
+Band creation successful.
 
-### Response fields
-
-
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | no | no |  |
-| `name` | string | no | no |  |
-| `description` | string | no | yes |  |
-| `average_rating` | number | no | yes |  |
-| `location` | string | no | yes |  |
-| `url` | string | no | yes |  |
-| `genre_id` | integer | no | yes |  |
+#### Response fields
 
 
-### Response 500
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id`  | integer | Unique ID for the band. |  |
+| `name`  | string | Name of the band. | `"Faux Real"` |
+| `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
+| `average_rating`  | integer | Average rating for the band. | `4.2` |
+| `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
+| `genre_id`  | integer | Unique ID for a genre. | `2` |
+| `url`  | string | URL for the band's website or social media site. | `"https://isthisfauxreal.com/"` |
+
+(*) Required field
+
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field

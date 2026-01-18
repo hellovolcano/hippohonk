@@ -1,6 +1,7 @@
 ---
 sidebar_position: 9
 ---
+<!-- This file is auto-generated. Edits here will be overwritten. -->
 
 # `/users`
 
@@ -9,34 +10,39 @@ sidebar_position: 9
 **Summary:** List users
 
 
+List all users who have contributed Hippohonk reviews and their various access levels.
+
+
 ### Responses
 
-### Response 200
+#### Response 200
 
 OK
 
-### Response fields
-_Array of items_
+#### Response fields
+_Returns an array_
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | no | no |  |
-| `email` | string | no | no | Email address associated with user |
-| `description` | text | no | no | Description for the user |
-| `password_digest` | string | no | no | User password for authentication |
-| `admin` | boolean | no | no | Specifies if the user has access to administrative functions in the app |
-| `reviewer` | boolean | no | no | Specifies if the user has access to the reviewer workflows in the app |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id`  | integer | Unique ID for the user. |  |
+| `email`  | string | Email address associated with user. |  |
+| `description`  | text | Description for the user |  |
+| `password_digest`  | string | User password for authentication. |  |
+| `admin`  | boolean | Specifies if the user has access to administrative functions in the app. |  |
+| `reviewer`  | boolean | Specifies if the user has access to the reviewer workflows in the app. |  |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field

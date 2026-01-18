@@ -1,8 +1,12 @@
 openapi: 3.1.0
 info:
-  title: HippoHonk API
+  title: Hippohonk API
   version: 0.1.0
-  description: OpenAPI spec generated from Express controllers (bands, genres, festivals, lineups, users).
+  description: > 
+    An API used for reading from and adding to the list of music festival-related 
+    information in the Hippohonk database.
+
+    You can retrieve various information about bands and festivals.
 
 servers:
   - url: http://localhost:3000
@@ -19,7 +23,8 @@ paths:
   /bands:
     get:
       tags: [Bands]
-      summary: List bands (sorted by average_rating desc)
+      summary: Get all bands.
+      description: Used to retrieve all bands in the database.
       responses:
         "200":
           description: OK
@@ -35,6 +40,10 @@ paths:
     post:
       tags: [Bands]
       summary: Create a new band
+      description: |
+        Creates a new band in the hippohonk database.
+
+        Required params: `name`, `genre_id`
       requestBody:
         required: true
         content:
@@ -43,7 +52,7 @@ paths:
               $ref: "#/components/schemas/BandCreate"
       responses:
         "201":
-          description: Created
+          description: Band creation successful.
           content:
             application/json:
               schema:
@@ -54,7 +63,8 @@ paths:
   /bands/{id}:
     get:
       tags: [Bands]
-      summary: Get band by id
+      summary: Get band by id.
+      description: Retrieves all information about a specific band.
       parameters:
         - $ref: "#/components/parameters/IdPathParam"
       responses:
@@ -108,7 +118,8 @@ paths:
   /festivals:
     get:
       tags: [Festivals]
-      summary: List festivals (sorted by date desc)
+      summary: List festivals
+      description: Returns a list of festivals sorted by most recent.
       responses:
         "200":
           description: OK
@@ -125,6 +136,7 @@ paths:
     get:
       tags: [Festivals]
       summary: Get festival by slug
+      description: Returns the festival at the user-specified pretty path.
       parameters:
         - $ref: "#/components/parameters/SlugPathParam"
       responses:
@@ -144,6 +156,7 @@ paths:
     get:
       tags: [Users]
       summary: List users
+      description: List all users who have contributed Hippohonk reviews and their various access levels.
       responses:
         "200":
           description: OK
@@ -161,8 +174,7 @@ paths:
       tags: [Lineups]
       summary: List lineups
       description: |
-        Note: In the current controller code, `include` is assigned twice, so the first include is overwritten.
-        If you want Band and Festival included, change include to an array: `include: [ { model: Band, ... }, { model: Festival, ... } ]`.
+        All lineups in the database. 
       responses:
         "200":
           description: OK
@@ -177,8 +189,8 @@ paths:
 
     post:
       tags: [Lineups]
-      summary: Add a band to a lineup (festival hardcoded to 16)
-      description: Currently hardcoded to festival_id=16 in the controller.
+      summary: Add a band to a lineup.
+      description: Currently hardcoded to SXSW 2023. The API will eventually be adapted to allow lineup configuration.
       requestBody:
         required: true
         content:
@@ -222,7 +234,7 @@ components:
       required: true
       schema:
         type: string
-      description: Identifier (often numeric in DB).
+      description: Unique identifier for the object.
 
     SlugPathParam:
       name: slug
@@ -230,6 +242,8 @@ components:
       required: true
       schema:
         type: string
+      description: Short name to use as the browser path.
+      example: sxsw-2025
 
   responses:
     BadRequest:
@@ -256,47 +270,117 @@ components:
       additionalProperties: true
 
     # ----------------
+    # Shared Properties
+    # ----------------
+
+    name:
+      type: string
+      description: Name of the band.
+      example: Faux Real
+    description:
+      type: text
+      description: Summary of the band that can't be captured through genre alone.
+      example: >
+        French Art Pop duo producing jams with an eye for performance. We are all living in the 
+        United Snakes of America, and the brothers Arndt are the snake charmers.
+    average_rating:
+      type: integer
+      description: Average rating for the band.
+      example: 4.2
+    location:
+      type: string
+      description: Location the band calls home.
+      example: Los Angeles, CA
+    url: 
+      type: string
+      nullable: true
+      description: URL for the band's website or social media site.
+      example: https://isthisfauxreal.com/
+    genre_id:
+      type: integer
+      nullable: true
+      description: Unique ID for a genre.
+      example: 2
+    genre_name:
+      type: string
+      nullable: true
+      description: Name for a band's primary genre.
+      example: Art Pop
+    image: 
+      type: string
+      nullable: true
+      description: > 
+        (Do not use) Path to the web-hosted image. This image should be pre-processed to the correct size 
+        and hosted in a secure location.
+      example: Currently not implemented
+
+    # ----------------
     # Bands
     # ----------------
     BandListItem:
       type: object
       additionalProperties: false
       properties:
-        band_id: { type: integer }
-        name: { type: string }
-        description: { type: string, nullable: true }
-        average_rating: { type: number, nullable: true }
-        location: { type: string, nullable: true }
-        url: { type: string, nullable: true }
-        genre_id: { type: integer, nullable: true }
-        genre_name: { type: string, nullable: true }
-        image: { type: string, nullable: true }
-      required: [band_id, name]
+        band_id: 
+          type: integer
+          description: Unique ID for the band.
+        name: 
+          $ref: '#/components/schemas/name'
+        description: 
+          $ref: '#/components/schemas/description'
+        average_rating:
+          $ref: '#/components/schemas/average_rating'
+        location: 
+          $ref: '#/components/schemas/average_rating'
+        url: 
+          $ref: '#/components/schemas/average_rating'
+        genre_id: 
+          $ref: '#/components/schemas/genre_id'
+        genre_name: 
+          $ref: '#/components/schemas/genre_name'
+        image:
+          $ref: '#/components/schemas/image'
 
     BandDetail:
       type: object
       additionalProperties: false
       properties:
-        id: { type: integer }
-        name: { type: string }
-        description: { type: string, nullable: true }
-        average_rating: { type: number, nullable: true }
-        location: { type: string, nullable: true }
-        url: { type: string, nullable: true }
-        genre_id: { type: integer, nullable: true }
-        genre_name: { type: string, nullable: true }
-        image: { type: string, nullable: true }
+        id: 
+          type: integer
+          description: Unique ID for the band.
+        name: 
+          $ref: '#/components/schemas/name'
+        description: 
+          $ref: '#/components/schemas/description'
+        average_rating:
+          $ref: '#/components/schemas/average_rating'
+        location: 
+          $ref: '#/components/schemas/location'
+        url: 
+          $ref: '#/components/schemas/url'
+        genre_id: 
+          $ref: '#/components/schemas/genre_id'
+        genre_name: 
+          $ref: '#/components/schemas/genre_name'
+        image: 
+          $ref: '#/components/schemas/image'
       required: [id, name]
 
     BandCreate:
       type: object
       additionalProperties: false
       properties:
-        name: { type: string }
-        description: { type: string, nullable: true }
-        average_rating: { type: number, nullable: true }
-        location: { type: string, nullable: true }
-        genre_id: { type: integer }
+        name: 
+          type: string
+          description: Name of the band.
+        description: 
+          $ref: '#/components/schemas/description'
+        average_rating:
+          $ref: '#/components/schemas/average_rating'
+        location: 
+          $ref: '#/components/schemas/location'
+        genre_id: 
+          $ref: '#/components/schemas/genre_id'
       required: [name, genre_id]
 
     Band:
@@ -304,13 +388,21 @@ components:
       description: Sequelize Band model as returned by Band.create (fields may include timestamps depending on model).
       additionalProperties: true
       properties:
-        id: { type: integer }
-        name: { type: string }
-        description: { type: string, nullable: true }
-        average_rating: { type: number, nullable: true }
-        location: { type: string, nullable: true }
-        url: { type: string, nullable: true }
-        genre_id: { type: integer, nullable: true }
+        id:
+          type: integer
+          description: Unique ID for the band.
+        name: 
+          $ref: '#/components/schemas/name'
+        description: 
+          $ref: '#/components/schemas/description'
+        average_rating:
+          $ref: '#/components/schemas/average_rating'
+        location:
+          $ref: '#/components/schemas/location'
+        genre_id: 
+          $ref: '#/components/schemas/genre_id'
+        url: 
+          $ref: '#/components/schemas/url'
 
     # ----------------
     # Genres
@@ -319,23 +411,27 @@ components:
       type: object
       additionalProperties: false
       properties:
-        name: { type: string }
+        name:
+          $ref: "#/components/schemas/genre_name"
       required: [name]
 
     Genre:
       type: object
-      description: Sequelize Genre model (exact fields depend on model definition).
+      description: Sequelize Genre model
       additionalProperties: true
       properties:
-        id: { type: integer }
-        name: { type: string }
+        id: 
+          type: integer
+          description: Unique ID for the genre. This is an auto-generated field.
+        name: 
+          $ref: '#/components/schemas/genre_name'
 
     # ----------------
     # Festivals
     # ----------------
     Festival:
       type: object
-      description: Sequelize Festival model (exact fields depend on model definition).
+      description: Festival model.
       additionalProperties: true
       properties:
         id: { type: integer }
@@ -344,11 +440,12 @@ components:
           nullable: true
           description: Name of the festival
           example: SXSW 2025
-        slug: { type: string, nullable: true }
+        slug: 
+          $ref: '#/components/parameters/SlugPathParam'
         date:
           type: string
           nullable: true
-          description: Festival date (format depends on model; often ISO 8601).
+          description: Festival date.
           examples: ["2026-03-10"]
 
     # ----------------
@@ -359,12 +456,24 @@ components:
       description: Sequelize User model.
       additionalProperties: false
       properties:
-        id: { type: integer}
-        email: { type: string, description: Email address associated with user }
-        description: { type: text, description: Description for the user }
-        password_digest: { type: string, description: User password for authentication }
-        admin: { type: boolean, description: Specifies if the user has access to administrative functions in the app }
-        reviewer: { type: boolean, description: Specifies if the user has access to the reviewer workflows in the app }
+        id: 
+          type: integer
+          description: Unique ID for the user.
+        email: 
+          type: string
+          description: Email address associated with user.
+        description:
+          type: text
+          description: Description for the user
+        password_digest: 
+          type: string
+          description: User password for authentication.
+        admin: 
+          type: boolean
+          description: Specifies if the user has access to administrative functions in the app.
+        reviewer: 
+          type: boolean
+          description: Specifies if the user has access to the reviewer workflows in the app.
 
 
     # ----------------
@@ -374,7 +483,9 @@ components:
       type: object
       additionalProperties: false
       properties:
-        band_id: { type: integer }
+        band_id: 
+          type: integer
+          description: 
       required: [band_id]
 
     Lineup:
@@ -408,35 +519,68 @@ components:
         Returns properties about a specific lineup
       additionalProperties: true
       properties:
-        id: { type: integer }
-        band_id: { type: integer }
-        festival_id: { type: integer }
+        id: 
+          type: integer
+          description: Unique ID for the lineup.
+        band_id: 
+          type: integer
+          description: Unique ID for the band.
+        festival_id: 
+          type: integer
+          description: Unique ID for the festival.
         band:
           type: object
           nullable: true
           additionalProperties: true
           properties:
-            id: { type: integer }
-            name: { type: string }
+            id: 
+              type: integer
+              description: Unique ID for the band.
+            name:
+              $ref: '#/components/schemas/name'
         festival:
           type: object
           nullable: true
           additionalProperties: true
           properties:
-            name: { type: string, nullable: true }
-            date: { type: string, nullable: true }
+            name: 
+              type: string
+              nullable: true
+              description: Unique ID for the festival.
+            date: 
+              type: string
+              nullable: true
+              description: Festival date.
 
     LineupByFestivalItem:
       type: object
       additionalProperties: false
       properties:
-        id: { type: integer }
-        festival_id: { type: integer }
-        band_id: { type: integer }
-        name: { type: string, nullable: true }
-        description: { type: string, nullable: true }
-        location: { type: string, nullable: true }
-        average_rating: { type: number, nullable: true }
-        image: { type: string, nullable: true }
-        festival_name: { type: string, nullable: true }
+        id: 
+          type: integer
+          description: Unique ID for festival-band pairing
+        festival_id: 
+          type: integer
+          description: Unique ID of the festival.
+        band_id: 
+          type: integer
+          description: Unique ID for the band.
+        name: 
+          $ref: '#/components/schemas/name'
+        description: 
+          $ref: '#/components/schemas/description'
+        location:
+          type: string
+          nullable: true
+          description: Location for the festival.
+        average_rating: 
+          $ref: '#/components/schemas/average_rating'
+        image: 
+          type: string
+          nullable: true
+          description: Image for the festival.
+        festival_name: 
+          type: string
+          nullable: true
+          description: Name of the festival.
       required: [id, festival_id, band_id]

@@ -1,6 +1,7 @@
 ---
 sidebar_position: 11
 ---
+<!-- This file is auto-generated. Edits here will be overwritten. -->
 
 # `/lineups/{id}`
 
@@ -14,35 +15,37 @@ Uses `{id}` as the festival_id.
 
 ### Responses
 
-### Response 200
+#### Response 200
 
 OK
 
-### Response fields
-_Array of items_
+#### Response fields
+_Returns an array_
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `id` | integer | yes | no |  |
-| `festival_id` | integer | yes | no |  |
-| `band_id` | integer | yes | no |  |
-| `name` | string | no | yes |  |
-| `description` | string | no | yes |  |
-| `location` | string | no | yes |  |
-| `average_rating` | number | no | yes |  |
-| `image` | string | no | yes |  |
-| `festival_name` | string | no | yes |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `id` * | integer | Unique ID for festival-band pairing |  |
+| `festival_id` * | integer | Unique ID of the festival. |  |
+| `band_id` * | integer | Unique ID for the band. |  |
+| `name`  | string | Name of the band. | `"Faux Real"` |
+| `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
+| `location`  | string | Location for the festival. |  |
+| `average_rating`  | integer | Average rating for the band. | `4.2` |
+| `image`  | string | Image for the festival. |  |
+| `festival_name`  | string | Name of the festival. |  |
 
+(*) Required field
 
-### Response 500
+#### Response 500
 
 Server error
 
-### Response fields
+#### Response fields
 
 
-| Field | Type | Required | Nullable | Description |
-|------|------|----------|----------|-------------|
-| `message` | string | yes | no |  |
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
 
+(*) Required field
