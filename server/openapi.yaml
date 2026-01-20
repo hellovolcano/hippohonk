@@ -9,7 +9,7 @@ info:
     You can retrieve various information about bands and festivals.
 
 servers:
-  - url: http://localhost:3000
+  - url: https://hippohonk-api-642586320677.herokuapp.com/
     description: Local dev
 
 tags:
@@ -24,20 +24,47 @@ paths:
     get:
       tags: [Bands]
       summary: Get all bands in the database.
+      description: |
+        Returns a list of bands ordered by average rating (descending).
+
+        Optional filters:
+        - `genre_id`: only return bands in the specified genre
+        - `min_rating`: only return bands with `average_rating >= min_rating`
+        - `location`: only return bands matching the specified location
+      parameters:
+        - name: genre_id
+          in: query
+          required: false
+          description: Filter results to bands in the specified genre.
+          schema:
+            type: integer
+          example: 2
+
       x-codeSamples:
         - lang: curl
           source: |
-            curl https://api.hippohonk.com/bands
+            # All bands
+            curl /bands
+
+            # Filter by genre_id
+            curl "/bands?genre_id=2"
         - lang: python
           source: |
             import requests
 
-            url = "https://api.hippohonk.com/bands"
+            url = "/bands"
 
+            # All bands
             response = requests.get(url)
-
             print(response.status_code)
             print(response.json())
+
+            # Filter by genre_id
+            params = {"genre_id": 2}
+            response = requests.get(url, params=params)
+            print(response.status_code)
+            print(response.json())
+
       responses:
         "200":
           description: OK
@@ -51,20 +78,37 @@ paths:
                 default:
                   summary: List of bands
                   value:
-                    - band_id: 1
-                      name: "Jungle"
-                      genre_id: 2
-                      average_rating: 5
-                      location: "London, UK"
-                    - band_id: 2
-                      name: "The Last Dinner Party"
-                      genre_id: 3
-                      average_rating: 5
-                      location: "London, UK"
-                    - band_id: 3
-                      name: "Wet Leg"
-                      genre_id: 4
-                      location: "The Isle of Wight, UK"
+                    - band_id: 1386
+                      name: "Phantogram"
+                      description: "Dark ambient indie electro-pop who have been at the forefront of this genre for a decade."
+                      average_rating: 4.89
+                      location: "Saratoga Springs, NY"
+                      url: "http://phantogrammusic.virb.com/music"
+                      genre_id: 45
+                      genre_name: "Synth Pop"
+                      image: "v1425489534/raqs1rix20wrl4smrg4i.png"
+                    - band_id: 1608
+                      name: "Kishi Bashi"
+                      description: "A classically trained violinist, Kishi Bashi (the pseudonym of Kaoru Ishibashi) makes highly catchy indie pop tracks using repeated loops of instrumentation and vocals. Unique and mesmerizing live."
+                      average_rating: 5.0
+                      location: "Athensa GA"
+                      url: "http://www.kishibashi.com/music"
+                      genre_id: 44
+                      genre_name: "Indie Pop"
+                      image: "v1425262448/yzo3mysaolekvammwh00.png"
+
+        "400":
+          description: Invalid query parameter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                invalidGenreId:
+                  summary: genre_id is not a number
+                  value:
+                    error: "Invalid query parameter"
+                    message: "genre_id must be a number"
         "500":
           $ref: "#/components/responses/ServerError"
 
@@ -81,7 +125,7 @@ paths:
       x-codeSamples:
         - lang: curl
           source: |
-            curl -X POST https://api.hippohonk.com/bands \
+            curl -X POST /bands \
               -H "Content-Type: application/json" \
               -d '{
                 "name": "Jungle",
@@ -92,7 +136,7 @@ paths:
           source: |
             import requests
 
-            url = "https://api.hippohonk.com/bands"
+            url = "/bands"
             payload = {
                 "name": "Jungle",
                 "genre_id": 2,

@@ -5,6 +5,13 @@ const path = require("path");
 const SPEC_PATH = "openapi.yaml";
 const OUT_DIR = path.join(process.cwd(), "../help/docs/api");
 
+function getBaseUrl(api) {
+  if (!Array.isArray(api.servers) || api.servers.length === 0) {
+    return null;
+  }
+  return api.servers[0].url;
+}
+
 function pathToFilename(apiPath) {
   return apiPath
     .replace(/^\//, "")
@@ -316,6 +323,7 @@ function renderOperation(method, operation) {
 async function main() {
   // parse + dereference so $ref schemas are expanded
   const api = await SwaggerParser.dereference(SPEC_PATH);
+  const baseUrl = getBaseUrl(api);
   let index = 4;
   await fs.ensureDir(OUT_DIR);
 
@@ -347,6 +355,8 @@ async function main() {
     const sections = [
       frontMatter,
       `# \`${apiPath}\``,
+      "",
+      baseUrl ? `**Base URL:** \`${baseUrl}\`` : "",
       "",
     ];
 

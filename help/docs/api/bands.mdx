@@ -8,9 +8,20 @@ import TabItem from '@theme/TabItem';
 
 # `/bands`
 
+**Base URL:** `https://hippohonk-api-642586320677.herokuapp.com/`
+
 ## GET
 
 **Summary:** Get all bands in the database.
+
+
+Returns a list of bands ordered by average rating (descending).
+
+Optional filters:
+- `genre_id`: only return bands in the specified genre
+- `min_rating`: only return bands with `average_rating >= min_rating`
+- `location`: only return bands matching the specified location
+
 
 
 ### Code samples
@@ -20,7 +31,11 @@ import TabItem from '@theme/TabItem';
 <TabItem value="curl" label="curl">
 
 ```bash
-curl https://api.hippohonk.com/bands
+# All bands
+curl /bands
+
+# Filter by genre_id
+curl "/bands?genre_id=2"
 ```
 
 </TabItem>
@@ -29,10 +44,16 @@ curl https://api.hippohonk.com/bands
 ```python
 import requests
 
-url = "https://api.hippohonk.com/bands"
+url = "/bands"
 
+# All bands
 response = requests.get(url)
+print(response.status_code)
+print(response.json())
 
+# Filter by genre_id
+params = {"genre_id": 2}
+response = requests.get(url, params=params)
 print(response.status_code)
 print(response.json())
 ```
@@ -72,26 +93,52 @@ _Returns an array_
 ```json
 [
   {
-    "band_id": 1,
-    "name": "Jungle",
-    "genre_id": 2,
-    "average_rating": 5,
-    "location": "London, UK"
+    "band_id": 1386,
+    "name": "Phantogram",
+    "description": "Dark ambient indie electro-pop who have been at the forefront of this genre for a decade.",
+    "average_rating": 4.89,
+    "location": "Saratoga Springs, NY",
+    "url": "http://phantogrammusic.virb.com/music",
+    "genre_id": 45,
+    "genre_name": "Synth Pop",
+    "image": "v1425489534/raqs1rix20wrl4smrg4i.png"
   },
   {
-    "band_id": 2,
-    "name": "The Last Dinner Party",
-    "genre_id": 3,
+    "band_id": 1608,
+    "name": "Kishi Bashi",
+    "description": "A classically trained violinist, Kishi Bashi (the pseudonym of Kaoru Ishibashi) makes highly catchy indie pop tracks using repeated loops of instrumentation and vocals. Unique and mesmerizing live.",
     "average_rating": 5,
-    "location": "London, UK"
-  },
-  {
-    "band_id": 3,
-    "name": "Wet Leg",
-    "genre_id": 4,
-    "location": "The Isle of Wight, UK"
+    "location": "Athensa GA",
+    "url": "http://www.kishibashi.com/music",
+    "genre_id": 44,
+    "genre_name": "Indie Pop",
+    "image": "v1425262448/yzo3mysaolekvammwh00.png"
   }
 ]
+```
+
+#### Response 400
+
+Invalid query parameter
+
+#### Response fields
+
+
+| Field (*) | Type | Description | Example |
+|------|------|---------------|-----------------|
+| `message` * | string |  |  |
+
+(*) Required field
+
+#### Example response(s)
+
+**genre_id is not a number**
+
+```json
+{
+  "error": "Invalid query parameter",
+  "message": "genre_id must be a number"
+}
 ```
 
 #### Response 500
@@ -128,7 +175,7 @@ Refer to the [Genres API documentation](/docs/api/genres) to get a list of genre
 <TabItem value="curl" label="curl">
 
 ```bash
-curl -X POST https://api.hippohonk.com/bands \
+curl -X POST /bands \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Jungle",
@@ -143,7 +190,7 @@ curl -X POST https://api.hippohonk.com/bands \
 ```python
 import requests
 
-url = "https://api.hippohonk.com/bands"
+url = "/bands"
 payload = {
     "name": "Jungle",
     "genre_id": 2,
