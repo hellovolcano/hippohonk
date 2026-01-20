@@ -19,8 +19,6 @@ Returns a list of bands ordered by average rating (descending).
 
 Optional filters:
 - `genre_id`: only return bands in the specified genre
-- `min_rating`: only return bands with `average_rating >= min_rating`
-- `location`: only return bands matching the specified location
 
 
 
@@ -77,7 +75,7 @@ _Returns an array_
 | `band_id`  | integer | Unique ID for the band. |  |
 | `name`  | string | Name of the band. | `"Faux Real"` |
 | `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
-| `average_rating`  | integer | Average rating for the band. | `4` |
+| `average_rating`  | number | Average rating for the band. | `4` |
 | `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
 | `url`  | string | URL for the band's website or social media site. | `"https://isthisfauxreal.com/"` |
 | `genre_id`  | integer | Unique ID for a genre. | `2` |
@@ -214,7 +212,7 @@ print(response.json())
 |------|------|---------------|-----------------|
 | `name` * | string | Name of the band. |  |
 | `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
-| `average_rating`  | integer | Average rating for the band. | `4` |
+| `average_rating`  | number | Average rating for the band. | `4` |
 | `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
 | `genre_id` * | integer | Unique ID for a genre. | `2` |
 
@@ -255,7 +253,7 @@ Band creation successful.
 | `id`  | integer | Unique ID for the band. |  |
 | `name`  | string | Name of the band. | `"Faux Real"` |
 | `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
-| `average_rating`  | integer | Average rating for the band. | `4` |
+| `average_rating`  | number | Average rating for the band. | `4` |
 | `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
 | `genre_id`  | integer | Unique ID for a genre. | `2` |
 | `url`  | string | URL for the band's website or social media site. | `"https://isthisfauxreal.com/"` |
