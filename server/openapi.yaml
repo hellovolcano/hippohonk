@@ -47,6 +47,24 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/BandListItem"
+              examples:
+                default:
+                  summary: List of bands
+                  value:
+                    - band_id: 1
+                      name: "Jungle"
+                      genre_id: 2
+                      average_rating: 5
+                      location: "London, UK"
+                    - band_id: 2
+                      name: "The Last Dinner Party"
+                      genre_id: 3
+                      average_rating: 5
+                      location: "London, UK"
+                    - band_id: 3
+                      name: "Wet Leg"
+                      genre_id: 4
+                      location: "The Isle of Wight, UK"
         "500":
           $ref: "#/components/responses/ServerError"
 
@@ -57,13 +75,16 @@ paths:
         Creates a new band in the hippohonk database.
 
         Required params: `name`, `genre_id`
+
+        **Note:** Genres are managed as a standardized list to support filtering by genre. 
+        Refer to the [Genres API documentation](/docs/api/genres) to get a list of genres.
       x-codeSamples:
         - lang: curl
           source: |
             curl -X POST https://api.hippohonk.com/bands \
               -H "Content-Type: application/json" \
               -d '{
-                "name": Jungle",
+                "name": "Jungle",
                 "genre_id": 2,
                 "average_rating": 5
               }'

@@ -65,6 +65,35 @@ _Returns an array_
 
 (*) Required field
 
+#### Example response(s)
+
+**List of bands**
+
+```json
+[
+  {
+    "band_id": 1,
+    "name": "Jungle",
+    "genre_id": 2,
+    "average_rating": 5,
+    "location": "London, UK"
+  },
+  {
+    "band_id": 2,
+    "name": "The Last Dinner Party",
+    "genre_id": 3,
+    "average_rating": 5,
+    "location": "London, UK"
+  },
+  {
+    "band_id": 3,
+    "name": "Wet Leg",
+    "genre_id": 4,
+    "location": "The Isle of Wight, UK"
+  }
+]
+```
+
 #### Response 500
 
 Server error
@@ -87,6 +116,9 @@ Creates a new band in the hippohonk database.
 
 Required params: `name`, `genre_id`
 
+**Note:** Genres are managed as a standardized list to support filtering by genre. 
+Refer to the [Genres API documentation](/docs/api/genres) to get a list of genres.
+
 
 
 ### Code samples
@@ -99,7 +131,7 @@ Required params: `name`, `genre_id`
 curl -X POST https://api.hippohonk.com/bands \
   -H "Content-Type: application/json" \
   -d '{
-    "name": Jungle",
+    "name": "Jungle",
     "genre_id": 2,
     "average_rating": 5
   }'
