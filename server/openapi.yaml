@@ -49,8 +49,9 @@ paths:
         - lang: python
           source: |
             import requests
+            BASE_URL = "https://hippohonk-api-642586320677.herokuapp.com/"
 
-            url = "/bands"
+            url = f"{BASE_URL}/bands"
 
             # All bands
             response = requests.get(url)
