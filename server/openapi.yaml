@@ -23,8 +23,21 @@ paths:
   /bands:
     get:
       tags: [Bands]
-      summary: Get all bands.
-      description: Used to retrieve all bands in the database.
+      summary: Get all bands in the database.
+      x-codeSamples:
+        - lang: curl
+          source: |
+            curl https://api.hippohonk.com/bands
+        - lang: python
+          source: |
+            import requests
+
+            url = "https://api.hippohonk.com/bands"
+
+            response = requests.get(url)
+
+            print(response.status_code)
+            print(response.json())
       responses:
         "200":
           description: OK
@@ -44,12 +57,49 @@ paths:
         Creates a new band in the hippohonk database.
 
         Required params: `name`, `genre_id`
+      x-codeSamples:
+        - lang: curl
+          source: |
+            curl -X POST https://api.hippohonk.com/bands \
+              -H "Content-Type: application/json" \
+              -d '{
+                "name": Jungle",
+                "genre_id": 2,
+                "average_rating": 5
+              }'
+        - lang: python
+          source: |
+            import requests
+
+            url = "https://api.hippohonk.com/bands"
+            payload = {
+                "name": "Jungle",
+                "genre_id": 2,
+                "average_rating": 5
+              }
+
+            response = requests.post(url, json=payload)
+
+            print(response.status_code)
+            print(response.json())
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/BandCreate"
+            examples:
+              basic:
+                summary: Request with minimum required parameters
+                value:
+                  name: "Jungle"
+                  genre_id: 2
+              withRating:
+                summary: Request with additional parameters
+                value:
+                  name: "The Last Dinner Party"
+                  genre_id: 5
+                  average_rating: 5
       responses:
         "201":
           description: Band creation successful.
@@ -286,7 +336,7 @@ components:
     average_rating:
       type: integer
       description: Average rating for the band.
-      example: 4.2
+      example: 4
     location:
       type: string
       description: Location the band calls home.
@@ -310,7 +360,7 @@ components:
       type: string
       nullable: true
       description: > 
-        (Do not use) Path to the web-hosted image. This image should be pre-processed to the correct size 
+        Path to the web-hosted image. This image should be pre-processed to the correct size 
         and hosted in a secure location.
       example: Currently not implemented
 

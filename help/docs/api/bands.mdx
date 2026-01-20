@@ -3,15 +3,43 @@ sidebar_position: 4
 ---
 <!-- This file is auto-generated. Edits here will be overwritten. -->
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # `/bands`
 
 ## GET
 
-**Summary:** Get all bands.
+**Summary:** Get all bands in the database.
 
 
-Used to retrieve all bands in the database.
+### Code samples
 
+<Tabs groupId="codeSamples">
+
+<TabItem value="curl" label="curl">
+
+```bash
+curl https://api.hippohonk.com/bands
+```
+
+</TabItem>
+<TabItem value="python" label="python">
+
+```python
+import requests
+
+url = "https://api.hippohonk.com/bands"
+
+response = requests.get(url)
+
+print(response.status_code)
+print(response.json())
+```
+
+</TabItem>
+
+</Tabs>
 
 ### Responses
 
@@ -28,12 +56,12 @@ _Returns an array_
 | `band_id`  | integer | Unique ID for the band. |  |
 | `name`  | string | Name of the band. | `"Faux Real"` |
 | `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
-| `average_rating`  | integer | Average rating for the band. | `4.2` |
+| `average_rating`  | integer | Average rating for the band. | `4` |
 | `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
 | `url`  | string | URL for the band's website or social media site. | `"https://isthisfauxreal.com/"` |
 | `genre_id`  | integer | Unique ID for a genre. | `2` |
 | `genre_name`  | string | Name for a band's primary genre. | `"Art Pop"` |
-| `image`  | string | (Do not use) Path to the web-hosted image. This image should be pre-processed to the correct size  and hosted in a secure location. | `"Currently not implemented"` |
+| `image`  | string | Path to the web-hosted image. This image should be pre-processed to the correct size  and hosted in a secure location. | `"Currently not implemented"` |
 
 (*) Required field
 
@@ -61,6 +89,45 @@ Required params: `name`, `genre_id`
 
 
 
+### Code samples
+
+<Tabs groupId="codeSamples">
+
+<TabItem value="curl" label="curl">
+
+```bash
+curl -X POST https://api.hippohonk.com/bands \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": Jungle",
+    "genre_id": 2,
+    "average_rating": 5
+  }'
+```
+
+</TabItem>
+<TabItem value="python" label="python">
+
+```python
+import requests
+
+url = "https://api.hippohonk.com/bands"
+payload = {
+    "name": "Jungle",
+    "genre_id": 2,
+    "average_rating": 5
+  }
+
+response = requests.post(url, json=payload)
+
+print(response.status_code)
+print(response.json())
+```
+
+</TabItem>
+
+</Tabs>
+
 # Request body fields
 
 
@@ -68,11 +135,32 @@ Required params: `name`, `genre_id`
 |------|------|---------------|-----------------|
 | `name` * | string | Name of the band. |  |
 | `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
-| `average_rating`  | integer | Average rating for the band. | `4.2` |
+| `average_rating`  | integer | Average rating for the band. | `4` |
 | `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
 | `genre_id` * | integer | Unique ID for a genre. | `2` |
 
 (*) Required field
+
+### Example request(s)
+
+**Request with minimum required parameters**
+
+```json
+{
+  "name": "Jungle",
+  "genre_id": 2
+}
+```
+
+**Request with additional parameters**
+
+```json
+{
+  "name": "The Last Dinner Party",
+  "genre_id": 5,
+  "average_rating": 5
+}
+```
 
 ### Responses
 
@@ -88,7 +176,7 @@ Band creation successful.
 | `id`  | integer | Unique ID for the band. |  |
 | `name`  | string | Name of the band. | `"Faux Real"` |
 | `description`  | text | Summary of the band that can't be captured through genre alone. | `"French Art Pop duo producing jams with an eye for performance. We are all living in the  United Snakes of America, and the brothers Arndt are the snake charmers.\n"` |
-| `average_rating`  | integer | Average rating for the band. | `4.2` |
+| `average_rating`  | integer | Average rating for the band. | `4` |
 | `location`  | string | Location the band calls home. | `"Los Angeles, CA"` |
 | `genre_id`  | integer | Unique ID for a genre. | `2` |
 | `url`  | string | URL for the band's website or social media site. | `"https://isthisfauxreal.com/"` |
