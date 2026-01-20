@@ -29,8 +29,6 @@ paths:
 
         Optional filters:
         - `genre_id`: only return bands in the specified genre
-        - `min_rating`: only return bands with `average_rating >= min_rating`
-        - `location`: only return bands matching the specified location
       parameters:
         - name: genre_id
           in: query
