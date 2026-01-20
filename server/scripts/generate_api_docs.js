@@ -345,7 +345,7 @@ async function main() {
       "---",
       `sidebar_position: ${index}`,
       "---",
-      "<!-- This file is auto-generated. Edits here will be overwritten. -->",
+      "{/* This file is auto-generated. Edits here will be overwritten. */}",
       "",
       "import Tabs from '@theme/Tabs';",
       "import TabItem from '@theme/TabItem';",

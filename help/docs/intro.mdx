@@ -1,0 +1,160 @@
+---
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Hippohonk API
+The Hippohonk API provides access to festival band data, including location, genre, and reviewer ratings. The ratings are subjective and reflect how excited our reviewers are to see a band live.
+
+### Rating Scale (1-5)
+
+- `1`: I would leave the venue if this band comes on stage.
+- `2`: I would only stay if a good band is coming up at this venue soon after they’re done.
+- `3`: I won’t leave the venue but I also won’t go out of my way to see this band.
+- `4`: I want to see this band and will try my best to fit them into my schedule.
+- `5`: I must see this band and I would go out of my way to see them.
+
+## Getting Started
+The Hippohonk API provides programmatic access to festival band data. You can retrieve festival information and create new records using standard HTTP requests.
+
+### Base URL
+
+`https://hippohonk-api-642586320677.herokuapp.com/`
+
+All examples below assume this base URL.
+
+---
+
+### Get all bands in a lineup
+A _lineup_ represents all bands associated with a specific _festival_. Complete the following to retrieve a list of bands for a specific lineup:
+
+1. Retrieve a list of all festivals, ordered by date
+
+    <Tabs>
+    <TabItem value="curl" label="curl">
+    ```bash
+        curl "/festivals"
+    ```
+    </TabItem>
+    <TabItem value="python" label="Python">
+    ```python 
+            import requests
+
+            BASE_URL = ""
+            
+
+            response = requests.get(f"{BASE_URL}/festivals")
+
+            print(response.status_code)
+            print(response.json())
+            ```
+        </TabItem>
+    </Tabs>
+
+    ---
+
+    The API returns a JSON list with all festivals. Select the festival ID you'd like to query from this list.
+
+    ```json
+    {
+            "id": 16,
+            "name": "SXSW 2023",
+            "date": "2023-03-13",
+            "slug": "sxsw-2023",
+            "createdAt": "2023-02-14T19:21:06.660Z",
+            "updatedAt": "2023-02-14T19:21:06.660Z"
+        },
+        {
+            "id": 15,
+            "name": "SXSW 2020",
+            "date": "2020-03-16",
+            "slug": "sxsw-2020",
+            "createdAt": "2020-01-15T15:13:20.238Z",
+            "updatedAt": "2020-01-15T15:13:20.238Z"
+        },
+        {
+            "id": 14,
+            "name": "SXSW 2019",
+            "date": "2019-03-11",
+            "slug": "sxsw-2019",
+            "createdAt": "2019-01-13T16:44:17.595Z",
+            "updatedAt": "2019-01-13T16:44:17.595Z"
+        },
+        ```
+
+1. Using the [`lineups` API](/api/lineups), retrieve the list of bands. This example uses `SXSW 2023`, with a `festival_id` of `16`.
+
+    <Tabs>
+    <TabItem value="curl" label="curl">
+    ```bash
+        curl "/lineups/16"
+    ```
+    </TabItem>
+    <TabItem value="python" label="Python">
+    ```python 
+            import requests
+
+            BASE_URL = ""
+            
+
+            response = requests.get(f"{BASE_URL}/lineups/16")
+
+            print(response.status_code)
+            print(response.json())
+            ```
+        </TabItem>
+    </Tabs>
+
+    This will give you all of the information about the bands performing in this lineup.
+
+    ```json
+    [
+        {
+            "id": 4373,
+            "festival_id": 16,
+            "band_id": 3391,
+            "name": "Armani White",
+            "description": "Fast-paced bombastic hip-hop. He has style, as in, glock tucked, big-t-shirt billie EILISH",
+            "location": "Philadelphia, PA",
+            "average_rating": "5.00",
+            "image": null,
+            "festival_name": "SXSW 2023"
+        },
+        {
+            "id": 4374,
+            "festival_id": 16,
+            "band_id": 3392,
+            "name": "Jockstrap",
+            "description": "Experimental electronic duo. Songs twist and turn but stay inside the lanes of listenable...barely",
+            "location": "London, UK-ENGLAND",
+            "average_rating": "5.00",
+            "image": null,
+            "festival_name": "SXSW 2023"
+        },
+        {
+            "id": 4375,
+            "festival_id": 16,
+            "band_id": 3393,
+            "name": "Husbands",
+            "description": "Indie beach rock that doesn't fall prey to the muddy waters of that genre",
+            "location": "Oklahoma City, OK",
+            "average_rating": "4.75",
+            "image": null,
+            "festival_name": "SXSW 2023"
+        },
+        {
+            "id": 4376,
+            "festival_id": 16,
+            "band_id": 2906,
+            "name": "PINES",
+            "description": "Moving ambient electronic duo with a similar style as The Range",
+            "location": "Adelaide, SA, AUSTRALIA",
+            "average_rating": "3.50",
+            "image": "v1488320632/hqcx14ubf5j92xowmgtq.png",
+            "festival_name": "SXSW 2023"
+        }
+    ]
+    ```
+
