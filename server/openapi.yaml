@@ -399,7 +399,7 @@ components:
         French Art Pop duo producing jams with an eye for performance. We are all living in the 
         United Snakes of America, and the brothers Arndt are the snake charmers.
     average_rating:
-      type: integer
+      type: number
       description: Average rating for the band.
       example: 4
     location:
