@@ -6,7 +6,9 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 # Hippohonk API
-The Hippohonk API provides access to festival band data, including location, genre, and reviewer ratings. The ratings are subjective and reflect how excited our reviewers are to see a band live.
+The Hippohonk API lets you retrieve and manage festival-related data including festivals, lineups, and bands. All responses are returned in JSON.
+
+The ratings are subjective and reflect how excited our reviewers are to see a band live.
 
 ### Rating Scale (1-5)
 
@@ -17,35 +19,28 @@ The Hippohonk API provides access to festival band data, including location, gen
 - `5`: I must see this band and I would go out of my way to see them.
 
 ## Getting Started
-The Hippohonk API provides programmatic access to festival band data. You can retrieve festival information and create new records using standard HTTP requests.
-
-### Base URL
-
-`https://hippohonk-api-642586320677.herokuapp.com/`
-
-All examples below assume this base URL.
+This example demonstrates how to retrieve a list of bands performing at a specific festival using the lineup API.
 
 ---
 
 ### Get all bands in a lineup
-A _lineup_ represents all bands associated with a specific _festival_. Complete the following to retrieve a list of bands for a specific lineup:
+A _lineup_ represents a many-to-many mapping between bands and festivals: Festivals can be linked to multiple bands, and bands can be linked to multiple festivals.
 
 1. Retrieve a list of all festivals, ordered by date
 
     <Tabs>
     <TabItem value="curl" label="curl">
     ```bash
-        curl "/festivals"
+        curl "https://hippohonk-api-642586320677.herokuapp.com/api/festivals"
     ```
     </TabItem>
     <TabItem value="python" label="Python">
     ```python 
             import requests
 
-            BASE_URL = ""
-            
+            BASE_URL = "https://hippohonk-api-642586320677.herokuapp.com"
 
-            response = requests.get(f"{BASE_URL}/festivals")
+            response = requests.get(f"{BASE_URL}/api/festivals")
 
             print(response.status_code)
             print(response.json())
@@ -55,10 +50,11 @@ A _lineup_ represents all bands associated with a specific _festival_. Complete 
 
     ---
 
-    The API returns a JSON list with all festivals. Select the festival ID you'd like to query from this list.
+    The API returns a JSON list with all festivals.  Select a festival ID.
 
     ```json
-    {
+    [
+        {
             "id": 16,
             "name": "SXSW 2023",
             "date": "2023-03-13",
@@ -81,25 +77,25 @@ A _lineup_ represents all bands associated with a specific _festival_. Complete 
             "slug": "sxsw-2019",
             "createdAt": "2019-01-13T16:44:17.595Z",
             "updatedAt": "2019-01-13T16:44:17.595Z"
-        },
+        }
+    ]
         ```
 
-1. Using the [`lineups` API](/api/lineups), retrieve the list of bands. This example uses `SXSW 2023`, with a `festival_id` of `16`.
+1. Using the [`lineups` API](/api/lineups), retrieve the list of bands. Here, you are searching for all lineup entries associated with the provided `festival_id`. This example uses `SXSW 2023`, with a `festival_id` of `16`.
 
     <Tabs>
     <TabItem value="curl" label="curl">
     ```bash
-        curl "/lineups/16"
+        curl "https://hippohonk-api-642586320677.herokuapp.com/api/lineups/16"
     ```
     </TabItem>
     <TabItem value="python" label="Python">
     ```python 
             import requests
 
-            BASE_URL = ""
+            BASE_URL = "https://hippohonk-api-642586320677.herokuapp.com"
             
-
-            response = requests.get(f"{BASE_URL}/lineups/16")
+            response = requests.get(f"{BASE_URL}/api/lineups/16")
 
             print(response.status_code)
             print(response.json())
