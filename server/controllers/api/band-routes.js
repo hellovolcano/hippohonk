@@ -7,7 +7,7 @@ const requireReviewer = require('../../middleware/reviewer')
 
 // Find all bands (with optional filters)
 router.get("/", async (req, res) => {
-  const { genre_id } = req.query;
+  const { genre_id, limit } = req.query;
 
   const where = {};
 
@@ -22,10 +22,23 @@ router.get("/", async (req, res) => {
     where.genre_id = parsed;
   }
 
+  let parsedLimit;
+  if (limit !== undefined) {
+    parsedLimit = parseInt(limit, 10);
+    if (Number.isNaN(parsedLimit) || parsedLimit <= 0) {
+      return res.status(400).json({
+        error: "Invalid query parameter",
+        message: "limit must be a positive number",
+      });
+    }
+    parsedLimit = Math.min(parsedLimit, 100);
+  }
+
   try {
     const bands = await Band.findAll({
       where,
       order: [[Sequelize.col("average_rating"), "DESC NULLS LAST"]],
+      ...(parsedLimit ? { limit: parsedLimit } : {}),
       attributes: [
         [Sequelize.col("bands.id"), "band_id"],
         "name",
@@ -33,6 +46,7 @@ router.get("/", async (req, res) => {
         [Sequelize.fn("ROUND", Sequelize.fn("AVG", Sequelize.col("ratings.rating")), 1), "average_rating"],
         "location",
         "url",
+        "spotify_url",
         "genre_id",
         [Sequelize.col("genre.name"), "genre_name"],
         "image",
@@ -68,6 +82,7 @@ router.get('/:id', (req,res) => {
             [Sequelize.fn('ROUND', Sequelize.fn('AVG', Sequelize.col('ratings.rating')), 1), 'average_rating'],
             'location',
             'url',
+            'spotify_url',
             'genre_id',
             [Sequelize.col('genre.name'), 'genre_name'],
             'image'
@@ -92,7 +107,9 @@ router.post('/', requireReviewer, (req,res) => {
         description: req.body.description,
         average_rating: req.body.average_rating,
         location: req.body.location,
-        genre_id: req.body.genre_id
+        genre_id: req.body.genre_id,
+        url: req.body.url ? String(req.body.url).trim() : null,
+        spotify_url: req.body.spotify_url ? String(req.body.spotify_url).trim() : null,
     })
     .then(dbBandData => res.status(201).json(dbBandData))
     .catch(err => {
@@ -123,6 +140,10 @@ router.post('/batch', requireReviewer, async (req, res) => {
         if (entry.name !== undefined) fields.name = entry.name;
         if (entry.location !== undefined) fields.location = entry.location;
         if (entry.description !== undefined) fields.description = entry.description;
+        if (entry.url !== undefined) fields.url = entry.url ? String(entry.url).trim() : null;
+        if (entry.spotify_url !== undefined) {
+          fields.spotify_url = entry.spotify_url ? String(entry.spotify_url).trim() : null;
+        }
 
         if (entry.id) {
           await Band.update(fields, { where: { id: entry.id }, transaction: t });
@@ -146,6 +167,8 @@ router.post('/batch', requireReviewer, async (req, res) => {
         'name',
         'description',
         'location',
+        'url',
+        'spotify_url',
         [Sequelize.fn('ROUND', Sequelize.fn('AVG', Sequelize.col('ratings.rating')), 1), 'average_rating'],
       ],
       include: [{ model: Rating, attributes: [] }],
@@ -174,7 +197,7 @@ router.put("/:id", requireReviewer, async (req, res) => {
     }
 
     // Whitelist fields we allow updating
-    const { name, location, url, genre_id, average_rating, description } = req.body;
+    const { name, location, url, spotify_url, genre_id, average_rating, description } = req.body;
 
     // Basic validation (match your “name + genre_id required” rule)
     if (!name || !String(name).trim()) {
@@ -189,6 +212,7 @@ router.put("/:id", requireReviewer, async (req, res) => {
         name: String(name).trim(),
         location: location ? String(location).trim() : null,
         url: url ? String(url).trim() : null,
+        spotify_url: spotify_url ? String(spotify_url).trim() : null,
         genre_id: Number(genre_id),
         average_rating: Number(average_rating),
         description: description ? String(description).trim() : null,

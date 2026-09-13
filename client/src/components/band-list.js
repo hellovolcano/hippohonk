@@ -162,13 +162,12 @@ const BandList = ({bands, isLoading, title}) => {
                             </div>
                         </div>
                         </a>
-                        <div className="band-row-actions">
-                            {isLoggedIn && isReviewer && (
+                        {isLoggedIn && isReviewer && (
+                            <div className="band-row-actions">
                                 <AddToFestivalControl band={band} />
-                            )}
-                            <span className="band-rank">#{currentPage === 1 ? i + 1 : i + 1 + rankMultiplier}</span>
-                        </div>
-
+                            </div>
+                        )}
+                        <span className="band-rank">{currentPage === 1 ? i + 1 : i + 1 + rankMultiplier}</span>
                     </div>
                 ))}
                 {!isLoading && filteredBands.length === 0 && (

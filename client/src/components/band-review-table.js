@@ -38,6 +38,32 @@ function makeEditableTextCell(field) {
   };
 }
 
+function makeEditableUrlCell(field) {
+  return function EditableUrlCell({ getValue, row, table }) {
+    const initialValue = getValue();
+    const [value, setValue] = useState(initialValue ?? "");
+
+    useEffect(() => {
+      setValue(initialValue ?? "");
+    }, [initialValue]);
+
+    const commit = () => {
+      table.options.meta?.updateBandField(row.original.band_id, field, value);
+    };
+
+    return (
+      <input
+        type="url"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={commit}
+        placeholder="https://…"
+        style={{ width: 150 }}
+      />
+    );
+  };
+}
+
 // The Name cell is special for a new row: the underlying band isn't created
 // until this field is filled in and loses focus.
 function EditableNameCell({ getValue, row, table }) {
@@ -69,6 +95,8 @@ function EditableNameCell({ getValue, row, table }) {
 
 const EditableLocationCell = makeEditableTextCell("location");
 const EditableDescriptionCell = makeEditableTextCell("description");
+const EditableUrlCell = makeEditableUrlCell("url");
+const EditableSpotifyUrlCell = makeEditableUrlCell("spotify_url");
 
 function ReadOnlyRatingCell({ getValue }) {
   const value = getValue();
@@ -118,7 +146,7 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
   // band_id -> edited rating for the current user (undefined = not edited)
   const [ratingEdits, setRatingEdits] = useState({});
 
-  // band_id -> { name?, location?, description? } edited values (real ids and "new-N" temp ids)
+  // band_id -> { name?, location?, description?, url?, spotify_url? } edited values (real ids and "new-N" temp ids)
   const [bandFieldEdits, setBandFieldEdits] = useState({});
   const bandOriginalsRef = useRef(new Map());
   const newRowCounterRef = useRef(0);
@@ -128,7 +156,10 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
     const list = initialBands || [];
     setBands(list);
     bandOriginalsRef.current = new Map(
-      list.map((b) => [b.band_id, { name: b.name, location: b.location, description: b.description }])
+      list.map((b) => [
+        b.band_id,
+        { name: b.name, location: b.location, description: b.description, url: b.url, spotify_url: b.spotify_url },
+      ])
     );
     setBandFieldEdits({});
     setRatingEdits({});
@@ -239,6 +270,18 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
         cell: EditableDescriptionCell,
       },
       {
+        id: "url",
+        accessorFn: (band) => bandFieldEdits[band.band_id]?.url ?? band.url ?? "",
+        header: "URL",
+        cell: EditableUrlCell,
+      },
+      {
+        id: "spotify_url",
+        accessorFn: (band) => bandFieldEdits[band.band_id]?.spotify_url ?? band.spotify_url ?? "",
+        header: "Spotify",
+        cell: EditableSpotifyUrlCell,
+      },
+      {
         id: "average_rating",
         accessorFn: (band) => band.average_rating,
         header: "Average Rating",
@@ -291,6 +334,8 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
           name: trimmed,
           location: pending.location ?? "",
           description: pending.description ?? "",
+          url: pending.url ?? "",
+          spotify_url: pending.spotify_url ?? "",
         }),
       });
 
@@ -318,6 +363,8 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
                 name: created.name,
                 location: created.location,
                 description: created.description,
+                url: created.url,
+                spotify_url: created.spotify_url,
                 average_rating: created.average_rating ?? null,
                 isNew: false,
               }
@@ -329,6 +376,8 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
         name: created.name,
         location: created.location,
         description: created.description,
+        url: created.url,
+        spotify_url: created.spotify_url,
       });
 
       // Its fields are now saved as the original; drop the pending edit entry
@@ -432,6 +481,8 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
           name: (bandFieldEdits[row.band_id]?.name ?? "").trim(),
           location: bandFieldEdits[row.band_id]?.location ?? "",
           description: bandFieldEdits[row.band_id]?.description ?? "",
+          url: bandFieldEdits[row.band_id]?.url ?? "",
+          spotify_url: bandFieldEdits[row.band_id]?.spotify_url ?? "",
         }))
         .filter((entry) => entry.name.length > 0);
 
@@ -516,6 +567,8 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
               name: created.name,
               location: created.location,
               description: created.description,
+              url: created.url,
+              spotify_url: created.spotify_url,
               average_rating: ratingUpdate ? ratingUpdate.average_rating : created.average_rating,
               isNew: false,
             };
@@ -532,6 +585,8 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
                   name: fieldUpdate.name,
                   location: fieldUpdate.location,
                   description: fieldUpdate.description,
+                  url: fieldUpdate.url,
+                  spotify_url: fieldUpdate.spotify_url,
                   average_rating: fieldUpdate.average_rating,
                 }
               : {}),
@@ -555,6 +610,8 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
           name: b.name,
           location: b.location,
           description: b.description,
+          url: b.url,
+          spotify_url: b.spotify_url,
         });
       });
 

@@ -113,7 +113,26 @@ const Band = () => {
 
             <div className="right-band-info">
               <SectionWrapper title="Band Links" className="h3-section-wrapper">
-                {/* add links here */}
+                {!bandInfo.url && !bandInfo.spotify_url ? (
+                  <div>No links yet</div>
+                ) : (
+                  <ul>
+                    {bandInfo.url && (
+                      <li>
+                        <a href={bandInfo.url} target="_blank" rel="noreferrer">
+                          Website
+                        </a>
+                      </li>
+                    )}
+                    {bandInfo.spotify_url && (
+                      <li>
+                        <a href={bandInfo.spotify_url} target="_blank" rel="noreferrer">
+                          Spotify
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                )}
               </SectionWrapper>
 
               <SectionWrapper title="Genre" className="h3-section-wrapper">

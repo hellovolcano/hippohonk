@@ -35,6 +35,12 @@ Band.init (
                 isUrl: true
             }
         },
+        spotify_url: {
+            type: DataTypes.STRING,
+            validate: {
+                isUrl: true
+            }
+        },
         genre_id: {
             type: DataTypes.NUMBER
         },

@@ -10,6 +10,7 @@
   --darker-color: #C0311D;
   --table-headings: #FEF5F4;
   --grey: rgb(204, 195, 195);
+  --radius-card: 16px;
 }
 
 body {
@@ -18,7 +19,6 @@ body {
   color: white;
   margin: 0;
   top: 0;
-  min-height: 200vh;
   }
 
   html {
@@ -44,7 +44,7 @@ body {
 
 .hero-text h1 {
   text-transform: uppercase;
-  font-size: 40px;
+  font-size: clamp(24px, 6vw, 40px);
   font-weight: 700;
   margin-bottom: 0;
 }
@@ -97,10 +97,6 @@ body {
 
 .button:active {
   color: var(--darker-color);
-}
-
-div .band-rank {
-  color: black;
 }
 
 .input-wrapper {
@@ -186,9 +182,10 @@ header img {
 }
 
 .band-row, .band-row-alt {
+  position: relative;
   background-color: var(--white);
   display: flex;
-  justify-content: space-between; 
+  flex-direction: column;
   padding: 15px;
   border-bottom: 1px solid var(--grey);
   color: black;
@@ -229,10 +226,24 @@ header img {
 }
 
 .band-rank {
-  padding: 5px;
-  background-color: var(--table-headings);
-  border: 1px solid var(--borders);
-  border-radius: 3px;
+  font-family: 'Climate Crisis', sans-serif;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  font-size: clamp(56px, 14vw, 120px);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--darker-color);
+  opacity: 0.2;
+  /* pointer-events: none; */
 }
 
 .band-rank:hover {
@@ -254,8 +265,10 @@ header img {
 
 .band-row-actions {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   gap: 10px;
+  margin-top: 8px;
 }
 
 .add-to-festival-select {
@@ -470,6 +483,10 @@ footer a:hover {
   }
   .bandlist-wrapper {
     width: 95%;
+  }
+  .band-row, .band-row-alt {
+    flex-direction: column;
+    align-items: flex-end;
   }
   
 }

@@ -38,6 +38,8 @@ router.get('/:id', (req,res) => {
             [Sequelize.col('band.location'), 'location'],
             [Sequelize.fn('ROUND', Sequelize.fn('AVG', Sequelize.col('band->ratings.rating')), 1), 'average_rating'],
             [Sequelize.col('band.image'), 'image'],
+            [Sequelize.col('band.url'), 'url'],
+            [Sequelize.col('band.spotify_url'), 'spotify_url'],
             [Sequelize.col('festival.name'), 'festival_name'],
             [Sequelize.col('band.genre_id'), 'genre_id']
         ],

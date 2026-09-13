@@ -5,6 +5,7 @@ h1 {
   font-style: normal;
   font-variation-settings:
     "YEAR" 2000;
+  color: var(--darker-color);
 }
 
 h1 {

@@ -11,11 +11,59 @@ const Home = () => {
   const [searchParams] = useSearchParams();
 
 
-  // get top 3 rated bands
-  const topBands = [];
+  // get top 5 rated bands
+  const [topBands, setTopBands] = useState([]);
 
   // get 3 festivals by date (upcoming or recent past)
-  const displayFestivals = [];
+  const [displayFestivals, setDisplayFestivals] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/bands?limit=5", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (!cancelled) setTopBands(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setTopBands([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/festivals", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (cancelled) return;
+
+        const festivals = Array.isArray(data) ? data : [];
+        const today = new Date().toISOString().slice(0, 10);
+
+        // Soonest upcoming first, then most recent past, up to 3 total
+        const upcoming = festivals
+          .filter((f) => f.date && f.date >= today)
+          .sort((a, b) => (a.date < b.date ? -1 : 1));
+
+        const recentPast = festivals
+          .filter((f) => f.date && f.date < today)
+          .sort((a, b) => (a.date > b.date ? -1 : 1));
+
+        setDisplayFestivals([...upcoming, ...recentPast].slice(0, 3));
+      })
+      .catch(() => {
+        if (!cancelled) setDisplayFestivals([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
 
   // Header controls these via query params
@@ -109,13 +157,10 @@ const Home = () => {
 
         </section>
         <section className="festival-hero">
-            <Hero title="Festivals" items={displayFestivals} />
+            <Hero title="Upcoming Festivals" items={displayFestivals} />
         </section>
         <section className="top-bands-hero">
             <Hero title="Top-Rated Bands" items={topBands} />
-        </section>
-        <section>
-          <PersonTable />
         </section>
     </main>
   );
