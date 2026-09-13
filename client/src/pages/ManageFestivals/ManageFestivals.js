@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../auth";
+import { useAuth } from "../../auth";
+import RequireAdmin from "../../components/common/require-admin";
+import Button from "../../components/common/forms/button";
+import InputField from "../../components/common/forms/input-field";
 
-function FestivalRow({ festival, onSave, onDelete }) {
+const FestivalRow = ({ festival, onSave, onDelete }) => {
   const [name, setName] = useState(festival.name || "");
   const [slug, setSlug] = useState(festival.slug || "");
   const [date, setDate] = useState(festival.date || "");
@@ -24,27 +27,27 @@ function FestivalRow({ festival, onSave, onDelete }) {
   };
 
   return (
-    <tr style={{ borderBottom: "1px solid #ddd" }}>
-      <td style={{ padding: "8px 12px" }}>
-        <input value={name} onChange={(e) => setName(e.target.value)} />
+    <tr>
+      <td>
+        <InputField value={name} onChange={(e) => setName(e.target.value)} />
       </td>
-      <td style={{ padding: "8px 12px" }}>
-        <input value={slug} onChange={(e) => setSlug(e.target.value)} />
+      <td>
+        <InputField value={slug} onChange={(e) => setSlug(e.target.value)} />
       </td>
-      <td style={{ padding: "8px 12px" }}>
-        <input type="date" value={date ? String(date).slice(0, 10) : ""} onChange={(e) => setDate(e.target.value)} />
+      <td>
+        <InputField type="date" value={date ? String(date).slice(0, 10) : ""} onChange={(e) => setDate(e.target.value)} />
       </td>
-      <td style={{ padding: "8px 12px", display: "flex", gap: 8 }}>
-        <button onClick={handleSave} disabled={!dirty || saving || deleting}>
+      <td>
+        <Button onClick={handleSave} disabled={!dirty || saving || deleting}>
           {saving ? "Saving…" : "Save"}
-        </button>
-        <button onClick={handleDelete} disabled={saving || deleting}>
+        </Button>
+        <Button onClick={handleDelete} disabled={saving || deleting}>
           {deleting ? "Deleting…" : "Delete"}
-        </button>
+        </Button>
       </td>
     </tr>
   );
-}
+};
 
 const ManageFestivals = () => {
   const { isLoggedIn, isAdmin, loading: authLoading } = useAuth();
@@ -148,45 +151,43 @@ const ManageFestivals = () => {
     }
   };
 
-  if (authLoading) return <div>Loading…</div>;
-
-  if (!isLoggedIn || !isAdmin) {
-    return <div style={{ maxWidth: 600, margin: "2rem auto" }}>Not authorized.</div>;
-  }
-
-  if (isLoading) return <div>Loading…</div>;
-
   return (
-    <div style={{ maxWidth: 800, margin: "2rem auto", fontFamily: "sans-serif" }}>
-      <h2>Manage Festivals</h2>
+    <RequireAdmin>
+      {isLoading ? (
+        <div>Loading…</div>
+      ) : (
+        <div className="page-panel">
+          <h2>Manage Festivals</h2>
 
-      {error && <div style={{ color: "crimson", marginBottom: 12 }}>{error}</div>}
+          {error && <div className="error-message">{error}</div>}
 
-      <form onSubmit={handleCreate} style={{ marginBottom: 24, display: "flex", gap: 8, alignItems: "center" }}>
-        <input placeholder="Name" value={newName} onChange={(e) => setNewName(e.target.value)} required />
-        <input placeholder="slug" value={newSlug} onChange={(e) => setNewSlug(e.target.value)} required />
-        <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} />
-        <button type="submit" disabled={creating}>
-          {creating ? "Adding…" : "+ Add Festival"}
-        </button>
-      </form>
+          <form onSubmit={handleCreate} className="form-row inline-form-row">
+            <InputField placeholder="Name" value={newName} onChange={(e) => setNewName(e.target.value)} required />
+            <InputField placeholder="slug" value={newSlug} onChange={(e) => setNewSlug(e.target.value)} required />
+            <InputField type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} />
+            <Button type="submit" disabled={creating}>
+              {creating ? "Adding…" : "+ Add Festival"}
+            </Button>
+          </form>
 
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th style={{ textAlign: "left", padding: "8px 12px" }}>Name</th>
-            <th style={{ textAlign: "left", padding: "8px 12px" }}>Slug</th>
-            <th style={{ textAlign: "left", padding: "8px 12px" }}>Date</th>
-            <th style={{ padding: "8px 12px" }}></th>
-          </tr>
-        </thead>
-        <tbody>
-          {festivals.map((f) => (
-            <FestivalRow key={f.id} festival={f} onSave={handleSaveExisting} onDelete={handleDelete} />
-          ))}
-        </tbody>
-      </table>
-    </div>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {festivals.map((f) => (
+                <FestivalRow key={f.id} festival={f} onSave={handleSaveExisting} onDelete={handleDelete} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </RequireAdmin>
   );
 };
 

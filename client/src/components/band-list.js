@@ -7,7 +7,6 @@ import styled from '@emotion/styled'
 
 import SectionWrapper from './common/section-wrapper'
 import BandImage from './band-image'
-import { NavLink } from 'react-router-dom'
 import { useAuth } from '../auth'
 import './components.css'
 
@@ -87,18 +86,18 @@ function AddToFestivalControl({ band }) {
 const BandList = ({bands, isLoading, title}) => {
     const { isLoggedIn, isReviewer } = useAuth()
 
-    const MyPagination = styled(Pagination)({
+    const MyPagination = styled(Pagination)(({ theme }) => ({
         "& .MuiPaginationItem-root": {
-            backgroundColor: "#FEF5F4",
-            border: "1px solid #e35a47",
+            backgroundColor: theme.palette.info.main,
+            border: `1px solid ${theme.palette.primary.main}`,
             color: "#000"
            },
         '& .Mui-selected': {
-          backgroundColor: '#e35a47',
+          backgroundColor: theme.palette.primary.main,
           color:'#fff',
          }
 
-    })
+    }))
 
     const [currentPage, setCurrentPage] = useState(1)
     const [bandsPerPage] = useState(10)

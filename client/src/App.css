@@ -1,17 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
 
-:root {
-  --black: #000000;
-  --secondary-color: #66454f;
-  --highlight: #666445;
-  --white: white;
-  --borders: #e35a47;
-  --primary-color: #e35a47;
-  --darker-color: #C0311D;
-  --table-headings: #FEF5F4;
-  --grey: rgb(204, 195, 195);
-  --radius-card: 16px;
-}
+/* Design tokens (--primary-color, --radius-card, etc.) are defined once in
+   src/themes/tokens.js and injected onto :root at startup — see
+   src/themes/injectCssVars.js. Do not redeclare them here. */
 
 body {
   font-family: 'Montserrat', sans-serif;
@@ -518,5 +509,74 @@ footer a:hover {
     flex-direction: column;
     align-items: flex-end;
   }
-  
+
+}
+
+/* SHARED PAGE LAYOUT (simple form / table pages: auth, profile, admin) */
+.page-form {
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.page-panel {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.not-authorized {
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.form-row {
+  margin-top: 8px;
+}
+
+.status-message {
+  margin-top: 8px;
+}
+
+.error-message {
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-right: 8px;
+  border: 1px solid var(--grey);
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 8px 12px;
+}
+
+.data-table tr {
+  border-bottom: 1px solid var(--grey);
+}
+
+.icon-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.inline-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
 }

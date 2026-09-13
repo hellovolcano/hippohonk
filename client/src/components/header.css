@@ -30,8 +30,8 @@
   /* Visual styling (tweak freely) */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  background: rgba(12, 14, 28, 0.75);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  background: color-mix(in srgb, var(--black) 75%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
 }
 
 /* When collapsed, slide it into view */
@@ -56,22 +56,15 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: #fff;
+  color: var(--white);
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
-.brandMark {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.10);
-}
-
-.brandText {
-  font-size: 16px;
+.brandLogo {
+  height: 30px;
+  width: auto;
+  display: block;
 }
 
 /* Nav */
@@ -83,7 +76,7 @@
 }
 
 .navLink {
-  color: rgba(255, 255, 255, 0.85);
+  color: color-mix(in srgb, var(--white) 85%, transparent);
   text-decoration: none;
   font-size: 14px;
   padding: 8px 10px;
@@ -91,8 +84,8 @@
 }
 
 .navLink:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  background: color-mix(in srgb, var(--white) 8%, transparent);
 }
 
 /* Actions */
@@ -106,8 +99,8 @@
 .btn {
   appearance: none;
   border: 0;
-  color: #0b0c14;
-  background: rgba(255, 255, 255, 0.92);
+  color: var(--black);
+  background: color-mix(in srgb, var(--white) 92%, transparent);
   padding: 9px 12px;
   border-radius: 12px;
   font-weight: 700;
@@ -115,7 +108,7 @@
 }
 
 .btn:hover {
-  background: #fff;
+  background: var(--white);
 }
 
 /* Hamburger button */
@@ -135,13 +128,13 @@
 }
 
 .hamburgerBtn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--white) 8%, transparent);
 }
 
 .hamburgerBar {
   width: 20px;
   height: 2px;
-  background: #fff;
+  background: var(--white);
   border-radius: 2px;
 }
 
@@ -155,13 +148,13 @@
   flex-direction: column;
   gap: 2px;
   padding: 10px 16px 16px;
-  background: rgba(12, 14, 28, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  background: color-mix(in srgb, var(--black) 95%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--black) 25%, transparent);
 }
 
 .menuGreeting {
-  color: #fff;
+  color: var(--white);
   font-weight: 700;
   font-size: 14px;
   padding: 8px 10px;
@@ -170,12 +163,12 @@
 }
 
 .menuGreeting:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--white) 8%, transparent);
 }
 
 .menuDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.14);
+  background: color-mix(in srgb, var(--white) 14%, transparent);
   margin: 6px 0;
 }
 

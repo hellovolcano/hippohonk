@@ -26,6 +26,7 @@ export default function BandForm({
     name: initialBand?.name ?? "",
     location: initialBand?.location ?? "",
     url: initialBand?.url ?? "",
+    spotify_url: initialBand?.spotify_url ?? "",
     genre_id: initialBand?.genre_id ?? "",
     description: initialBand?.description ?? "",
     average_rating:
@@ -119,6 +120,7 @@ export default function BandForm({
             name: b?.name ?? "",
             location: b?.location ?? "",
             url: b?.url ?? "",
+            spotify_url: b?.spotify_url ?? "",
             genre_id: b?.genre_id ?? "",
             description: b?.description ?? "",
             average_rating:
@@ -164,6 +166,12 @@ export default function BandForm({
       return;
     }
 
+    const spotifyUrlTrimmed = form.spotify_url.trim();
+    if (spotifyUrlTrimmed && !/^https?:\/\//i.test(spotifyUrlTrimmed)) {
+      setError("Spotify link must start with http:// or https://");
+      return;
+    }
+
     // average_rating is optional; if present ensure it's a number
     const ratingTrimmed = String(form.average_rating ?? "").trim();
     const parsedRating =
@@ -182,6 +190,7 @@ export default function BandForm({
         genre_id: Number(form.genre_id),
         location: form.location.trim() || null,
         url: urlTrimmed || null,
+        spotify_url: spotifyUrlTrimmed || null,
         description: form.description.trim() || null,
         average_rating: parsedRating,
       };
@@ -235,6 +244,7 @@ export default function BandForm({
           name: "",
           location: "",
           url: "",
+          spotify_url: "",
           genre_id: "",
           description: "",
           average_rating: "",
@@ -273,10 +283,10 @@ export default function BandForm({
   }));
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 520 }}>
-      <h2 style={{ marginBottom: 12 }}>{isEdit ? "Edit Band" : "Add Band"}</h2>
+    <form onSubmit={handleSubmit} className="page-form">
+      <h2>{isEdit ? "Edit Band" : "Add Band"}</h2>
 
-      {error && <div style={{ marginBottom: 12, color: "crimson" }}>{error}</div>}
+      {error && <div className="error-message">{error}</div>}
 
       <InputField
         label="Name"
@@ -314,6 +324,13 @@ export default function BandForm({
         value={form.url}
         onChange={updateField("url")}
         placeholder="https://…"
+      />
+
+      <InputField
+        label="Spotify Link"
+        value={form.spotify_url}
+        onChange={updateField("spotify_url")}
+        placeholder="https://open.spotify.com/artist/…"
       />
 
       <InputField

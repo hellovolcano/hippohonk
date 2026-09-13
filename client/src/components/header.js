@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../auth";
+import hippoLogo from "../hippohonk.png";
 import "./header.css";
 
 const Header = () => {
@@ -68,8 +69,7 @@ const Header = () => {
       <div className="compactBar" role="navigation" aria-label="Site" ref={menuRef}>
         <div className="compactInner">
           <a className="brand" href="/" aria-label="Home">
-            <span className="brandMark" aria-hidden="true">◎</span>
-            <span className="brandText">Hippohonk</span>
+            <img className="brandLogo" src={hippoLogo} alt="Hippohonk" />
           </a>
 
           <div className="actions">

@@ -28,7 +28,7 @@ const Festivals = () => {
   if (isLoading) return <div>Loading…</div>;
 
   return (
-    <div style={{ maxWidth: 600, margin: "2rem auto", fontFamily: "sans-serif" }}>
+    <div className="page-form">
       <h2>Festivals</h2>
 
       {festivals.length === 0 ? (

@@ -31,7 +31,7 @@ h1 {
 }
 
 .hero-item {
-  flex: 0 0 100%;
+  flex: 0 0 calc(100% / var(--visible-count, 1));
   display: flex;
   justify-content: center;
   padding: 8px;
@@ -50,9 +50,15 @@ h1 {
 
 .hero-card-image {
   width: 100%;
+}
+
+.hero-card-image img {
+  width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
+  border-radius: 0;
+  border: none;
 }
 
 .hero-card-name {

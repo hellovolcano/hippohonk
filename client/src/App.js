@@ -1,21 +1,21 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom'
-import Band from './pages/Band'
+import Band from './pages/Band/Band'
 import Home from './pages/Home/Home'
 import Header from './components/header'
 import Footer from './components/footer'
-import AllBands from './pages/AllBands';
+import AllBands from './pages/AllBands/AllBands';
 import theme from './themes/material-ui-theme'
 import { ThemeProvider } from '@mui/material/styles';
 import SingleLineup from './pages/Lineup/Lineup';
-import Festivals from './pages/Festivals';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import EditProfile from './pages/EditProfile';
-import Profile from './pages/Profile';
-import ManageUsers from './pages/ManageUsers';
-import ManageFestivals from './pages/ManageFestivals';
-import { AddBand } from './pages/AddBand';
+import Festivals from './pages/Festivals/Festivals';
+import Login from './pages/Login/Login';
+import Signup from './pages/Signup/Signup';
+import EditProfile from './pages/EditProfile/EditProfile';
+import Profile from './pages/Profile/Profile';
+import ManageUsers from './pages/ManageUsers/ManageUsers';
+import ManageFestivals from './pages/ManageFestivals/ManageFestivals';
+import AddBand from './pages/AddBand/AddBand';
 
 function App() {
   return (

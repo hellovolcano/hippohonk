@@ -1,15 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../auth";
+import { useAuth } from "../../auth";
 
-import CommonChip from "../components/common/common-chip";
-import SectionWrapper from "../components/common/section-wrapper";
-import Button from "../components/common/forms/button";
-import BandImage from "../components/band-image";
-import { useSpotifyArtistImage } from "../hooks/useSpotifyArtistImage";
-
-// ✅ import your new form
-import BandForm from "../components/band-form"; // <-- adjust path to where you saved BandForm
+import CommonChip from "../../components/common/common-chip";
+import SectionWrapper from "../../components/common/section-wrapper";
+import Button from "../../components/common/forms/button";
+import BandImage from "../../components/band-image";
+import { useSpotifyArtistImage } from "../../hooks/useSpotifyArtistImage";
+import BandForm from "../../components/band-form";
 
 const Band = () => {
   const { isLoggedIn, isReviewer, loading: authLoading } = useAuth();

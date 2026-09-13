@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../auth";
+import { useAuth } from "../../auth";
+import Button from "../../components/common/forms/button";
 
-export default function Profile() {
+const Profile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
@@ -50,35 +51,25 @@ export default function Profile() {
     .slice(0, 10);
 
   return (
-    <div style={{ maxWidth: 400, margin: "2rem auto", fontFamily: "sans-serif" }}>
+    <div className="page-form">
       <h2>
         {profile.first_name} {profile.last_name}
       </h2>
 
       <div>
-        {profile.reviewer && (
-          <span style={{ marginRight: 8, padding: "2px 8px", border: "1px solid #999", borderRadius: 12 }}>
-            reviewer
-          </span>
-        )}
-        {profile.admin && (
-          <span style={{ padding: "2px 8px", border: "1px solid #999", borderRadius: 12 }}>
-            admin
-          </span>
-        )}
+        {profile.reviewer && <span className="badge">reviewer</span>}
+        {profile.admin && <span className="badge">admin</span>}
       </div>
 
-      {profile.description && (
-        <p style={{ marginTop: 12 }}>{profile.description}</p>
-      )}
+      {profile.description && <p className="form-row">{profile.description}</p>}
 
       {isOwnProfile && (
-        <button style={{ marginTop: 12 }} onClick={() => navigate("/profile/edit")}>
-          Edit
-        </button>
+        <div className="form-row">
+          <Button onClick={() => navigate("/profile/edit")}>Edit</Button>
+        </div>
       )}
 
-      <div style={{ marginTop: 24 }}>
+      <div className="form-row">
         <h3>Most Recent Ratings</h3>
         {recentRatings.length === 0 ? (
           <p>No ratings yet</p>
@@ -95,7 +86,7 @@ export default function Profile() {
         )}
       </div>
 
-      <div style={{ marginTop: 24 }}>
+      <div className="form-row">
         <h3>Top Rated Bands</h3>
         {topRatings.length === 0 ? (
           <p>No ratings yet</p>
@@ -113,4 +104,6 @@ export default function Profile() {
       </div>
     </div>
   );
-}
+};
+
+export default Profile;

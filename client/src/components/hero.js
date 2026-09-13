@@ -1,30 +1,46 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './hero.css'
+import BandImage from './band-image'
 
 const MAX_CARDS = 10
-const AUTO_ADVANCE_MS = 4000
+const CARD_WIDTH = 320
+const CARD_GAP = 16
 
 const Hero = ({title, items}) => {
     const cards = useMemo(() => (items || []).slice(0, MAX_CARDS), [items])
     const [activeIndex, setActiveIndex] = useState(0)
+    const [visibleCount, setVisibleCount] = useState(1)
+    const viewportRef = useRef(null)
 
-    // Keep the active slide in range if the card list changes size
+    // Figure out how many cards fit side by side based on the viewport's width
     useEffect(() => {
-        setActiveIndex((i) => (cards.length === 0 ? 0 : i % cards.length))
-    }, [cards.length])
+        const viewport = viewportRef.current
+        if (!viewport) return
 
+        const measure = () => {
+            const width = viewport.clientWidth
+            const count = Math.max(1, Math.floor((width + CARD_GAP) / (CARD_WIDTH + CARD_GAP)))
+            setVisibleCount(count)
+        }
+
+        measure()
+
+        const observer = new ResizeObserver(measure)
+        observer.observe(viewport)
+        return () => observer.disconnect()
+    }, [])
+
+    const perPage = Math.max(1, Math.min(visibleCount, cards.length || 1))
+    const numPages = cards.length === 0 ? 0 : Math.ceil(cards.length / perPage)
+
+    // Keep the active page in range if the card list or layout changes
     useEffect(() => {
-        if (cards.length <= 1) return
-
-        const interval = setInterval(() => {
-            setActiveIndex((i) => (i + 1) % cards.length)
-        }, AUTO_ADVANCE_MS)
-
-        return () => clearInterval(interval)
-    }, [cards.length])
+        setActiveIndex((i) => (numPages === 0 ? 0 : i % numPages))
+    }, [numPages])
 
     const goTo = (index) => {
-        setActiveIndex(((index % cards.length) + cards.length) % cards.length)
+        if (numPages === 0) return
+        setActiveIndex(((index % numPages) + numPages) % numPages)
     }
 
     return(
@@ -35,25 +51,34 @@ const Hero = ({title, items}) => {
                 <div className="hero-empty">Nothing to show yet</div>
             ) : (
                 <div className="hero-carousel">
-                    <button
-                        type="button"
-                        className="hero-carousel-arrow hero-carousel-arrow-prev"
-                        aria-label="Previous"
-                        onClick={() => goTo(activeIndex - 1)}
-                    >
-                        ‹
-                    </button>
+                    {numPages > 1 && (
+                        <button
+                            type="button"
+                            className="hero-carousel-arrow hero-carousel-arrow-prev"
+                            aria-label="Previous"
+                            onClick={() => goTo(activeIndex - 1)}
+                        >
+                            ‹
+                        </button>
+                    )}
 
-                    <div className="hero-carousel-viewport">
+                    <div className="hero-carousel-viewport" ref={viewportRef}>
                         <div
                             className="hero-carousel-track"
-                            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+                            style={{
+                                transform: `translateX(-${activeIndex * 100}%)`,
+                                '--visible-count': perPage,
+                            }}
                         >
                             {cards.map((item, index) => (
                                 <div key={index} className="hero-item">
                                     <div className="hero-card">
-                                        {item.image && (
-                                            <img className="hero-card-image" src={item.image} alt={item.name} />
+                                        {(item.image || item.spotify_url) && (
+                                            <BandImage
+                                                src={item.image}
+                                                spotifyUrl={item.spotify_url}
+                                                className="hero-card-image"
+                                            />
                                         )}
                                         <div className="hero-card-name">{item.name}</div>
                                     </div>
@@ -62,20 +87,22 @@ const Hero = ({title, items}) => {
                         </div>
                     </div>
 
-                    <button
-                        type="button"
-                        className="hero-carousel-arrow hero-carousel-arrow-next"
-                        aria-label="Next"
-                        onClick={() => goTo(activeIndex + 1)}
-                    >
-                        ›
-                    </button>
+                    {numPages > 1 && (
+                        <button
+                            type="button"
+                            className="hero-carousel-arrow hero-carousel-arrow-next"
+                            aria-label="Next"
+                            onClick={() => goTo(activeIndex + 1)}
+                        >
+                            ›
+                        </button>
+                    )}
                 </div>
             )}
 
-            {cards.length > 1 && (
+            {numPages > 1 && (
                 <div className="hero-carousel-dots">
-                    {cards.map((_, index) => (
+                    {Array.from({ length: numPages }).map((_, index) => (
                         <button
                             type="button"
                             key={index}

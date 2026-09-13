@@ -1,5 +1,4 @@
-import hippo from '../hippohonk.png'
-import './pretty-vew.css'
+import './pretty-view.css'
 
 const PrettyView = () => {
     // on load, have hippo slide in from the left

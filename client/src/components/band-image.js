@@ -12,7 +12,7 @@ const BandImage = (props) => {
         : defaultImg
 
     return(
-        <div className="band-image">
+        <div className={`band-image ${props.className || ''}`.trim()}>
             <img src={src} alt="" />
         </div>
     )

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function EditProfile() {
+import InputField from "../../components/common/forms/input-field";
+import Button from "../../components/common/forms/button";
+
+const EditProfile = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -63,47 +66,38 @@ export default function EditProfile() {
   if (loading) return null;
 
   return (
-    <div style={{ maxWidth: 400, margin: "2rem auto", fontFamily: "sans-serif" }}>
+    <div className="page-form">
       <h2>Edit Profile</h2>
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>First name</label>
-          <br />
-          <input
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-        </div>
+        <InputField
+          label="First name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
 
-        <div style={{ marginTop: 8 }}>
-          <label>Last name</label>
-          <br />
-          <input
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-        </div>
+        <InputField
+          label="Last name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
 
-        <div style={{ marginTop: 8 }}>
-          <label>Description</label>
-          <br />
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            style={{ width: "100%", fontFamily: "inherit" }}
-          />
-        </div>
+        <InputField
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          multiline
+          rows={4}
+        />
 
-        <button style={{ marginTop: 12 }} type="submit">
-          Save
-        </button>
+        <Button type="submit">Save</Button>
       </form>
 
-      {status && <p>{status}</p>}
+      {status && <p className="status-message">{status}</p>}
     </div>
   );
-}
+};
+
+export default EditProfile;
