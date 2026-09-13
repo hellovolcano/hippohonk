@@ -24,6 +24,20 @@ User.init(
         isEmail: true
       }
     },
+    first_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        len: [1]
+      }
+    },
+    last_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        len: [1]
+      }
+    },
     password_digest: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -41,6 +55,11 @@ User.init(
         defaultValue: false
     },
     reviewer: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    active: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false

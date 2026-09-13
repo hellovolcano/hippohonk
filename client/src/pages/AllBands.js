@@ -20,10 +20,10 @@ const AllBands = () => {
             })
             .catch((err) => {
                 console.log(err.message);
-            })  
+            })
     }, [])
 
- 
+
 
 
     return(

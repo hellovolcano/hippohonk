@@ -17,9 +17,12 @@ body {
   background-color: var(--darker-color);
   color: white;
   margin: 0;
-  background: url('./assets/bg2.jpg') no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
+  top: 0;
+  min-height: 200vh;
+  }
+
+  html {
+    margin: 0;
   }
 
 .App-logo {
@@ -62,7 +65,7 @@ body {
 .button, .drop-down, .input-field {
   border-radius: 1px;
   border: 2px solid var(--primary-color);
-  color: var(--white);
+  color: var(--darker-color);
   background-color: rgba(0,0,0,0);
   padding: 13px;
   text-transform: uppercase;
@@ -115,6 +118,7 @@ div .band-rank {
   margin-top: 5px;
   margin-bottom: 2px;
   margin-left: 4px;
+  color: var(--primary-color);
 }
 
 
@@ -122,7 +126,7 @@ div .band-rank {
 header {
   display:flex;
   justify-content: space-between;
-  margin: 10px;
+  /* margin: 10px; */
 }
 
 header img {
@@ -233,6 +237,34 @@ header img {
 
 .band-rank:hover {
   color: black;
+}
+
+.band-search-wrapper {
+  padding: 10px 15px;
+}
+
+.band-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--borders);
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.band-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-to-festival-select {
+  padding: 4px 8px;
+  border: 1px solid var(--borders);
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: var(--white);
+  cursor: pointer;
 }
 
 .band-container {

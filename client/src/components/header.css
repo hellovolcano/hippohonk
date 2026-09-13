@@ -1,0 +1,201 @@
+/* header.css */
+
+@media (prefers-reduced-motion: reduce) {
+  .siteHeader *,
+  .siteHeader {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* The header wrapper itself doesn't need to be sticky;
+   the compactBar inside is sticky. */
+.siteHeader {
+  position: relative;
+  z-index: 50;
+  top: 0;
+}
+
+/* Sticky compact bar that slides down */
+.compactBar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  width: 100%;
+
+  /* Hidden by default (above viewport) */
+  /* transform: translateY(-110%); */
+  /* transition: transform 260ms ease; */
+
+  /* Visual styling (tweak freely) */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(12, 14, 28, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* When collapsed, slide it into view */
+.siteHeader.isCollapsed .compactBar {
+  transform: translateY(0);
+}
+
+.compactInner {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 0 16px;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+}
+
+/* Brand */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brandMark {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.brandText {
+  font-size: 16px;
+}
+
+/* Nav */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: 10px;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.navLink:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Actions */
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  color: #0b0c14;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #fff;
+}
+
+/* Hamburger button */
+.hamburgerBtn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.hamburgerBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hamburgerBar {
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+/* Dropdown menu panel */
+.menuPanel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 16px 16px;
+  background: rgba(12, 14, 28, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.menuGreeting {
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 10px;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.menuGreeting:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.menuDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  margin: 6px 0;
+}
+
+.menuActionLink {
+  text-align: left;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Optional spacer:
+   If your compact bar overlays content when it appears and you *don't* want that,
+   you can reserve space only when collapsed. */
+
+.compactSpacer {
+  height: 0;
+  transition: height 260ms ease;
+}
+
+.siteHeader.isCollapsed .compactSpacer {
+  height: 56px; /* must match compactInner height */
+}
