@@ -4,10 +4,19 @@ const { Band, Festival, Lineup, Rating } = require('../../models')
 const Sequelize = require('sequelize')
 const requireReviewer = require('../../middleware/reviewer')
 
-// find all lineups
+// find all lineups (optionally filtered by band_id or festival_id)
 router.get('/', (req,res) => {
+    const { band_id, festival_id } = req.query
+    const where = {}
+    if (band_id !== undefined) where.band_id = band_id
+    if (festival_id !== undefined) where.festival_id = festival_id
+
     Lineup.findAll({
-        attributes: ['id','band_id', 'festival_id'],
+        where,
+        attributes: ['id','band_id', 'festival_id',
+            [Sequelize.col('festival.name'), 'festival_name'],
+            [Sequelize.col('festival.slug'), 'festival_slug']
+        ],
         include: [{
             model: Band,
             attributes: []

@@ -243,11 +243,7 @@ header img {
   line-height: 1;
   color: var(--darker-color);
   opacity: 0.2;
-  /* pointer-events: none; */
-}
-
-.band-rank:hover {
-  color: black;
+  pointer-events: none;
 }
 
 .band-search-wrapper {
@@ -296,6 +292,17 @@ header img {
   border: 1px solid var(--borders);
  }
 
+.band-image-attribution {
+  font-size: 11px;
+  color: var(--grey);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.band-image-attribution a {
+  color: var(--grey);
+}
+
 .bandlist-wrapper {
   width: 80%;
   margin: 0 auto;
@@ -309,7 +316,23 @@ header img {
 
 .single-band-divs {
   display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
 
+.single-band-image .band-image img {
+  width: 300px;
+  height: 300px;
+  border-radius: var(--radius-card);
+  border: none;
+}
+
+.single-band-title-block {
+  text-align: left;
+}
+
+.single-band-title-block h1.section-title {
+  text-align: left;
 }
 
 .single-band-main-wrapper {
@@ -326,7 +349,14 @@ header img {
 }
 
 .single-band-description {
-  padding: 20px;
+  padding: 10px 0 0;
+}
+
+.single-band-festivals {
+  padding: 10px 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .h3-section-wrapper {

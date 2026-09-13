@@ -6,6 +6,7 @@ import CommonChip from "../components/common/common-chip";
 import SectionWrapper from "../components/common/section-wrapper";
 import Button from "../components/common/forms/button";
 import BandImage from "../components/band-image";
+import { useSpotifyArtistImage } from "../hooks/useSpotifyArtistImage";
 
 // ✅ import your new form
 import BandForm from "../components/band-form"; // <-- adjust path to where you saved BandForm
@@ -19,8 +20,11 @@ const Band = () => {
   const [bandInfo, setBandInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [ratings, setRatings] = useState([]);
+  const [festivals, setFestivals] = useState([]);
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const { imageUrl: spotifyImageUrl } = useSpotifyArtistImage(bandInfo?.spotify_url);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,8 +53,19 @@ const Band = () => {
       }
     }
 
+    async function loadFestivals() {
+      try {
+        const res = await fetch(`/api/lineups?band_id=${id}`, { credentials: "include" });
+        const data = await res.json();
+        if (!cancelled) setFestivals(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+
     loadBand();
     loadRatings();
+    loadFestivals();
     return () => {
       cancelled = true;
     };
@@ -99,17 +114,36 @@ const Band = () => {
       <div className="band-wrapper">
         <div className="section-wrapper white-bg">
           <div className="section-title single-band-divs">
-            <BandImage src={bandInfo.image} />
-            <div>
+            <div className="single-band-image">
+              <BandImage src={bandInfo.image} spotifyUrl={bandInfo.spotify_url} />
+              {spotifyImageUrl && (
+                <div className="band-image-attribution">
+                  Photo via{" "}
+                  <a href={bandInfo.spotify_url} target="_blank" rel="noreferrer">
+                    Spotify
+                  </a>
+                </div>
+              )}
+            </div>
+            <div className="single-band-title-block">
               <h1 className="section-title">{bandInfo.name}</h1>
               <span>{bandInfo.location}</span>
+              <div className="single-band-description">{bandInfo.description}</div>
+
+              {festivals.length > 0 && (
+                <div className="single-band-festivals">
+                  {festivals.map((f) => (
+                    <a key={f.id} href={`/festivals/${f.festival_slug}`}>
+                      <CommonChip genre={f.festival_name} />
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
+
           </div>
 
           <div className="single-band-page">
-            <div className="single-band-right-div">
-              <div className="single-band-description">{bandInfo.description}</div>
-            </div>
 
             <div className="right-band-info">
               <SectionWrapper title="Band Links" className="h3-section-wrapper">
