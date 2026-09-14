@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import BandList from '../../components/band-list'
 import BandReviewTable from '../../components/band-review-table'
+import Button from '../../components/common/forms/button'
 import { useAuth } from '../../auth'
 
 import { useParams } from 'react-router-dom'
+import './lineup.css'
 
 
 
@@ -16,6 +18,9 @@ const SingleLineup = props => {
     const [title, setTitle] = useState('')
     const [festivalId, setFestivalId] = useState(null)
     const [reviewMode, setReviewMode] = useState(false)
+    const [reviewState, setReviewState] = useState({ dirtyCount: 0, saving: false })
+    const [hideOtherReviewers, setHideOtherReviewers] = useState(false)
+    const reviewTableRef = useRef(null)
 
 
     useEffect(() => {
@@ -45,15 +50,46 @@ const SingleLineup = props => {
     return(
         <div>
             {canReview && (
-                <div style={{ maxWidth: 600, margin: "1rem auto", textAlign: "right" }}>
-                    <button onClick={() => setReviewMode((mode) => !mode)}>
-                        {reviewMode ? "Exit Review Mode" : "Review Mode"}
-                    </button>
+                <div className="lineup-toolbar">
+                    <div className="lineup-toolbar-left">
+                        {reviewMode && (
+                            <>
+                                <Button onClick={() => reviewTableRef.current?.addRow()}>+ Add Band</Button>
+                                <span className="toolbar-divider" aria-hidden="true" />
+                                <Button onClick={() => setHideOtherReviewers((v) => !v)}>
+                                    {hideOtherReviewers ? "Show All Reviewers" : "Hide Other Reviewers"}
+                                </Button>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="lineup-toolbar-right">
+                        {reviewMode && (
+                            <Button
+                                onClick={() => reviewTableRef.current?.save()}
+                                disabled={reviewState.saving || reviewState.dirtyCount === 0}
+                            >
+                                {reviewState.saving
+                                    ? "Saving…"
+                                    : `Save${reviewState.dirtyCount > 0 ? ` (${reviewState.dirtyCount})` : ""}`}
+                            </Button>
+                        )}
+                        <Button onClick={() => setReviewMode((mode) => !mode)}>
+                            {reviewMode ? "Exit Review Mode" : "Review Mode"}
+                        </Button>
+                    </div>
                 </div>
             )}
 
             {reviewMode && canReview ? (
-                <BandReviewTable bands={bands} isLoading={isLoading} festivalId={festivalId} />
+                <BandReviewTable
+                    ref={reviewTableRef}
+                    bands={bands}
+                    isLoading={isLoading}
+                    festivalId={festivalId}
+                    onStateChange={setReviewState}
+                    hideOtherReviewers={hideOtherReviewers}
+                />
             ) : (
                 <BandList bands={bands} isLoading={isLoading} title={title} />
             )}

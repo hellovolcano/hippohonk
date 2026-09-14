@@ -58,6 +58,10 @@ const Login = () => {
       </form>
 
       {status && <p className="status-message">{status}</p>}
+
+      <p className="form-row">
+        Need an account? <a href="/signup">Sign up</a>
+      </p>
     </div>
   );
 };

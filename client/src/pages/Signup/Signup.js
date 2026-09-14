@@ -6,8 +6,6 @@ import Button from "../../components/common/forms/button";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState(null);
@@ -21,12 +19,7 @@ const Signup = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          email,
-          password,
-          first_name: firstName,
-          last_name: lastName,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
@@ -45,20 +38,6 @@ const Signup = () => {
       <h2>Sign Up</h2>
 
       <form onSubmit={handleSubmit}>
-        <InputField
-          label="First name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          required
-        />
-
-        <InputField
-          label="Last name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          required
-        />
-
         <InputField
           label="Email"
           type="email"
@@ -79,6 +58,10 @@ const Signup = () => {
       </form>
 
       {status && <p className="status-message">{status}</p>}
+
+      <p className="form-row">
+        Already have an account? <a href="/login">Log in</a>
+      </p>
     </div>
   );
 };

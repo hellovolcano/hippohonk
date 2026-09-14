@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { tableFeatures, useTable } from "@tanstack/react-table";
 import { Chip, Stack } from "@mui/material";
 import RecommendRoundedIcon from "@mui/icons-material/RecommendRounded";
 import { useAuth } from "../auth";
-import Button from "./common/forms/button";
 import StyledPagination from "./common/styled-pagination";
 import "./band-review-table.css";
 
@@ -13,7 +12,9 @@ const features = tableFeatures({});
 
 const isNewRowId = (bandId) => typeof bandId === "string" && bandId.startsWith("new-");
 
-const makeEditableTextCell = (field, className) => {
+const makeEditableTextCell = (field, { className, multiline = false } = {}) => {
+  const Tag = multiline ? "textarea" : "input";
+
   const EditableTextCell = ({ getValue, row, table }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(initialValue ?? "");
@@ -27,12 +28,13 @@ const makeEditableTextCell = (field, className) => {
     };
 
     return (
-      <input
+      <Tag
         className={className}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={commit}
         placeholder={row.original.isNew ? field : undefined}
+        {...(multiline ? { rows: 2 } : {})}
       />
     );
   };
@@ -56,7 +58,6 @@ const makeEditableUrlCell = (field) => {
     return (
       <input
         type="url"
-        className="review-input-url"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={commit}
@@ -88,7 +89,6 @@ const EditableNameCell = ({ getValue, row, table }) => {
 
   return (
     <input
-      className="review-input-narrow"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onBlur={commit}
@@ -97,8 +97,8 @@ const EditableNameCell = ({ getValue, row, table }) => {
   );
 };
 
-const EditableLocationCell = makeEditableTextCell("location", "review-input-narrow");
-const EditableDescriptionCell = makeEditableTextCell("description", "review-input-wide");
+const EditableLocationCell = makeEditableTextCell("location");
+const EditableDescriptionCell = makeEditableTextCell("description", { className: "review-textarea", multiline: true });
 const EditableUrlCell = makeEditableUrlCell("url");
 const EditableSpotifyUrlCell = makeEditableUrlCell("spotify_url");
 
@@ -126,7 +126,6 @@ const EditableRatingCell = ({ getValue, row, table }) => {
       type="number"
       min="1"
       max="5"
-      className="review-input-rating"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onBlur={commit}
@@ -134,7 +133,49 @@ const EditableRatingCell = ({ getValue, row, table }) => {
   );
 };
 
-const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festivalId }) => {
+// Its own component (rather than inline in BandReviewTable) so it can be
+// force-remounted via a `key` prop whenever we need a genuinely fresh
+// useTable() instance — see the comment where it's rendered.
+const ReviewTableGrid = ({ columns, data, meta, hideOtherReviewers }) => {
+  const table = useTable({
+    key: "band-review-table",
+    features,
+    columns,
+    data,
+    meta,
+  });
+
+  return (
+    <div className="review-table-scroll">
+      <table className={`review-table${hideOtherReviewers ? " hide-other-reviewers" : ""}`}>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {header.isPlaceholder ? null : <table.FlexRender header={header} />}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className={row.original.isNew ? "review-row-new" : undefined}>
+              {row.getAllCells().map((cell) => (
+                <td key={cell.id}>
+                  <table.FlexRender cell={cell} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoading, festivalId, onStateChange, hideOtherReviewers = false }, ref) => {
   const { user } = useAuth();
   const [bands, setBands] = useState(initialBands || []);
   const [reviewers, setReviewers] = useState([]);
@@ -142,6 +183,7 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [saving, setSaving] = useState(false);
+  const [ratingSort, setRatingSort] = useState(null); // null | "asc" | "desc"
 
   // band_id -> { [user_id]: rating }, filled in a page at a time
   const [ratingsCache, setRatingsCache] = useState({});
@@ -202,11 +244,34 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
     };
   }, []);
 
+  // Sort by average rating, if requested. Bands without a rating yet always
+  // sort to the end, regardless of direction (matches the rest of the app).
+  const sortedBands = useMemo(() => {
+    if (!ratingSort) return bands;
+
+    return bands
+      .map((band, index) => ({ band, index }))
+      .sort((x, y) => {
+        const a = x.band.average_rating;
+        const b = y.band.average_rating;
+        if (a == null && b == null) return x.index - y.index;
+        if (a == null) return 1;
+        if (b == null) return -1;
+        return ratingSort === "asc" ? a - b : b - a;
+      })
+      .map(({ band }) => band);
+  }, [bands, ratingSort]);
+
   const numPages = Math.max(1, Math.ceil(bands.length / BANDS_PER_PAGE));
   const pagedBands = useMemo(() => {
     const start = (currentPage - 1) * BANDS_PER_PAGE;
-    return bands.slice(start, start + BANDS_PER_PAGE);
-  }, [bands, currentPage]);
+    return sortedBands.slice(start, start + BANDS_PER_PAGE);
+  }, [sortedBands, currentPage]);
+
+  const toggleRatingSort = () => {
+    setCurrentPage(1);
+    setRatingSort((prev) => (prev === "asc" ? "desc" : "asc"));
+  };
 
   // Fetch ratings for whichever real (non-new) bands on this page haven't been loaded yet
   useEffect(() => {
@@ -253,6 +318,13 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
     return [...reviewers, { id: user.id, first_name: user.first_name, last_name: user.last_name }];
   }, [reviewers, user]);
 
+  // "Hide other reviewers" keeps only the current user's own rating column,
+  // so the remaining columns can expand into the freed-up space.
+  const displayedReviewers = useMemo(() => {
+    if (!hideOtherReviewers) return visibleReviewers;
+    return visibleReviewers.filter((r) => r.id === user?.id);
+  }, [visibleReviewers, hideOtherReviewers, user?.id]);
+
   const columns = useMemo(() => {
     const cols = [
       {
@@ -288,7 +360,14 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
       {
         id: "average_rating",
         accessorFn: (band) => band.average_rating,
-        header: "Average Rating",
+        header: () => (
+          <button type="button" className="review-sort-button" onClick={toggleRatingSort}>
+            Average Rating
+            <span className="review-sort-arrow">
+              {ratingSort === "asc" ? " ▲" : ratingSort === "desc" ? " ▼" : ""}
+            </span>
+          </button>
+        ),
         cell: (info) => (
           <Chip
             label={info.getValue() ?? "—"}
@@ -301,7 +380,7 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
       },
     ];
 
-    visibleReviewers.forEach((reviewer) => {
+    displayedReviewers.forEach((reviewer) => {
       const isOwnColumn = reviewer.id === user?.id;
       cols.push({
         id: `reviewer_${reviewer.id}`,
@@ -317,7 +396,7 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
     });
 
     return cols;
-  }, [visibleReviewers, user?.id, ratingsCache, ratingEdits, bandFieldEdits]);
+  }, [displayedReviewers, user?.id, ratingsCache, ratingEdits, bandFieldEdits, ratingSort]);
 
   // Guards against a double-fire (e.g. Enter then blur) creating the same row twice
   const creatingRowsRef = useRef(new Set());
@@ -411,47 +490,51 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
     }
   };
 
-  const table = useTable({
-    key: "band-review-table",
-    features,
-    columns,
-    data: pagedBands,
-    meta: {
-      updateReviewerRating: (bandId, newValue) => {
-        setRatingEdits((old) => {
-          const originalValue = ratingsCache[bandId]?.[user.id] ?? null;
-          const next = { ...old };
-          if (!isNewRowId(bandId) && newValue === originalValue) {
-            delete next[bandId];
-          } else {
-            next[bandId] = newValue;
-          }
-          return next;
-        });
-      },
-      updateBandField: (bandId, field, value) => {
-        setBandFieldEdits((old) => {
-          const original = bandOriginalsRef.current.get(bandId);
-          const entry = { ...(old[bandId] || {}) };
-
-          if (!isNewRowId(bandId) && original && (original[field] ?? "") === value) {
-            delete entry[field];
-          } else {
-            entry[field] = value;
-          }
-
-          const next = { ...old };
-          if (Object.keys(entry).length === 0) {
-            delete next[bandId];
-          } else {
-            next[bandId] = entry;
-          }
-          return next;
-        });
-      },
-      commitNewBandName,
+  const tableMeta = {
+    updateReviewerRating: (bandId, newValue) => {
+      setRatingEdits((old) => {
+        const originalValue = ratingsCache[bandId]?.[user.id] ?? null;
+        const next = { ...old };
+        if (!isNewRowId(bandId) && newValue === originalValue) {
+          delete next[bandId];
+        } else {
+          next[bandId] = newValue;
+        }
+        return next;
+      });
     },
-  });
+    updateBandField: (bandId, field, value) => {
+      setBandFieldEdits((old) => {
+        const original = bandOriginalsRef.current.get(bandId);
+        const entry = { ...(old[bandId] || {}) };
+
+        if (!isNewRowId(bandId) && original && (original[field] ?? "") === value) {
+          delete entry[field];
+        } else {
+          entry[field] = value;
+        }
+
+        const next = { ...old };
+        if (Object.keys(entry).length === 0) {
+          delete next[bandId];
+        } else {
+          next[bandId] = entry;
+        }
+        return next;
+      });
+    },
+    commitNewBandName,
+  };
+
+  // TanStack Table v9 is alpha and backed by a store (atoms) that doesn't
+  // always pick up new columns/data cleanly after async data (like ratings)
+  // arrives post-mount. Keying the grid by "is this page's rating data
+  // loaded yet" forces a single fresh useTable() instance exactly when that
+  // data becomes available, instead of showing stale/blank rating cells
+  // until the whole table happens to remount some other way.
+  const pageRatingsReadyKey = pagedBands
+    .map((b) => (b.isNew || ratingsCache[b.band_id] ? "1" : "0"))
+    .join("");
 
   const dirtyCount = Object.keys(ratingEdits).length + Object.keys(bandFieldEdits).length;
 
@@ -643,43 +726,30 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
     }
   };
 
+  // Let the parent (which owns the shared toolbar) render Add Band/Save
+  // buttons that reflect our internal state and can trigger our actions.
+  useEffect(() => {
+    onStateChange?.({ dirtyCount, saving });
+  }, [onStateChange, dirtyCount, saving]);
+
+  useImperativeHandle(ref, () => ({
+    addRow: handleAddRow,
+    save: handleSave,
+  }));
+
   if (isLoading || bandsLoading) return <div>Loading…</div>;
 
   return (
-    <div className="bandlist-wrapper">
+    <div className="review-table-wrapper">
       {error && <div className="error-message">{error}</div>}
 
-      <div className="review-table-toolbar">
-        <Button onClick={handleAddRow}>+ Add Band</Button>
-        <Button onClick={handleSave} disabled={saving || dirtyCount === 0}>
-          {saving ? "Saving…" : `Save${dirtyCount > 0 ? ` (${dirtyCount})` : ""}`}
-        </Button>
-      </div>
-
-      <table className="review-table">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : <table.FlexRender header={header} />}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className={row.original.isNew ? "review-row-new" : undefined}>
-              {row.getAllCells().map((cell) => (
-                <td key={cell.id}>
-                  <table.FlexRender cell={cell} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ReviewTableGrid
+        key={pageRatingsReadyKey}
+        columns={columns}
+        data={pagedBands}
+        meta={tableMeta}
+        hideOtherReviewers={hideOtherReviewers}
+      />
 
       <Stack alignItems="center" margin="20px">
         <StyledPagination
@@ -693,6 +763,6 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
       </Stack>
     </div>
   );
-};
+});
 
 export default BandReviewTable;

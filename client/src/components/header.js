@@ -137,7 +137,7 @@ const Header = () => {
               Logout
             </button>
           ) : (
-            <a className="navLink" href="/signup" onClick={() => setMenuOpen(false)}>Signup or Login</a>
+            <a className="navLink" href="/login" onClick={() => setMenuOpen(false)}>Login</a>
           )}
         </nav>
       </div>

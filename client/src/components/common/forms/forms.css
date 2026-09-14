@@ -4,11 +4,17 @@
   border-radius: 1px;
   border: 2px solid var(--primary-color);
   color: var(--darker-color);
-  background-color: rgba(0, 0, 0, 0);
+  background-color: var(--white);
   padding: 13px;
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
   margin: 3px;
+}
+
+.button {
+  color: var(--white);
+  background-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
 }
 
 .button svg {

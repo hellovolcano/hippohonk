@@ -1,17 +1,22 @@
-h1 {
-  font-family: "Climate Crisis", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "YEAR" 2000;
-  color: var(--darker-color);
+.lineup-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 1rem auto;
 }
 
-h1 {
-    font-size: 5rem;
+.lineup-toolbar-left,
+.lineup-toolbar-right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
-h2 {
-    font-size: 3rem;
+.toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: color-mix(in srgb, var(--white) 25%, transparent);
 }
