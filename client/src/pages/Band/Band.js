@@ -111,7 +111,7 @@ const Band = () => {
         <div className="section-wrapper white-bg">
           <div className="section-title single-band-divs">
             <div className="single-band-image">
-              <BandImage spotifyImage={bandInfo.spotify_image} />
+              <BandImage spotifyImage={bandInfo.spotify_image} loading="eager" />
               {bandInfo.spotify_image && (
                 <div className="band-image-attribution">
                   Photo via{" "}

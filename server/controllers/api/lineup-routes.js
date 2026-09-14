@@ -69,8 +69,13 @@ router.get('/:id', async (req, res) => {
             ]
         })
 
-        const images = await Promise.all(dbUserData.map((row) => getArtistImage(row.spotify_url)))
-        const withImages = dbUserData.map((row, i) => ({ ...row.toJSON(), spotify_image: images[i] }))
+        // spotify_url is pulled onto this model via a raw Sequelize.col() alias
+        // (Lineup has no such attribute of its own), so it's only reliably
+        // available via toJSON()/dataValues — accessing it as a direct
+        // instance property (row.spotify_url) silently returns undefined.
+        const rows = dbUserData.map((row) => row.toJSON())
+        const images = await Promise.all(rows.map((row) => getArtistImage(row.spotify_url)))
+        const withImages = rows.map((row, i) => ({ ...row, spotify_image: images[i] }))
         res.json(withImages)
     } catch (err) {
         console.log(err)

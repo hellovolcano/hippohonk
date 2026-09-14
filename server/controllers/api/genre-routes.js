@@ -4,6 +4,9 @@ const { Genre } = require('../../models')
 
 // find all genres
 router.get('/', (req,res) => {
+    // Genres are effectively static (no delete/edit UI reads this list back
+    // right after a mutation, unlike festivals), so a short cache is safe.
+    res.set('Cache-Control', 'public, max-age=300')
     Genre.findAll()
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
