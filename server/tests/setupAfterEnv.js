@@ -1,17 +1,12 @@
-const sequelize = require("../config/connection");
 const { truncateAll } = require("./helpers/db");
 
 afterEach(async () => {
   await truncateAll();
 });
 
-afterAll(async () => {
-  // Required lazily, here, rather than at module top-level: this file runs
-  // before every test file, so an eager require("../app") would force the
-  // real (unmocked) routes/services to load and cache before a test file's
-  // own jest.mock() of one of their dependencies (see lineups.test.js) ever
-  // got a chance to register.
-  const { sessionStore } = require("../app");
-  sessionStore.stopExpiringSessions();
-  await sequelize.close();
-});
+// Deliberately no afterAll(() => sequelize.close()) here: this file runs
+// once per test file (that's what setupFilesAfterEnv means), and closing
+// the shared connection after every individual file broke later files that
+// still needed it. One-time-at-the-very-end cleanup belongs in
+// globalTeardown.js instead, which — unlike this file — really does only
+// run once for the whole suite.

@@ -30,7 +30,7 @@ The suite uses **Jest** + **Supertest**, running against a real, isolated Postgr
 1. Create a dedicated test database, either:
    - locally: `createdb hippohonk_test`, or
    - via Docker (no local Postgres install needed): `docker-compose up -d` from the repo root.
-2. Copy `server/.env.test.example` to `server/.env.test` and adjust `DATABASE_URL` if needed (it defaults to the local `createdb` option above).
+2. Copy `server/.env.test.example` to `server/.env.test` and adjust `DATABASE_URL` if needed (it defaults to the local `createdb` option above). `SPOTIFY_CLIENT_ID`/`SPOTIFY_CLIENT_SECRET` are optional — not every contributor has their own Spotify dev app credentials, and the suite doesn't require them (see below).
 
 **Running the suite:**
 
@@ -46,6 +46,7 @@ This sets `NODE_ENV=test`, which is what makes the app read `.env.test`'s `DATAB
 - Any new route or non-trivial business logic change should come with coverage in `server/tests/`.
 - Use the real (test) database for anything touching actual query behavior — aggregates, joins, `GROUP BY`, ordering. This app relies on real Postgres semantics in places, and a mocked/in-memory DB has already been shown to hide real bugs that only appear against a real query engine. `server/tests/helpers/` has factories and DB helpers to keep this easy.
 - Do mock external services — tests should never require network access or real third-party credentials. See `server/tests/lineups.test.js` for the pattern used to mock `server/services/spotify.js`.
+- The one exception is `server/tests/spotify.test.js`, which has a small block that exercises the real Spotify API — it's automatically skipped unless `SPOTIFY_CLIENT_ID`/`SPOTIFY_CLIENT_SECRET` are set in `.env.test`. Follow that pattern (`describe.skip` gated on the relevant env vars) for anything else that can only meaningfully be tested against a real external service.
 
 ### Client tests
 
