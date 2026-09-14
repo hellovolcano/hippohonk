@@ -1,8 +1,14 @@
 import { Chip } from "@mui/material";
 
-const CommonChip = ({ genre }) => {
+const CommonChip = ({ genre, href }) => {
+    const linkProps = href ? { component: 'a', href, clickable: true } : {};
+
     return (
-                <Chip label={genre} sx={{bgcolor: 'primary.main', color: 'white', margin: 1, padding: 2}}/>
+                <Chip
+                    label={genre}
+                    {...linkProps}
+                    sx={{bgcolor: 'primary.main', color: 'white', margin: 1, padding: 2}}
+                />
     )
 }
 

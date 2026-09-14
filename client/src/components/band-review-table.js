@@ -7,6 +7,7 @@ import StyledPagination from "./common/styled-pagination";
 import "./band-review-table.css";
 
 const BANDS_PER_PAGE = 10;
+const AUTO_SAVE_DELAY_MS = 1500;
 
 const features = tableFeatures({});
 
@@ -166,6 +167,11 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
   const [currentPage, setCurrentPage] = useState(1);
   const [saving, setSaving] = useState(false);
   const [ratingSort, setRatingSort] = useState(null); // null | "asc" | "desc"
+
+  // Bumped on every field/rating commit, so the auto-save debounce below can
+  // reset its timer even when an edit doesn't change dirtyCount's value
+  // (e.g. re-editing the same field twice before it saves).
+  const [editTick, setEditTick] = useState(0);
 
   // band_id -> { [user_id]: rating }, filled in a page at a time
   const [ratingsCache, setRatingsCache] = useState({});
@@ -484,6 +490,7 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
         }
         return next;
       });
+      setEditTick((t) => t + 1);
     },
     updateBandField: (bandId, field, value) => {
       setBandFieldEdits((old) => {
@@ -504,6 +511,7 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
         }
         return next;
       });
+      setEditTick((t) => t + 1);
     },
     commitNewBandName,
   };
@@ -713,6 +721,25 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
   useEffect(() => {
     onStateChange?.({ dirtyCount, saving });
   }, [onStateChange, dirtyCount, saving]);
+
+  // Auto-save: debounce a save a short pause after the most recent edit,
+  // instead of firing a request per keystroke/commit. handleSave is read via
+  // a ref so the timer isn't reset by unrelated re-renders (only by an
+  // actual new edit, via editTick, or dirtyCount/saving settling).
+  const handleSaveRef = useRef(handleSave);
+  useEffect(() => {
+    handleSaveRef.current = handleSave;
+  });
+
+  useEffect(() => {
+    if (dirtyCount === 0 || saving) return;
+
+    const timer = setTimeout(() => {
+      handleSaveRef.current();
+    }, AUTO_SAVE_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, [editTick, dirtyCount, saving]);
 
   useImperativeHandle(ref, () => ({
     addRow: handleAddRow,

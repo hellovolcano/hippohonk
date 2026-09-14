@@ -12,9 +12,13 @@
 
 .review-table {
   width: 100%;
-  min-width: 1000px;
   table-layout: fixed;
   border-collapse: collapse;
+}
+
+.review-table th,
+.review-table td {
+  box-sizing: border-box;
 }
 
 .review-table th {
@@ -128,6 +132,11 @@
   cursor: text;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  transition: background-color 100ms ease;
+}
+
+.editable-cell:hover:not(:focus) {
+  background: color-mix(in srgb, var(--white) 35%, transparent);
 }
 
 .editable-cell:focus {

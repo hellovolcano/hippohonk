@@ -132,9 +132,7 @@ const Band = () => {
               {festivals.length > 0 && (
                 <div className="single-band-festivals">
                   {festivals.map((f) => (
-                    <a key={f.id} href={`/festivals/${f.festival_slug}`}>
-                      <CommonChip genre={f.festival_name} />
-                    </a>
+                    <CommonChip key={f.id} genre={f.festival_name} href={`/festivals/${f.festival_slug}`} />
                   ))}
                 </div>
               )}
