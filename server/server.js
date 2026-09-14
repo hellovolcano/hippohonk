@@ -8,6 +8,11 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Heroku sits behind a router/proxy; without this, Express can't reliably
+// tell the connection is HTTPS, which breaks the `secure: true` session
+// cookie below in production (login would "succeed" but never persist).
+app.set("trust proxy", 1);
+
 const sess = {
   secret: process.env.SESSION_SECRET,
   cookie: {
