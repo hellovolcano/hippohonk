@@ -23,6 +23,9 @@ h1 {
 .hero-carousel-viewport {
   flex: 1;
   overflow: hidden;
+  /* Handle horizontal drag ourselves (swipe/wheel); let vertical page
+     scroll pass through untouched. */
+  touch-action: pan-y;
 }
 
 .hero-carousel-track {

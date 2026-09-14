@@ -5,11 +5,28 @@ import BandImage from './band-image'
 const MAX_CARDS = 10
 const CARD_WIDTH = 320
 const CARD_GAP = 16
+const SWIPE_THRESHOLD_PX = 50
+const WHEEL_THRESHOLD = 60
+// Mac trackpad two-finger swipes fire a long trailing stream of momentum
+// wheel events after the physical gesture ends — this needs to outlast that
+// tail, or the accumulator crosses the threshold again right as the lock
+// clears, paging a second time from a single swipe.
+const WHEEL_LOCK_MS = 900
 
 const Hero = ({title, items, getHref}) => {
     const cards = useMemo(() => (items || []).slice(0, MAX_CARDS), [items])
     const [visibleCount, setVisibleCount] = useState(1)
     const observerRef = useRef(null)
+    const wheelCleanupRef = useRef(null)
+
+    // Touch swipe (mobile) and horizontal wheel/trackpad scroll (desktop) both
+    // just decide "go forward" or "go back" once per gesture — see
+    // handleTouchEnd/handleWheel below, wired up via refs so the always-latest
+    // goTo/activeIndex is used without having to re-attach listeners.
+    const touchStartXRef = useRef(null)
+    const wheelAccumRef = useRef(0)
+    const wheelLockRef = useRef(false)
+    const gestureHandlerRef = useRef(() => {})
 
     // Figure out how many cards fit side by side based on the viewport's width.
     // A callback ref (rather than useEffect on mount) is required here because
@@ -19,6 +36,10 @@ const Hero = ({title, items, getHref}) => {
         if (observerRef.current) {
             observerRef.current.disconnect()
             observerRef.current = null
+        }
+        if (wheelCleanupRef.current) {
+            wheelCleanupRef.current()
+            wheelCleanupRef.current = null
         }
 
         if (!node) return
@@ -34,6 +55,18 @@ const Hero = ({title, items, getHref}) => {
         const observer = new ResizeObserver(measure)
         observer.observe(node)
         observerRef.current = observer
+
+        // React's synthetic onWheel is passive by default, so preventDefault()
+        // silently no-ops there — attach natively instead. Without it, a
+        // horizontal trackpad swipe over the carousel can also trigger the
+        // browser's own swipe-to-go-back/forward navigation.
+        const onWheel = (e) => {
+            if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return // let vertical page scroll through
+            e.preventDefault()
+            gestureHandlerRef.current('wheel', e.deltaX)
+        }
+        node.addEventListener('wheel', onWheel, { passive: false })
+        wheelCleanupRef.current = () => node.removeEventListener('wheel', onWheel)
     }, [])
 
     const perPage = Math.max(1, Math.min(visibleCount, cards.length || 1))
@@ -68,6 +101,51 @@ const Hero = ({title, items, getHref}) => {
         if (numPages === 0) return
         setTransitionEnabled(true)
         setActiveIndex(nextIndex)
+    }
+
+    // Always-current gesture handler (touch + wheel funnel through here), kept
+    // in a ref so the native wheel listener attached once in setViewportRef
+    // never sees a stale activeIndex/numPages.
+    gestureHandlerRef.current = (source, delta) => {
+        if (!looping) return
+
+        if (source === 'wheel') {
+            // Ignore every delta while locked (including momentum trailing
+            // off from the swipe that just triggered a page change) — not
+            // just the trigger — so the accumulator can't silently cross the
+            // threshold again before the lock even clears.
+            if (wheelLockRef.current) return
+            wheelAccumRef.current += delta
+
+            if (wheelAccumRef.current > WHEEL_THRESHOLD) {
+                wheelLockRef.current = true
+                wheelAccumRef.current = 0
+                goTo(activeIndex + 1)
+                setTimeout(() => { wheelLockRef.current = false }, WHEEL_LOCK_MS)
+            } else if (wheelAccumRef.current < -WHEEL_THRESHOLD) {
+                wheelLockRef.current = true
+                wheelAccumRef.current = 0
+                goTo(activeIndex - 1)
+                setTimeout(() => { wheelLockRef.current = false }, WHEEL_LOCK_MS)
+            }
+        } else if (source === 'swipe') {
+            if (delta <= -SWIPE_THRESHOLD_PX) {
+                goTo(activeIndex + 1)
+            } else if (delta >= SWIPE_THRESHOLD_PX) {
+                goTo(activeIndex - 1)
+            }
+        }
+    }
+
+    const handleTouchStart = (e) => {
+        touchStartXRef.current = e.touches[0].clientX
+    }
+
+    const handleTouchEnd = (e) => {
+        if (touchStartXRef.current === null) return
+        const delta = e.changedTouches[0].clientX - touchStartXRef.current
+        touchStartXRef.current = null
+        gestureHandlerRef.current('swipe', delta)
     }
 
     // When a slide lands on a cloned buffer page, silently snap (no transition)
@@ -105,7 +183,12 @@ const Hero = ({title, items, getHref}) => {
                         </button>
                     )}
 
-                    <div className="hero-carousel-viewport" ref={setViewportRef}>
+                    <div
+                        className="hero-carousel-viewport"
+                        ref={setViewportRef}
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                    >
                         <div
                             className="hero-carousel-track"
                             onTransitionEnd={handleTransitionEnd}
