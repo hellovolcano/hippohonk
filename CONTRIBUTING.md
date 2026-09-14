@@ -5,7 +5,7 @@
 This is a monorepo with two apps:
 
 - `server/` — Express + Sequelize (Postgres) API
-- `client/` — Create React App frontend
+- `client/` — React frontend, built with Vite
 
 ## Local setup
 
@@ -50,7 +50,7 @@ This sets `NODE_ENV=test`, which is what makes the app read `.env.test`'s `DATAB
 
 ### Client tests
 
-Create React App ships Jest + React Testing Library out of the box, but no real test suite exists yet in `client/` — `npm test` there currently only runs the stock CRA boilerplate test. This is a gap, not a deliberate choice; contributions here are welcome.
+The client uses **Vitest** + **React Testing Library** (run via `cd client && npm test`). The suite is minimal today — `src/App.test.jsx` is a basic smoke test that the app renders without crashing — and building it out further is a gap, not a deliberate choice; contributions here are welcome.
 
 ## Before opening a PR
 

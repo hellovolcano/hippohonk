@@ -1,6 +1,5 @@
 import './band-image.css'
-
-const defaultImg = require('../assets/default.jpg')
+import defaultImg from '../assets/default.jpg'
 
 const BandImage = ({ spotifyImage, className, loading = 'lazy' }) => {
     const src = spotifyImage || defaultImg
