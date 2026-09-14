@@ -12,125 +12,107 @@ const features = tableFeatures({});
 
 const isNewRowId = (bandId) => typeof bandId === "string" && bandId.startsWith("new-");
 
-const makeEditableTextCell = (field, { className, multiline = false } = {}) => {
-  const Tag = multiline ? "textarea" : "input";
-
-  const EditableTextCell = ({ getValue, row, table }) => {
-    const initialValue = getValue();
-    const [value, setValue] = useState(initialValue ?? "");
-
-    useEffect(() => {
-      setValue(initialValue ?? "");
-    }, [initialValue]);
-
-    const commit = () => {
-      table.options.meta?.updateBandField(row.original.band_id, field, value);
-    };
-
-    return (
-      <Tag
-        className={className}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={commit}
-        placeholder={row.original.isNew ? field : undefined}
-        {...(multiline ? { rows: 2 } : {})}
-      />
-    );
-  };
-
-  return EditableTextCell;
-};
-
-const makeEditableUrlCell = (field) => {
-  const EditableUrlCell = ({ getValue, row, table }) => {
-    const initialValue = getValue();
-    const [value, setValue] = useState(initialValue ?? "");
-
-    useEffect(() => {
-      setValue(initialValue ?? "");
-    }, [initialValue]);
-
-    const commit = () => {
-      table.options.meta?.updateBandField(row.original.band_id, field, value);
-    };
-
-    return (
-      <input
-        type="url"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={commit}
-        placeholder="https://…"
-      />
-    );
-  };
-
-  return EditableUrlCell;
-};
-
-// The Name cell is special for a new row: the underlying band isn't created
-// until this field is filled in and loses focus.
-const EditableNameCell = ({ getValue, row, table }) => {
-  const initialValue = getValue();
-  const [value, setValue] = useState(initialValue ?? "");
+// A contentEditable div that fills its cell exactly (no intrinsic sizing
+// quirks like a native <input>/<textarea> has). Deliberately uncontrolled:
+// React only ever writes into the DOM when the value changes from outside
+// and the element isn't focused, so an in-progress edit is never clobbered.
+// Enter commits (blurs) single-line fields instead of inserting a newline.
+const EditableCell = ({ value, placeholder, multiline = false, onCommit }) => {
+  const ref = useRef(null);
 
   useEffect(() => {
-    setValue(initialValue ?? "");
-  }, [initialValue]);
+    const el = ref.current;
+    if (el && document.activeElement !== el) {
+      el.textContent = value ?? "";
+    }
+  }, [value]);
 
-  const commit = () => {
-    if (row.original.isNew) {
-      table.options.meta?.commitNewBandName(row.original.band_id, value);
-    } else {
-      table.options.meta?.updateBandField(row.original.band_id, "name", value);
+  const handleBlur = (e) => {
+    onCommit(e.currentTarget.innerText.trim());
+  };
+
+  const handleKeyDown = (e) => {
+    if (!multiline && e.key === "Enter") {
+      e.preventDefault();
+      e.currentTarget.blur();
     }
   };
 
   return (
-    <input
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={commit}
-      placeholder={row.original.isNew ? "name" : undefined}
+    <div
+      ref={ref}
+      className="editable-cell"
+      contentEditable
+      suppressContentEditableWarning
+      data-placeholder={placeholder}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
     />
   );
 };
 
-const EditableLocationCell = makeEditableTextCell("location");
-const EditableDescriptionCell = makeEditableTextCell("description", { className: "review-textarea", multiline: true });
+// The Name cell is special for a new row: the underlying band isn't created
+// until this field is filled in and loses focus.
+const EditableNameCell = ({ getValue, row, table }) => (
+  <EditableCell
+    value={getValue()}
+    placeholder={row.original.isNew ? "name" : undefined}
+    onCommit={(value) => {
+      if (row.original.isNew) {
+        table.options.meta?.commitNewBandName(row.original.band_id, value);
+      } else {
+        table.options.meta?.updateBandField(row.original.band_id, "name", value);
+      }
+    }}
+  />
+);
+
+const EditableLocationCell = ({ getValue, row, table }) => (
+  <EditableCell
+    value={getValue()}
+    placeholder={row.original.isNew ? "location" : undefined}
+    onCommit={(value) => table.options.meta?.updateBandField(row.original.band_id, "location", value)}
+  />
+);
+
+const EditableDescriptionCell = ({ getValue, row, table }) => (
+  <EditableCell
+    value={getValue()}
+    placeholder={row.original.isNew ? "description" : undefined}
+    multiline
+    onCommit={(value) => table.options.meta?.updateBandField(row.original.band_id, "description", value)}
+  />
+);
+
+const makeEditableUrlCell = (field) => {
+  const Cell = ({ getValue, row, table }) => (
+    <EditableCell
+      value={getValue()}
+      placeholder="https://…"
+      onCommit={(value) => table.options.meta?.updateBandField(row.original.band_id, field, value)}
+    />
+  );
+  return Cell;
+};
+
 const EditableUrlCell = makeEditableUrlCell("url");
 const EditableSpotifyUrlCell = makeEditableUrlCell("spotify_url");
 
 const ReadOnlyRatingCell = ({ getValue }) => {
   const value = getValue();
-  return <span>{value ?? "—"}</span>;
+  return <span className="review-static-value">{value ?? "—"}</span>;
 };
 
 const EditableRatingCell = ({ getValue, row, table }) => {
   const initialValue = getValue();
-  const [value, setValue] = useState(initialValue ?? "");
 
-  useEffect(() => {
-    setValue(initialValue ?? "");
-  }, [initialValue]);
-
-  const commit = () => {
-    const trimmed = String(value).trim();
+  const commit = (raw) => {
+    const trimmed = raw.trim();
     const parsed = trimmed === "" ? null : Number(trimmed);
-    table.options.meta?.updateReviewerRating(row.original.band_id, parsed);
+    table.options.meta?.updateReviewerRating(row.original.band_id, Number.isFinite(parsed) ? parsed : null);
   };
 
-  return (
-    <input
-      type="number"
-      min="1"
-      max="5"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={commit}
-    />
-  );
+  return <EditableCell value={initialValue == null ? "" : String(initialValue)} onCommit={commit} />;
 };
 
 // Its own component (rather than inline in BandReviewTable) so it can be

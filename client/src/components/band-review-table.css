@@ -23,8 +23,10 @@
   border-bottom: 2px solid var(--borders);
 }
 
+/* No padding here — .editable-cell/.review-static-value provide their own,
+   so the editable area itself is the exact full size of the cell. */
 .review-table td {
-  padding: 4px;
+  padding: 0;
 }
 
 .review-sort-button {
@@ -110,21 +112,36 @@
   background-color: #fffbe6;
 }
 
-/* Editable cell controls fill the available width and height of their cell,
-   with no background/border of their own — they take on the row's own
+/* Editable cells fill the entire width/height of their table cell exactly —
+   no background/border of their own, so they take on the row's own
    background and text color instead of looking like separate boxes. */
-.review-table input,
-.review-table textarea {
+.editable-cell {
+  display: block;
   width: 100%;
   height: 100%;
+  min-height: 2.4em;
   box-sizing: border-box;
+  padding: 6px 8px;
   font: inherit;
   color: inherit;
-  background: transparent;
-  border: none;
+  outline: none;
+  cursor: text;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
-.review-textarea {
-  resize: vertical;
-  min-height: 48px;
+.editable-cell:focus {
+  background: var(--table-headings);
+}
+
+.editable-cell:empty::before {
+  content: attr(data-placeholder);
+  color: color-mix(in srgb, var(--black) 45%, transparent);
+}
+
+/* Read-only values (e.g. other reviewers' ratings) get the same padding as
+   editable cells so everything in a row lines up. */
+.review-static-value {
+  display: block;
+  padding: 6px 8px;
 }
