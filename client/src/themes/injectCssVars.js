@@ -1,8 +1,8 @@
 import { tokens } from './tokens'
 
 // Maps design tokens onto the existing CSS custom property names used
-// throughout the plain-CSS files (App.css, components.css, etc.) so both
-// MUI components and hand-written CSS read from the same source of truth.
+// throughout the plain CSS files so both MUI components and hand-written
+// CSS read from the same source of truth.
 const cssVarMap = {
     '--black': tokens.color.black,
     '--white': tokens.color.white,

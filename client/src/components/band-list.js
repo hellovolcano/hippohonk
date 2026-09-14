@@ -1,17 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
-import { CircularProgress } from '@mui/material'
-import { Chip, Stack } from '@mui/material'
+import { CircularProgress, Chip, Stack } from '@mui/material'
 import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
-import { Pagination } from '@mui/material'
-import styled from '@emotion/styled'
 
 import SectionWrapper from './common/section-wrapper'
+import StyledPagination from './common/styled-pagination'
 import BandImage from './band-image'
 import { useAuth } from '../auth'
-import './components.css'
+import './band-list.css'
 
 
-function AddToFestivalControl({ band }) {
+const AddToFestivalControl = ({ band }) => {
     const [festivals, setFestivals] = useState([])
     const [status, setStatus] = useState('idle') // idle | adding | added | error
 
@@ -86,19 +84,6 @@ function AddToFestivalControl({ band }) {
 const BandList = ({bands, isLoading, title}) => {
     const { isLoggedIn, isReviewer } = useAuth()
 
-    const MyPagination = styled(Pagination)(({ theme }) => ({
-        "& .MuiPaginationItem-root": {
-            backgroundColor: theme.palette.info.main,
-            border: `1px solid ${theme.palette.primary.main}`,
-            color: "#000"
-           },
-        '& .Mui-selected': {
-          backgroundColor: theme.palette.primary.main,
-          color:'#fff',
-         }
-
-    }))
-
     const [currentPage, setCurrentPage] = useState(1)
     const [bandsPerPage] = useState(10)
     const [search, setSearch] = useState('')
@@ -122,7 +107,6 @@ const BandList = ({bands, isLoading, title}) => {
     const rankMultiplier = (currentPage - 1) * bandsPerPage
 
     const handlePageChange = (event, value) => {
-        // console.log(event.target.value)
         setCurrentPage(value)
     }
 
@@ -147,7 +131,7 @@ const BandList = ({bands, isLoading, title}) => {
                     <div key={i} className={i % 2 ? "band-row" : "band-row-alt"}>
                         <a className="band-list-link" href={'/band/' + band.band_id}>
                         <div className="band-container">
-                            <BandImage src={band.image} spotifyUrl={band.spotify_url} />
+                            <BandImage spotifyUrl={band.spotify_url} />
                             <div className="band-info">
                                 <div>
                                     <span className="band-name">{band.name}</span>
@@ -155,7 +139,6 @@ const BandList = ({bands, isLoading, title}) => {
                                 </div>
                                 <div className="band-details">
                                     <Chip label={band.average_rating} color="success" variant="outlined" icon={<RecommendRoundedIcon fontSize='small'/>} />
-                                    {/* <Chip label={band.popularity} color="warning" variant="outlined" /> */}
                                     <span className="band-description">{band.description}</span>
                                 </div>
                             </div>
@@ -170,12 +153,12 @@ const BandList = ({bands, isLoading, title}) => {
                     </div>
                 ))}
                 {!isLoading && filteredBands.length === 0 && (
-                    <div style={{ padding: 16 }}>No bands match "{search}"</div>
+                    <div className="empty-state">No bands match "{search}"</div>
                 )}
             </div>
         </SectionWrapper>
         <Stack alignItems="center" margin="20px">
-            <MyPagination  count={numPages}  variant="outlined" size="large" siblingCount={2} page={currentPage} onChange={handlePageChange} sx={{textAlign: "center"}} />
+            <StyledPagination count={numPages} variant="outlined" size="large" siblingCount={2} page={currentPage} onChange={handlePageChange} sx={{textAlign: "center"}} />
         </Stack>
         </div>
     )

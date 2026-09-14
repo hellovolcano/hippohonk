@@ -1,20 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { tableFeatures, useTable } from "@tanstack/react-table";
-import { Chip, Pagination, Stack } from "@mui/material";
+import { Chip, Stack } from "@mui/material";
 import RecommendRoundedIcon from "@mui/icons-material/RecommendRounded";
 import { useAuth } from "../auth";
-import "./components.css";
+import Button from "./common/forms/button";
+import StyledPagination from "./common/styled-pagination";
+import "./band-review-table.css";
 
 const BANDS_PER_PAGE = 10;
 
 const features = tableFeatures({});
 
-function isNewRowId(bandId) {
-  return typeof bandId === "string" && bandId.startsWith("new-");
-}
+const isNewRowId = (bandId) => typeof bandId === "string" && bandId.startsWith("new-");
 
-function makeEditableTextCell(field) {
-  return function EditableTextCell({ getValue, row, table }) {
+const makeEditableTextCell = (field, className) => {
+  const EditableTextCell = ({ getValue, row, table }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(initialValue ?? "");
 
@@ -28,18 +28,20 @@ function makeEditableTextCell(field) {
 
     return (
       <input
+        className={className}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={commit}
         placeholder={row.original.isNew ? field : undefined}
-        style={{ width: field === "description" ? 220 : 130 }}
       />
     );
   };
-}
 
-function makeEditableUrlCell(field) {
-  return function EditableUrlCell({ getValue, row, table }) {
+  return EditableTextCell;
+};
+
+const makeEditableUrlCell = (field) => {
+  const EditableUrlCell = ({ getValue, row, table }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(initialValue ?? "");
 
@@ -54,19 +56,21 @@ function makeEditableUrlCell(field) {
     return (
       <input
         type="url"
+        className="review-input-url"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={commit}
         placeholder="https://…"
-        style={{ width: 150 }}
       />
     );
   };
-}
+
+  return EditableUrlCell;
+};
 
 // The Name cell is special for a new row: the underlying band isn't created
 // until this field is filled in and loses focus.
-function EditableNameCell({ getValue, row, table }) {
+const EditableNameCell = ({ getValue, row, table }) => {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue ?? "");
 
@@ -84,26 +88,26 @@ function EditableNameCell({ getValue, row, table }) {
 
   return (
     <input
+      className="review-input-narrow"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onBlur={commit}
       placeholder={row.original.isNew ? "name" : undefined}
-      style={{ width: 130 }}
     />
   );
-}
+};
 
-const EditableLocationCell = makeEditableTextCell("location");
-const EditableDescriptionCell = makeEditableTextCell("description");
+const EditableLocationCell = makeEditableTextCell("location", "review-input-narrow");
+const EditableDescriptionCell = makeEditableTextCell("description", "review-input-wide");
 const EditableUrlCell = makeEditableUrlCell("url");
 const EditableSpotifyUrlCell = makeEditableUrlCell("spotify_url");
 
-function ReadOnlyRatingCell({ getValue }) {
+const ReadOnlyRatingCell = ({ getValue }) => {
   const value = getValue();
   return <span>{value ?? "—"}</span>;
-}
+};
 
-function EditableRatingCell({ getValue, row, table }) {
+const EditableRatingCell = ({ getValue, row, table }) => {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue ?? "");
 
@@ -122,13 +126,13 @@ function EditableRatingCell({ getValue, row, table }) {
       type="number"
       min="1"
       max="5"
-      style={{ width: 48 }}
+      className="review-input-rating"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onBlur={commit}
     />
   );
-}
+};
 
 const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festivalId }) => {
   const { user } = useAuth();
@@ -643,28 +647,21 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
 
   return (
     <div className="bandlist-wrapper">
-      {error && <div style={{ color: "crimson", marginBottom: 12 }}>{error}</div>}
+      {error && <div className="error-message">{error}</div>}
 
-      <div style={{ marginBottom: 12, display: "flex", gap: 8 }}>
-        <button onClick={handleAddRow}>+ Add Band</button>
-        <button onClick={handleSave} disabled={saving || dirtyCount === 0}>
+      <div className="review-table-toolbar">
+        <Button onClick={handleAddRow}>+ Add Band</Button>
+        <Button onClick={handleSave} disabled={saving || dirtyCount === 0}>
           {saving ? "Saving…" : `Save${dirtyCount > 0 ? ` (${dirtyCount})` : ""}`}
-        </button>
+        </Button>
       </div>
 
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table className="review-table">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  style={{
-                    textAlign: "left",
-                    padding: "8px 12px",
-                    borderBottom: "2px solid var(--borders)",
-                  }}
-                >
+                <th key={header.id}>
                   {header.isPlaceholder ? null : <table.FlexRender header={header} />}
                 </th>
               ))}
@@ -672,20 +669,10 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row, i) => (
-            <tr
-              key={row.id}
-              style={{
-                backgroundColor: row.original.isNew
-                  ? "#fffbe6"
-                  : i % 2
-                  ? "var(--white)"
-                  : "var(--borders)",
-                borderBottom: "1px solid var(--grey)",
-              }}
-            >
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className={row.original.isNew ? "review-row-new" : undefined}>
               {row.getAllCells().map((cell) => (
-                <td key={cell.id} style={{ padding: "8px 12px" }}>
+                <td key={cell.id}>
                   <table.FlexRender cell={cell} />
                 </td>
               ))}
@@ -695,7 +682,7 @@ const BandReviewTable = ({ bands: initialBands, isLoading: bandsLoading, festiva
       </table>
 
       <Stack alignItems="center" margin="20px">
-        <Pagination
+        <StyledPagination
           count={numPages}
           variant="outlined"
           size="large"

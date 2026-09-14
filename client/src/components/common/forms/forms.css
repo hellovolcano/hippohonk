@@ -1,0 +1,45 @@
+/* Shared visual language for Button, DropDown, and InputField */
+
+.button, .drop-down, .input-field {
+  border-radius: 1px;
+  border: 2px solid var(--primary-color);
+  color: var(--darker-color);
+  background-color: rgba(0, 0, 0, 0);
+  padding: 13px;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  margin: 3px;
+}
+
+.button svg {
+  vertical-align: middle;
+  padding: 0;
+}
+
+.button:hover {
+  color: var(--white);
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-name: fadein;
+}
+
+.button:active {
+  color: var(--darker-color);
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  margin-left: 3px;
+}
+
+.input-label {
+  text-transform: uppercase;
+  margin-top: 5px;
+  margin-bottom: 2px;
+  margin-left: 4px;
+  color: var(--primary-color);
+}

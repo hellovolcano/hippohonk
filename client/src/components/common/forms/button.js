@@ -1,4 +1,5 @@
 import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
+import './forms.css';
 
 const Button = ({children, onClick, type = "button", disabled = false, className = ""}) => {
 

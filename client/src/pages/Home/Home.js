@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     let cancelled = false;
 
-    fetch("/api/bands?limit=5", { credentials: "include" })
+    fetch("/api/bands?limit=10", { credentials: "include" })
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
         if (!cancelled) setTopBands(Array.isArray(data) ? data : []);
@@ -64,10 +64,18 @@ const Home = () => {
         <PrettyView />
       </section>
       <section className="festival-hero">
-        <Hero title="Upcoming Festivals" items={displayFestivals} />
+        <Hero
+          title="Upcoming Festivals"
+          items={displayFestivals}
+          getHref={(festival) => `/festivals/${festival.slug}`}
+        />
       </section>
       <section className="top-bands-hero">
-        <Hero title="Top-Rated Bands" items={topBands} />
+        <Hero
+          title="Top-Rated Bands"
+          items={topBands}
+          getHref={(band) => `/band/${band.band_id}`}
+        />
       </section>
     </main>
   );

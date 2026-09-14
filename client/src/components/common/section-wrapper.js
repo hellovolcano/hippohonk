@@ -1,3 +1,5 @@
+import './section-wrapper.css'
+
 const SectionWrapper = ({title, children, className}) => {
     return (
         <div className="section-wrapper">

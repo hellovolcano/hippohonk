@@ -1,0 +1,26 @@
+.section-wrapper {
+  border: 2px solid var(--borders);
+  padding-top: 0px;
+  border-radius: 2px;
+  margin: 10px;
+}
+
+.section-wrapper p {
+  padding: 10px;
+}
+
+.section-title {
+  background-color: var(--table-headings);
+  padding: 10px;
+  margin-bottom: 0;
+  border-top-color: var(--borders);
+  border-left-color: var(--borders);
+  border-right-color: var(--borders);
+  border-left: 1px;
+  border-right: 1px;
+  border-top: 1px;
+  margin-top: 0;
+  color: var(--darker-color);
+  font-weight: 100;
+  text-align: center;
+}

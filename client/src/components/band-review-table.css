@@ -1,0 +1,52 @@
+.review-table-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.review-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.review-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--borders);
+}
+
+.review-table td {
+  padding: 8px 12px;
+}
+
+.review-table tbody tr {
+  border-bottom: 1px solid var(--grey);
+}
+
+.review-table tbody tr:nth-child(odd) {
+  background-color: var(--borders);
+}
+
+.review-table tbody tr:nth-child(even) {
+  background-color: var(--white);
+}
+
+.review-table tbody tr.review-row-new {
+  background-color: #fffbe6;
+}
+
+.review-input-narrow {
+  width: 130px;
+}
+
+.review-input-wide {
+  width: 220px;
+}
+
+.review-input-url {
+  width: 150px;
+}
+
+.review-input-rating {
+  width: 48px;
+}

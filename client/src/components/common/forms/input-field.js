@@ -1,6 +1,6 @@
-import React from "react";
+import './forms.css'
 
-export default function InputField(props) {
+const InputField = (props) => {
   const {
     label,
     name,
@@ -53,4 +53,6 @@ export default function InputField(props) {
       )}
     </div>
   );
-}
+};
+
+export default InputField;

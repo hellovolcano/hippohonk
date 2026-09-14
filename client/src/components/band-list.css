@@ -1,0 +1,116 @@
+.bandlist-wrapper {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.band-list-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.band-row, .band-row-alt {
+  position: relative;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-bottom: 1px solid var(--grey);
+  color: black;
+}
+
+.band-row:hover, .band-row-alt:hover {
+  color: var(--white);
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-name: fadein;
+}
+
+.band-name {
+  font-weight: 400;
+}
+
+.band-location {
+  font-weight: 100;
+  margin-left: 8px;
+  font-size: 14px;
+  color: var(--grey);
+}
+
+.band-details {
+  margin-top: 5px;
+}
+
+.band-description {
+  margin-left: 8px;
+  font-weight: 100;
+}
+
+.band-rank {
+  font-family: 'Climate Crisis', sans-serif;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  font-size: clamp(56px, 14vw, 120px);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--darker-color);
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.band-search-wrapper {
+  padding: 10px 15px;
+}
+
+.band-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--borders);
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.band-row-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.add-to-festival-select {
+  padding: 4px 8px;
+  border: 1px solid var(--borders);
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: var(--white);
+  cursor: pointer;
+}
+
+.band-container {
+  display: flex;
+  margin-right: 5px;
+}
+
+.band-info {
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 700px) {
+  .bandlist-wrapper {
+    width: 95%;
+  }
+  .band-row, .band-row-alt {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}

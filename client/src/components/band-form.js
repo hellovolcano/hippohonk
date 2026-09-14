@@ -4,12 +4,12 @@ import InputField from "../components/common/forms/input-field";
 import Button from "../components/common/forms/button";
 import DropDown from "../components/common/forms/drop-down";
 
-export default function BandForm({
+const BandForm = ({
   mode = "create",
   initialBand = null,
   bandId = null,
   onSuccess,
-}) {
+}) => {
   const isEdit = mode === "edit";
 
   const [genres, setGenres] = useState([]);
@@ -353,4 +353,6 @@ export default function BandForm({
       </Button>
     </form>
   );
-}
+};
+
+export default BandForm;

@@ -39,11 +39,13 @@ h1 {
 }
 
 .hero-card {
+  display: block;
   width: 100%;
   max-width: 320px;
   border-radius: var(--radius-card);
   background-color: var(--white);
   color: var(--black);
+  text-decoration: none;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
@@ -52,9 +54,10 @@ h1 {
   width: 100%;
 }
 
-.hero-card-image img {
+.hero-card .hero-card-image img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: auto;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
   display: block;
   border-radius: 0;

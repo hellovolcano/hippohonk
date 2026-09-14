@@ -8,6 +8,7 @@ import Button from "../../components/common/forms/button";
 import BandImage from "../../components/band-image";
 import { useSpotifyArtistImage } from "../../hooks/useSpotifyArtistImage";
 import BandForm from "../../components/band-form";
+import "./Band.css";
 
 const Band = () => {
   const { isLoggedIn, isReviewer, loading: authLoading } = useAuth();
@@ -113,7 +114,7 @@ const Band = () => {
         <div className="section-wrapper white-bg">
           <div className="section-title single-band-divs">
             <div className="single-band-image">
-              <BandImage src={bandInfo.image} spotifyUrl={bandInfo.spotify_url} />
+              <BandImage spotifyUrl={bandInfo.spotify_url} />
               {spotifyImageUrl && (
                 <div className="band-image-attribution">
                   Photo via{" "}
