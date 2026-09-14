@@ -131,7 +131,7 @@ const BandList = ({bands, isLoading, title}) => {
                     <div key={i} className={i % 2 ? "band-row" : "band-row-alt"}>
                         <a className="band-list-link" href={'/band/' + band.band_id}>
                         <div className="band-container">
-                            <BandImage spotifyUrl={band.spotify_url} />
+                            <BandImage spotifyImage={band.spotify_image} />
                             <div className="band-info">
                                 <div>
                                     <span className="band-name">{band.name}</span>

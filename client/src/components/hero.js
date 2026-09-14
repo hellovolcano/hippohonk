@@ -122,9 +122,9 @@ const Hero = ({title, items, getHref}) => {
                                 return (
                                     <div key={index} className="hero-item">
                                         <CardTag className="hero-card" href={href}>
-                                            {item.spotify_url && (
+                                            {item.spotify_image && (
                                                 <BandImage
-                                                    spotifyUrl={item.spotify_url}
+                                                    spotifyImage={item.spotify_image}
                                                     className="hero-card-image"
                                                 />
                                             )}

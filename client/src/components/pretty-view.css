@@ -13,7 +13,7 @@
   min-height: 320px;
 
   /* background lives here since PrettyView is the hero */
-  background-image: url('../assets/hands.png');
+  background-image: url('../assets/hands.jpg');
   background-attachment: fixed;
   background-size: cover;
   background-position: 50% 150%;

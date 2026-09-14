@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
+/* Montserrat is loaded via a <link> in public/index.html (alongside Climate
+   Crisis), not an @import here — @import is render-blocking since the
+   browser can't discover/fetch it until this file itself is parsed. */
 
 /* Design tokens (--primary-color, --radius-card, etc.) are defined once in
    src/themes/tokens.js and injected onto :root at startup — see

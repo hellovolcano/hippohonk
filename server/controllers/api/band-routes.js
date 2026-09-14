@@ -4,6 +4,15 @@ const { Band, Genre, Rating } = require('../../models')
 const Sequelize = require('sequelize')
 const { Router } = require('express')
 const requireReviewer = require('../../middleware/reviewer')
+const { getArtistImage } = require('../../services/spotify')
+
+// Resolves each band's Spotify artist image server-side (in parallel, and
+// cached per-artist in services/spotify.js) so the client gets it inline
+// instead of firing its own request per band.
+async function withSpotifyImages(bands) {
+  const images = await Promise.all(bands.map((b) => getArtistImage(b.spotify_url)));
+  return bands.map((b, i) => ({ ...b, spotify_image: images[i] }));
+}
 
 // Find all bands (with optional filters)
 router.get("/", async (req, res) => {
@@ -59,7 +68,8 @@ router.get("/", async (req, res) => {
       subQuery: false,
     });
 
-    return res.status(200).json(bands);
+    const withImages = await withSpotifyImages(bands.map((b) => b.toJSON()));
+    return res.status(200).json(withImages);
   } catch (err) {
     console.error(err);
     return res.status(500).json({
@@ -70,34 +80,39 @@ router.get("/", async (req, res) => {
 });
 
 // find one band by ID
-router.get('/:id', (req,res) => {
-    Band.findOne({
-        where: {
-            id: req.params.id
-        },
-        attributes: [
-            'id',
-            'name',
-            'description',
-            [Sequelize.fn('ROUND', Sequelize.fn('AVG', Sequelize.col('ratings.rating')), 1), 'average_rating'],
-            'location',
-            'url',
-            'spotify_url',
-            'genre_id',
-            [Sequelize.col('genre.name'), 'genre_name'],
-            'image'
-        ],
-        include: [
-            { model: Genre, attributes: [] },
-            { model: Rating, attributes: [] }
-        ],
-        group: ['bands.id', 'genre.name']
-    })
-    .then(dbBandData => res.json(dbBandData))
-    .catch(err => {
+router.get('/:id', async (req, res) => {
+    try {
+        const dbBandData = await Band.findOne({
+            where: {
+                id: req.params.id
+            },
+            attributes: [
+                'id',
+                'name',
+                'description',
+                [Sequelize.fn('ROUND', Sequelize.fn('AVG', Sequelize.col('ratings.rating')), 1), 'average_rating'],
+                'location',
+                'url',
+                'spotify_url',
+                'genre_id',
+                [Sequelize.col('genre.name'), 'genre_name'],
+                'image'
+            ],
+            include: [
+                { model: Genre, attributes: [] },
+                { model: Rating, attributes: [] }
+            ],
+            group: ['bands.id', 'genre.name']
+        })
+
+        if (!dbBandData) return res.json(dbBandData)
+
+        const spotify_image = await getArtistImage(dbBandData.spotify_url)
+        res.json({ ...dbBandData.toJSON(), spotify_image })
+    } catch (err) {
         console.log(err)
         res.status(500).json(err)
-    })
+    }
 })
 
 // create a new band

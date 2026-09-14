@@ -6,7 +6,6 @@ import CommonChip from "../../components/common/common-chip";
 import SectionWrapper from "../../components/common/section-wrapper";
 import Button from "../../components/common/forms/button";
 import BandImage from "../../components/band-image";
-import { useSpotifyArtistImage } from "../../hooks/useSpotifyArtistImage";
 import BandForm from "../../components/band-form";
 import "./Band.css";
 
@@ -22,8 +21,6 @@ const Band = () => {
   const [festivals, setFestivals] = useState([]);
 
   const [isEditing, setIsEditing] = useState(false);
-
-  const { imageUrl: spotifyImageUrl } = useSpotifyArtistImage(bandInfo?.spotify_url);
 
   useEffect(() => {
     let cancelled = false;
@@ -114,8 +111,8 @@ const Band = () => {
         <div className="section-wrapper white-bg">
           <div className="section-title single-band-divs">
             <div className="single-band-image">
-              <BandImage spotifyUrl={bandInfo.spotify_url} />
-              {spotifyImageUrl && (
+              <BandImage spotifyImage={bandInfo.spotify_image} />
+              {bandInfo.spotify_image && (
                 <div className="band-image-attribution">
                   Photo via{" "}
                   <a href={bandInfo.spotify_url} target="_blank" rel="noreferrer">
