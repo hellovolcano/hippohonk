@@ -1,0 +1,17 @@
+version: '3.8'
+
+# Throwaway Postgres for running the server test suite against — never
+# production data. Start with `docker-compose up -d`, then point
+# server/.env.test's DATABASE_URL at postgres://hippohonk:hippohonk@localhost:5433/hippohonk_test
+# (already the default in server/.env.test.example).
+services:
+  test-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: hippohonk
+      POSTGRES_PASSWORD: hippohonk
+      POSTGRES_DB: hippohonk_test
+    ports:
+      - '5433:5432'
+    tmpfs:
+      - /var/lib/postgresql/data # never persisted to disk — fully disposable

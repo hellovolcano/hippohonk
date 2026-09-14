@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+> For local setup, running the server + client together, and testing requirements, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## Available Scripts
 
 In the project directory, you can run:

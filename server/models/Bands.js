@@ -24,7 +24,7 @@ Band.init (
             type: DataTypes.TEXT
         },
         average_rating: {
-            type: DataTypes.NUMBER
+            type: DataTypes.DECIMAL(3, 2)
         },
         location: {
             type: DataTypes.STRING,
@@ -42,13 +42,13 @@ Band.init (
             }
         },
         genre_id: {
-            type: DataTypes.NUMBER
+            type: DataTypes.INTEGER
         },
         image: {
             type: DataTypes.TEXT
         },
         popularity: {
-            type: DataTypes.NUMBER
+            type: DataTypes.DECIMAL(8, 5)
         },
         twitter: {
             type: DataTypes.STRING
