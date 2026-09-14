@@ -1,13 +1,16 @@
+import { useSpotifyArtistImage } from '../hooks/useSpotifyArtistImage'
+import './band-image.css'
+
 const defaultImg = require('../assets/default.jpg')
 
-const BandImage =(props) => {
-    return(
-        <div className="band-image">
-            {props.src ?
-                <img src={"https://res.cloudinary.com/hgvtrrtxq/image/upload/" + props.src} /> :
-                <img src={defaultImg} /> 
-            } 
+const BandImage = (props) => {
+    const { imageUrl: spotifyImage } = useSpotifyArtistImage(props.spotifyUrl)
 
+    const src = spotifyImage || defaultImg
+
+    return(
+        <div className={`band-image ${props.className || ''}`.trim()}>
+            <img src={src} alt="" />
         </div>
     )
 }

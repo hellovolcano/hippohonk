@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import BandList from '../components/band-list'
+import BandList from '../../components/band-list'
 
 
 const AllBands = () => {
@@ -20,10 +20,10 @@ const AllBands = () => {
             })
             .catch((err) => {
                 console.log(err.message);
-            })  
+            })
     }, [])
 
- 
+
 
 
     return(

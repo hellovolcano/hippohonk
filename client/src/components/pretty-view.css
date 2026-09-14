@@ -1,0 +1,63 @@
+.first-view .hero {
+  /* ensures the hero fills the section cleanly */
+  width: 100%;
+}
+
+/* Container */
+.hero {
+  position: relative;
+  overflow: hidden;
+  overflow-x: hidden;
+
+  /* matches your "big hero" look */
+  min-height: 320px;
+
+  /* background lives here since PrettyView is the hero */
+  background-image: url('../assets/hands.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: 50% 150%;
+
+  border-radius: 24px;
+  max-width: min(100vw, calc(100% - 30px));
+  margin: 0 auto;
+  margin-top: 15px;
+  box-sizing: border-box;
+
+  /* gives room for hippo + text */
+  padding: 32px 28px;
+}
+
+
+#hippo-horn {
+  display: block;
+  width: auto;
+  height: 100%;
+}
+
+/* Title block */
+.big-hippo-title {
+  position: relative;
+  z-index: 1;
+
+  /* keep text from sitting on top of the hippo face */
+  max-width: 640px;
+  margin-left: auto;
+
+  text-align: right;
+  color: #fff;
+}
+
+.big-hippo-title h1 {
+  margin: 0 0 10px 0;
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.big-hippo-title h2 {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 500;
+  opacity: 0.85;
+}

@@ -1,35 +1,42 @@
 import { createTheme } from '@mui/material/styles'
+import { tokens } from './tokens'
 
 const theme = createTheme({
   palette: {
-    type: 'light',
+    mode: 'light',
     primary: {
-      main: '#e35a47',
+      main: tokens.color.primary,
     },
     secondary: {
-      main: '#c0311d',
+      main: tokens.color.primaryDark,
     },
     text: {
       primary: 'rgba(0,0,0,0.87)',
-      hint: '#ffffff',
+      hint: tokens.color.white,
     },
     info: {
-      main: '#fef5f4',
+      main: tokens.color.surface,
     },
   },
-  overrides: {
-    MuiPaginationItem: {
-        root: {
-          color: '#fef5f4',
-        },
-    },
+  shape: {
+    borderRadius: tokens.radius.sm,
   },
+  spacing: tokens.spacingUnit,
   typography: {
-    fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-    fontWeightLight: 100,
-    fontWeightRegular: 400,
-    fontWeightMedium: 500,
-    fontWeightBold: 700,
+    fontFamily: tokens.font.family,
+    fontWeightLight: tokens.font.weight.light,
+    fontWeightRegular: tokens.font.weight.regular,
+    fontWeightMedium: tokens.font.weight.medium,
+    fontWeightBold: tokens.font.weight.bold,
+  },
+  components: {
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          color: tokens.color.surface,
+        },
+      },
+    },
   },
 })
 

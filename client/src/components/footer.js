@@ -1,7 +1,11 @@
+import './footer.css'
+
 const Footer = () => {
     return (
         <footer>
-            <div>dev by <a href="http://www.valeriegleason.com" target="_blank" rel="noreferrer">Valerie Gleason</a>. UX & Design by Kyle Ledbetter.</div>
+            <div>Credits</div>
+            <div>Not affiliated with these festivals,their organizers, or Spotify.</div>
+            <div>© <a href="http://www.valeriegleason.com" target="_blank" rel="noreferrer">Valerie Gleason</a></div>
         </footer>
     )
 }

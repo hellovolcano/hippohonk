@@ -1,0 +1,66 @@
+.reviewer-banner {
+  width: 88%;
+  margin: 0 auto;
+  text-align: right;
+}
+
+.band-wrapper {
+  display: flex;
+  margin: 0 auto;
+}
+
+.single-band-divs {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.single-band-image .band-image img {
+  width: 300px;
+  height: 300px;
+  border-radius: var(--radius-card);
+  border: none;
+}
+
+.single-band-title-block {
+  text-align: left;
+}
+
+.single-band-title-block h1.section-title {
+  text-align: left;
+}
+
+.single-band-main-wrapper {
+  margin: 0 auto;
+}
+
+.single-band-page {
+  display: flex;
+}
+
+.white-bg {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.single-band-description {
+  padding: 10px 0 0;
+}
+
+.single-band-festivals {
+  padding: 10px 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.h3-section-wrapper {
+  font-weight: 100;
+  font-size: 24px;
+}
+
+@media screen and (max-width: 700px) {
+  .band-wrapper {
+    flex-direction: column;
+  }
+}

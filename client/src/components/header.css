@@ -1,0 +1,276 @@
+/* header.css */
+
+@media (prefers-reduced-motion: reduce) {
+  .siteHeader *,
+  .siteHeader {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* The header itself is what sticks. Its containing block is the outer app
+   wrapper (spanning the whole page), which gives it room to stay pinned for
+   the full scroll — sticking .compactBar directly only worked for the first
+   ~100px because its own parent (.siteHeader) is barely taller than itself. */
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerInner {
+  position: relative;
+  width: 100%;
+}
+
+.compactBar {
+  position: relative;
+  z-index: 60;
+  width: 100%;
+
+  /* Hidden by default (above viewport) */
+  /* transform: translateY(-110%); */
+  /* transition: transform 260ms ease; */
+
+  /* Visual styling (tweak freely) */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--black) 75%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
+}
+
+/* When collapsed, slide it into view */
+.siteHeader.isCollapsed .compactBar {
+  transform: translateY(0);
+}
+
+.compactInner {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 0 16px;
+  /* max-width: 1200px; */
+  margin: 0 auto;
+}
+
+/* Brand */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brandLogo {
+  height: 30px;
+  width: auto;
+  display: block;
+}
+
+/* Nav */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: 10px;
+}
+
+.navLink {
+  color: color-mix(in srgb, var(--white) 85%, transparent);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.navLink:hover {
+  color: var(--white);
+  background: color-mix(in srgb, var(--white) 8%, transparent);
+}
+
+/* Actions */
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  color: var(--black);
+  background: color-mix(in srgb, var(--white) 92%, transparent);
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--white);
+}
+
+/* Hamburger button */
+.hamburgerBtn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.hamburgerBtn:hover {
+  background: color-mix(in srgb, var(--white) 8%, transparent);
+}
+
+.hamburgerBar {
+  width: 20px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: transform 250ms ease, opacity 150ms ease;
+}
+
+/* Animate the three bars into an X when the menu is open, and back when closed */
+.hamburgerBtn.open .hamburgerBar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburgerBtn.open .hamburgerBar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburgerBtn.open .hamburgerBar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile: full-width dropdown right below the compact bar */
+.menuPanel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 61;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 16px 16px;
+  background: color-mix(in srgb, var(--black) 95%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--black) 25%, transparent);
+
+  transform: translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 200ms ease, opacity 200ms ease, visibility 200ms;
+}
+
+.menuPanel.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Desktop-only backdrop behind the drawer (hidden entirely on mobile) */
+.menuBackdrop {
+  display: none;
+}
+
+/* Desktop: drawer-style overlay sliding in from the right, with a backdrop */
+@media screen and (min-width: 701px) {
+  .menuPanel {
+    top: 0;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    width: min(360px, 90vw);
+    height: 100vh;
+    overflow-y: auto;
+    border-bottom: none;
+    border-left: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
+    box-shadow: -8px 0 24px color-mix(in srgb, var(--black) 25%, transparent);
+    padding: 24px 20px;
+
+    transform: translateX(100%);
+    transition: transform 280ms ease;
+  }
+
+  .menuPanel.open {
+    transform: translateX(0);
+  }
+
+  .menuBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: color-mix(in srgb, var(--black) 45%, transparent);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 280ms ease, visibility 280ms;
+  }
+
+  .menuBackdrop.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+.menuGreeting {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 8px 10px;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.menuGreeting:hover {
+  background: color-mix(in srgb, var(--white) 8%, transparent);
+}
+
+.menuDivider {
+  height: 1px;
+  background: color-mix(in srgb, var(--white) 14%, transparent);
+  margin: 6px 0;
+}
+
+.menuActionLink {
+  text-align: left;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Optional spacer:
+   If your compact bar overlays content when it appears and you *don't* want that,
+   you can reserve space only when collapsed. */
+
+.compactSpacer {
+  height: 0;
+  transition: height 260ms ease;
+}
+
+.siteHeader.isCollapsed .compactSpacer {
+  height: 56px; /* must match compactInner height */
+}

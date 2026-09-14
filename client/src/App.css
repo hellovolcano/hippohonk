@@ -1,87 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
 
-:root {
-  --black: #000000;
-  --secondary-color: #66454f;
-  --highlight: #666445;
-  --white: white;
-  --borders: #e35a47;
-  --primary-color: #e35a47;
-  --darker-color: #C0311D;
-  --table-headings: #FEF5F4;
-  --grey: rgb(204, 195, 195);
-}
+/* Design tokens (--primary-color, --radius-card, etc.) are defined once in
+   src/themes/tokens.js and injected onto :root at startup — see
+   src/themes/injectCssVars.js. Do not redeclare them here. */
 
 body {
   font-family: 'Montserrat', sans-serif;
   background-color: var(--darker-color);
   color: white;
   margin: 0;
-  background: url('./assets/bg2.jpg') no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  }
-
-.App-logo {
-  height: 30vmin;
-  pointer-events: none;
+  top: 0;
+  overflow-x: hidden;
 }
 
-/* MAIN PAGE */
-
-.hero-section {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  width: 100vw;
-  text-align: center;
-  margin-bottom: 40px;
-  margin-top: 70px;
+html {
+  margin: 0;
+  overflow-x: hidden;
 }
 
-.hero-text h1 {
-  text-transform: uppercase;
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 0;
+h1 {
+  font-family: "Climate Crisis", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "YEAR" 2000;
+  font-size: clamp(2rem, 8vw, 5rem);
 }
 
-.hero-text p {
-  margin-top: 10px;
-  font-size: 30px;
+h2 {
+  font-size: clamp(1.5rem, 5vw, 3rem);
 }
 
-/* Reviewer Logged In */
-.reviewer-banner {
-  width: 88%;
-  margin: 0 auto;
-  text-align: right;
-}
-
-/* FORM COMPONENTS */
-.button, .drop-down, .input-field {
-  border-radius: 1px;
-  border: 2px solid var(--primary-color);
-  color: var(--white);
-  background-color: rgba(0,0,0,0);
-  padding: 13px;
-  text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
-  margin: 3px;
-}
-
-.button svg {
-  vertical-align: middle;
-  padding: 0;
-}
-
-.button:hover, .band-row-alt:hover, .band-row:hover {
-  color: var(--white);
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
-  animation-name: fadein;
-}
-
+/* Shared hover-fade animation (used by Button and band-list rows) */
 @keyframes fadein {
   from {
       background-color: "";
@@ -90,354 +40,77 @@ body {
   to {
       background-color: var(--primary-color);
   }
-}ion
-
-.button:active {
-  color: var(--darker-color);
 }
 
-div .band-rank {
-  color: black;
+/* SHARED PAGE LAYOUT (simple form / table pages: auth, profile, admin) */
+.page-form {
+  max-width: 400px;
+  margin: 2rem auto;
 }
 
-.input-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  margin-left: 3px;
-
+.page-panel {
+  max-width: 800px;
+  margin: 2rem auto;
 }
 
-.input-label {
-  text-transform: uppercase;
-  margin-top: 5px;
-  margin-bottom: 2px;
-  margin-left: 4px;
+.not-authorized {
+  max-width: 600px;
+  margin: 2rem auto;
 }
 
-
-/* HEADER */
-header {
-  display:flex;
-  justify-content: space-between;
-  margin: 10px;
-}
-
-header img {
-  height: 5vmin;
-}
-
-.logo-img {
+.form-row {
   margin-top: 8px;
-  margin-left: 10px;
 }
 
-/* MENU */
-
-.main-menu {
-  padding-inline-start: 0px;
-  padding: 10px 40px;
+.status-message {
+  margin-top: 8px;
 }
 
-.main-menu li {
-  list-style-type: none;
+.error-message {
+  color: var(--primary-color);
+  margin-bottom: 12px;
 }
 
-.main-menu li a, .main-menu li {
-  color: var(--white);
-  font-weight: 700;
-  margin: 5px 0;
-  text-decoration: none;
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-right: 8px;
+  border: 1px solid var(--grey);
+  border-radius: 12px;
+  font-size: 12px;
 }
 
-.main-menu li a {
-  padding: 5px;
-}
-
-.ul-category {
-  padding-left: 5px;
-}
-
-.main-menu li a:hover {
-  background-color: var(--primary-color);
-}
-
-.menu-close {
-  display: flex;
-  justify-content: right;
-  cursor: pointer;
-}
-
-.menu-internal-wrapper {
-  padding: 20px;
-}
-
-
-/* BAND LIST */
-.band-list-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.band-row, .band-row-alt {
-  background-color: var(--white);
-  display: flex;
-  justify-content: space-between; 
-  padding: 15px;
-  border-bottom: 1px solid var(--grey);
-  color: black;
-}
-
-/* .band-row-alt {
-  background-color: var(--borders);
-} */
-
-/* .band-row:hover, .band-row-alt:hover {
-  background-color: var(--primary-color);
-} */
-
-.band-name {
-  font-weight: 400;
-  
-}
-
-.band-location {
-  font-weight: 100;
-  margin-left: 8px;
-  font-size: 14px;
-  color: var(--grey);
-}
-
-.band-details {
-  margin-top: 5px;
-}
-
-.band-description {
-  margin-left: 8px;
-  font-weight: 100;
-}
-
-.band-rating {
-  width: 50px;
-  text-align: right;
-}
-
-.band-rank {
-  padding: 5px;
-  background-color: var(--table-headings);
-  border: 1px solid var(--borders);
-  border-radius: 3px;
-}
-
-.band-rank:hover {
-  color: black;
-}
-
-.band-container {
-  display: flex;
-  margin-right: 5px;
-}
-
-.band-info {
-  margin-left: 10px;
-}
-
-.band-image img{
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid var(--borders);
- }
-
-.bandlist-wrapper {
-  width: 80%;
-  margin: 0 auto;
-}
-
-/* BAND PAGE */
-.band-wrapper {
-  display: flex;
-  margin: 0 auto;
-}
-
-.single-band-divs {
-  display: flex;
-
-}
-
-.single-band-main-wrapper {
-  margin: 0 auto;
-}
-
-.single-band-page {
-  display: flex;
-}
-
-.white-bg {
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
   background-color: var(--white);
   color: var(--black);
 }
 
-.single-band-description {
-  padding: 20px;
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 8px 12px;
 }
 
-.h3-section-wrapper {
-  font-weight: 100;
-  font-size: 24px;
+.data-table tr {
+  border-bottom: 1px solid var(--grey);
 }
 
-.pagination {
-  display: block;
-  margin-top: 10px;
-  margin: 0 auto;
-  /* background-color: var(--white); */
-  text-align: center;
-  /* color: white; */
-}
-.section-title {
-  /* border-top-right-radius: 5px;
-  border-top-left-radius: 6px; */
-  background-color: var(--table-headings);
-  padding: 10px;
-  margin-bottom: 0;
-  border-top-color: var(--borders);
-  border-left-color: var(--borders);
-  border-right-color: var(--borders);
-  border-left: 1px;
-  border-right: 1px;
-  border-top: 1px;
-  margin-top: 0;
-  color: var(--darker-color);
-  font-weight: 100;
-  text-align: center;
+.icon-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
 }
 
-.section-wrapper {
-  border: 2px solid var(--borders);
-  padding-top: 0px;
-  border-radius: 2px;
-  margin: 10px;
+.empty-state {
+  padding: 16px;
 }
 
-.section-wrapper p {
-  padding: 10px;
-}
-
-/* GENRES */
-.genre-chip {
-  background-color: white;
-  color: #2a1706;
-}
-
-/* FESTIVALS */
-
-.festival-section {
-  background-color: var(--darker-color);
-  padding: 25px;
-  text-align: center;
-}
-
-.festival-section h2 {
-  text-transform: uppercase;
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-weight: 100;
-}
-
-.festival-section hr {
-  width: 60%;
-  margin-bottom: 40px;
-}
-
-.festivals {
+.inline-form-row {
   display: flex;
-  justify-content: space-evenly;
   flex-wrap: wrap;
-  padding: 0px 50px;
-}
-
-.festival-item {
-  padding: 10px;
-  margin: 25px;
-  text-align: center;
-}
-
-.festival-item:hover {
-  background-color: var(--darker-color);
-}
-
-.festival-item h2 {
-  margin-top: 3px;
-}
-
-.festival-item a {
-  color: var(--white);
-  text-decoration: none;
-  background-color: var(--primary-color);
-}
-
-.festival-item a:hover {
-  background-color: var(--darker-color);
-  text-decoration: underline;
-}
-
-/* FOOTER */
-
-footer {
-  padding: 30px 0;
-  background-color: var(--primary-color);
-  text-align: center;
-}
-
-footer a {
-  color: var(--white);
-  text-decoration: none;
-}
-
-footer a:hover {
-  color: var(--darker-color);
-}
-
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: bounce infinite 3s alternate linear;
-  }
-}
-
-.coming-soon {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  text-align: center;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes bounce {
-  from {
-    transform: translate3d(0,0,0);
-  }
-  to {
-    transform: translate3d(0,10px,0);
-  }
-}
-
-
-@media screen and (max-width: 700px) {
-  .band-wrapper {
-    flex-direction: column;
-  }
-  .bandlist-wrapper {
-    width: 95%;
-  }
-  
+  align-items: flex-end;
+  gap: 8px;
 }

@@ -1,14 +1,10 @@
 import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
+import './forms.css';
 
-const Button = ({type, children}) => {
-
-    // let navIcon
-    // if type == "navigation" {
-        
-    // }
+const Button = ({children, onClick, type = "button", disabled = false, className = ""}) => {
 
     return (
-        <button className="button">         
+        <button type={type} onClick={onClick} disabled={disabled} className={`button ${className}`.trim()}>
             {children} {type === "navigation" && <KeyboardDoubleArrowRightRoundedIcon sx={{marginTop: "0", marginBottom: "0"}} />}
         </button>
     )

@@ -1,12 +1,22 @@
 const router = require('express').Router()
 const sequelize = require('../../config/connection')
-const { Band, Festival, Lineup } = require('../../models')
+const { Band, Festival, Lineup, Rating } = require('../../models')
 const Sequelize = require('sequelize')
+const requireReviewer = require('../../middleware/reviewer')
 
-// find all lineups
+// find all lineups (optionally filtered by band_id or festival_id)
 router.get('/', (req,res) => {
+    const { band_id, festival_id } = req.query
+    const where = {}
+    if (band_id !== undefined) where.band_id = band_id
+    if (festival_id !== undefined) where.festival_id = festival_id
+
     Lineup.findAll({
-        attributes: ['id','band_id', 'festival_id'],
+        where,
+        attributes: ['id','band_id', 'festival_id',
+            [Sequelize.col('festival.name'), 'festival_name'],
+            [Sequelize.col('festival.slug'), 'festival_slug']
+        ],
         include: [{
             model: Band,
             attributes: []
@@ -30,25 +40,30 @@ router.get('/:id', (req,res) => {
         where: {
             festival_id: req.params.id
         },
-        attributes: ['id','festival_id', 
+        attributes: ['id','festival_id',
             [Sequelize.col('band.id'), 'band_id'],
             [Sequelize.col('band.name'), 'name'],
             [Sequelize.col('band.description'), 'description'],
             [Sequelize.col('band.location'), 'location'],
-            [Sequelize.col('band.average_rating'), 'average_rating'],
+            [Sequelize.fn('ROUND', Sequelize.fn('AVG', Sequelize.col('band->ratings.rating')), 1), 'average_rating'],
             [Sequelize.col('band.image'), 'image'],
-            [Sequelize.col('festival.name'), 'festival_name']
+            [Sequelize.col('band.url'), 'url'],
+            [Sequelize.col('band.spotify_url'), 'spotify_url'],
+            [Sequelize.col('festival.name'), 'festival_name'],
+            [Sequelize.col('band.genre_id'), 'genre_id']
         ],
         include: [{
             model: Band,
-            attributes: []
+            attributes: [],
+            include: [{ model: Rating, attributes: [] }]
         },
         {
             model: Festival,
             attributes: []
         }],
+        group: ['lineups.id', 'band.id', 'festival.id'],
         order: [
-            [ Band, "average_rating" , "DESC"]
+            [Sequelize.col('average_rating'), 'DESC NULLS LAST']
         ]
     })
     .then(dbUserData => res.json(dbUserData))
@@ -58,17 +73,17 @@ router.get('/:id', (req,res) => {
     })
 })
 
-
-// Add a band to SXSW 2023 -- CURRENTLY HARDCODED TO SXSW 2023
-router.post('/', (req,res) => {
-    Lineup.create({
-        band_id: req.body.band_id,
-        festival_id: 16
-    })
-    .then(dbLineupData => res.json(dbLineupData))
-    .catch(err => {
+router.post('/', requireReviewer, async (req, res) => {
+    try {
+        const lineup = await Lineup.create({
+            band_id: req.body.band_id,
+            festival_id: req.body.festival_id
+        })
+        res.json(lineup)
+    } catch (err) {
         console.log(err)
-    })
+        res.status(500).json({ message: 'Server error' })
+    }
 })
 
 

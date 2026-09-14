@@ -1,0 +1,109 @@
+h1 {
+  margin: 0 0 10px 0;
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.hero-container {
+  text-align: center;
+}
+
+.hero-empty {
+  opacity: 0.7;
+  padding: 24px;
+}
+
+.hero-carousel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-carousel-viewport {
+  flex: 1;
+  overflow: hidden;
+}
+
+.hero-carousel-track {
+  display: flex;
+  transition: transform 0.4s ease;
+}
+
+.hero-item {
+  flex: 0 0 calc(100% / var(--visible-count, 1));
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.hero-card {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  border-radius: var(--radius-card);
+  background-color: var(--white);
+  color: var(--black);
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.hero-card-image {
+  width: 100%;
+}
+
+.hero-card .hero-card-image img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+  border: none;
+}
+
+.hero-card-name {
+  padding: 16px;
+  font-weight: 700;
+}
+
+.hero-carousel-arrow {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background-color: transparent;
+  color: var(--white);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.hero-carousel-arrow:hover {
+  background-color: var(--white);
+  color: var(--darker-color);
+}
+
+.hero-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.hero-carousel-dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.hero-carousel-dot.active {
+  background-color: var(--white);
+}

@@ -1,0 +1,38 @@
+
+
+.hero h1 {
+  font-family: "Climate Crisis", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "YEAR" 2000;
+  font-size: 5rem;
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: row;
+}
+
+/* home.css */
+
+/* Page layout */
+main {
+  display: block;
+}
+
+/* Sections below */
+.festival-hero,
+.top-bands-hero {
+  padding: 16px;
+}
+
+/* Nice vertical rhythm */
+.festival-hero {
+  margin-top: 8px;
+}
+
+.top-bands-hero {
+  margin-top: 8px;
+}

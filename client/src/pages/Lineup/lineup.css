@@ -1,0 +1,22 @@
+.lineup-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 1rem auto;
+}
+
+.lineup-toolbar-left,
+.lineup-toolbar-right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: color-mix(in srgb, var(--white) 25%, transparent);
+}
