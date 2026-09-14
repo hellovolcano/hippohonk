@@ -8,20 +8,25 @@
   }
 }
 
-/* The header wrapper itself doesn't need to be sticky;
-   the compactBar inside is sticky. */
+/* The header itself is what sticks. Its containing block is the outer app
+   wrapper (spanning the whole page), which gives it room to stay pinned for
+   the full scroll — sticking .compactBar directly only worked for the first
+   ~100px because its own parent (.siteHeader) is barely taller than itself. */
 .siteHeader {
-  position: relative;
-  z-index: 50;
+  position: sticky;
   top: 0;
+  z-index: 50;
   display: flex;
   justify-content: space-between;
 }
 
-/* Sticky compact bar that slides down */
+.headerInner {
+  position: relative;
+  width: 100%;
+}
+
 .compactBar {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 60;
   width: 100%;
 
@@ -138,14 +143,29 @@
   height: 2px;
   background: var(--white);
   border-radius: 2px;
+  transition: transform 250ms ease, opacity 150ms ease;
 }
 
-/* Dropdown menu panel */
+/* Animate the three bars into an X when the menu is open, and back when closed */
+.hamburgerBtn.open .hamburgerBar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburgerBtn.open .hamburgerBar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburgerBtn.open .hamburgerBar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile: full-width dropdown right below the compact bar */
 .menuPanel {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
+  z-index: 61;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -153,6 +173,66 @@
   background: color-mix(in srgb, var(--black) 95%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--black) 25%, transparent);
+
+  transform: translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 200ms ease, opacity 200ms ease, visibility 200ms;
+}
+
+.menuPanel.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Desktop-only backdrop behind the drawer (hidden entirely on mobile) */
+.menuBackdrop {
+  display: none;
+}
+
+/* Desktop: drawer-style overlay sliding in from the right, with a backdrop */
+@media screen and (min-width: 701px) {
+  .menuPanel {
+    top: 0;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    width: min(360px, 90vw);
+    height: 100vh;
+    overflow-y: auto;
+    border-bottom: none;
+    border-left: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
+    box-shadow: -8px 0 24px color-mix(in srgb, var(--black) 25%, transparent);
+    padding: 24px 20px;
+
+    transform: translateX(100%);
+    transition: transform 280ms ease;
+  }
+
+  .menuPanel.open {
+    transform: translateX(0);
+  }
+
+  .menuBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: color-mix(in srgb, var(--black) 45%, transparent);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 280ms ease, visibility 280ms;
+  }
+
+  .menuBackdrop.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
 }
 
 .menuGreeting {
