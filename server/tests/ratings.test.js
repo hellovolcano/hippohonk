@@ -93,3 +93,54 @@ describe("POST /api/ratings/batch", () => {
     expect(stillVisible.body).toHaveLength(0);
   });
 });
+
+describe("POST /api/ratings/batch-admin", () => {
+  it("requires an admin session", async () => {
+    const { user, password } = await createUser({ email: "plainreviewer@example.com", reviewer: true });
+    const otherReviewer = await createUser({ email: "someoneelse@example.com", reviewer: true });
+    const band = await createBand();
+    const agent = await agentLoggedInAs(user, password);
+
+    const res = await agent
+      .post("/api/ratings/batch-admin")
+      .send({ ratings: [{ band_id: band.id, user_id: otherReviewer.user.id, rating: 4 }] });
+    expect(res.status).toBe(403);
+  });
+
+  it("lets an admin set a rating on behalf of another reviewer", async () => {
+    const { user: admin, password } = await createUser({ email: "lp-admin@example.com", admin: true });
+    const reviewer = await createUser({ email: "lp-reviewer@example.com", reviewer: true });
+    const band = await createBand();
+    const agent = await agentLoggedInAs(admin, password);
+
+    const res = await agent
+      .post("/api/ratings/batch-admin")
+      .send({ ratings: [{ band_id: band.id, user_id: reviewer.user.id, rating: 5 }] });
+
+    expect(res.status).toBe(200);
+    expect(Number(res.body.updated[0].average_rating)).toBe(5);
+
+    const stored = await request(app).get(`/api/ratings?band_id=${band.id}&all=true`);
+    expect(stored.body).toHaveLength(1);
+    expect(stored.body[0].user_id).toBe(reviewer.user.id);
+    expect(stored.body[0].rating).toBe(5);
+  });
+
+  it("deletes a rating on behalf of another reviewer when given a null rating", async () => {
+    const { user: admin, password } = await createUser({ email: "lp-admin2@example.com", admin: true });
+    const reviewer = await createUser({ email: "lp-reviewer2@example.com", reviewer: true });
+    const band = await createBand();
+    const agent = await agentLoggedInAs(admin, password);
+
+    await agent
+      .post("/api/ratings/batch-admin")
+      .send({ ratings: [{ band_id: band.id, user_id: reviewer.user.id, rating: 3 }] });
+    const res = await agent
+      .post("/api/ratings/batch-admin")
+      .send({ ratings: [{ band_id: band.id, user_id: reviewer.user.id, rating: null }] });
+
+    expect(res.status).toBe(200);
+    const stillVisible = await request(app).get(`/api/ratings?band_id=${band.id}&all=true`);
+    expect(stillVisible.body).toHaveLength(0);
+  });
+});

@@ -7,10 +7,22 @@ export const color = {
     white: '#ffffff',
     primary: '#e35a47',
     primaryDark: '#c0311d',
-    secondary: '#66454f',
-    highlight: '#666445',
+    secondary: '#1DADC0',
+    secondaryDark: '#178796',
+    accent: '#F2A93B',
+    accentDark: '#b67f2c',
+    highlight: '#EFA095',
     surface: '#fef5f4',
     grey: 'rgb(204, 195, 195)',
+}
+
+// Named color schemes selectable on components like Button — each maps to a
+// base/dark pair of tokens above so a component can flip schemes via a
+// single `variant` prop instead of hardcoding colors per usage.
+export const colorScheme = {
+    primary: { base: color.primary, dark: color.primaryDark },
+    secondary: { base: color.secondary, dark: color.secondaryDark },
+    accent: { base: color.accent, dark: color.accentDark },
 }
 
 export const radius = {
@@ -30,6 +42,6 @@ export const font = {
     },
 }
 
-export const tokens = { color, radius, spacingUnit, font }
+export const tokens = { color, colorScheme, radius, spacingUnit, font }
 
 export default tokens

@@ -99,6 +99,26 @@
   min-width: 90px;
 }
 
+/* Listening Party Mode drops the URL/Spotify columns entirely (positions 4
+   and 5), so name/location/description/average-rating take their place and
+   reviewer columns now start at position 5 instead of 7. */
+.review-table.listening-party-mode th:nth-child(1),
+.review-table.listening-party-mode th:nth-child(2) {
+  width: 13%;
+}
+
+.review-table.listening-party-mode th:nth-child(3) {
+  width: 28%;
+}
+
+.review-table.listening-party-mode th:nth-child(4) {
+  width: 8%;
+}
+
+.review-table.listening-party-mode th:nth-child(n + 5) {
+  min-width: 90px;
+}
+
 .review-table tbody tr {
   border-bottom: 1px solid var(--grey);
   color: var(--black);

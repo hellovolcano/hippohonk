@@ -87,13 +87,15 @@
   margin-top: 8px;
 }
 
-.add-to-festival-select {
-  padding: 4px 8px;
-  border: 1px solid var(--borders);
-  border-radius: 4px;
+/* Layout wrapper only — the select itself is styled by the shared
+   DropDown component (forms.css) for visual consistency across the app. */
+.add-to-festival-select .input-wrapper {
+  margin: 0;
+}
+
+.add-to-festival-select .drop-down {
   font-size: 12px;
-  background-color: var(--white);
-  cursor: pointer;
+  padding: 4px 8px;
 }
 
 .band-container {

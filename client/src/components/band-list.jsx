@@ -4,6 +4,7 @@ import RecommendRoundedIcon from '@mui/icons-material/RecommendRounded'
 
 import SectionWrapper from './common/section-wrapper'
 import StyledPagination from './common/styled-pagination'
+import DropDown from './common/forms/drop-down'
 import BandImage from './band-image'
 import { useAuth } from '../auth'
 import './band-list.css'
@@ -12,6 +13,7 @@ import './band-list.css'
 const AddToFestivalControl = ({ band }) => {
     const [festivals, setFestivals] = useState([])
     const [status, setStatus] = useState('idle') // idle | adding | added | error
+    const [selected, setSelected] = useState('')
 
     useEffect(() => {
         let cancelled = false
@@ -49,39 +51,36 @@ const AddToFestivalControl = ({ band }) => {
             setStatus('error')
             setTimeout(() => setStatus('idle'), 2000)
         } finally {
-            e.target.value = ''
+            setSelected('')
         }
     }
 
     if (festivals.length === 0) return null
 
+    const placeholder =
+        status === 'adding'
+            ? 'Adding…'
+            : status === 'added'
+            ? 'Added!'
+            : status === 'error'
+            ? 'Failed, try again'
+            : '+ Add to festival'
+
     return (
-        <select
-            className="add-to-festival-select"
-            defaultValue=""
-            onChange={handleChange}
-            onClick={(e) => e.stopPropagation()}
-            disabled={status === 'adding'}
-        >
-            <option value="" disabled>
-                {status === 'adding'
-                    ? 'Adding…'
-                    : status === 'added'
-                    ? 'Added!'
-                    : status === 'error'
-                    ? 'Failed, try again'
-                    : '+ Add to festival'}
-            </option>
-            {festivals.map((f) => (
-                <option key={f.id} value={f.id}>
-                    {f.name}
-                </option>
-            ))}
-        </select>
+        <div className="add-to-festival-select" onClick={(e) => e.stopPropagation()}>
+            <DropDown
+                name={`add-to-festival-${band.band_id}`}
+                value={selected}
+                onChange={handleChange}
+                options={festivals.map((f) => ({ value: f.id, label: f.name }))}
+                placeholder={placeholder}
+                disabled={status === 'adding'}
+            />
+        </div>
     )
 }
 
-const BandList = ({bands, isLoading, title}) => {
+const BandList = ({bands, isLoading, title, showAddToFestival = false}) => {
     const { isLoggedIn, isReviewer } = useAuth()
 
     const [currentPage, setCurrentPage] = useState(1)
@@ -144,7 +143,7 @@ const BandList = ({bands, isLoading, title}) => {
                             </div>
                         </div>
                         </a>
-                        {isLoggedIn && isReviewer && (
+                        {showAddToFestival && isLoggedIn && isReviewer && (
                             <div className="band-row-actions">
                                 <AddToFestivalControl band={band} />
                             </div>

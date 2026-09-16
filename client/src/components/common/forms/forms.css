@@ -12,9 +12,8 @@
 }
 
 .button {
-  color: var(--white);
-  background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .button svg {
@@ -22,15 +21,48 @@
   padding: 0;
 }
 
-.button:hover {
-  color: var(--white);
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
-  animation-name: fadein;
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
-.button:active {
-  color: var(--darker-color);
+/* Color schemes: default background + border of the scheme's base color
+   with white text, darkening to the scheme's dark color on hover. Select
+   one via Button's `variant` prop ("primary" | "secondary" | "accent"). */
+.button--primary {
+  background-color: var(--scheme-primary);
+  border-color: var(--scheme-primary);
+  color: var(--white);
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: var(--scheme-primary-dark);
+  border-color: var(--scheme-primary-dark);
+  color: var(--white);
+}
+
+.button--secondary {
+  background-color: var(--scheme-secondary);
+  border-color: var(--scheme-secondary);
+  color: var(--white);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background-color: var(--scheme-secondary-dark);
+  border-color: var(--scheme-secondary-dark);
+  color: var(--white);
+}
+
+.button--accent {
+  background-color: var(--scheme-accent);
+  border-color: var(--scheme-accent);
+  color: var(--white);
+}
+
+.button--accent:hover:not(:disabled) {
+  background-color: var(--scheme-accent-dark);
+  border-color: var(--scheme-accent-dark);
+  color: var(--white);
 }
 
 .input-wrapper {

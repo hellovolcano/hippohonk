@@ -4,6 +4,7 @@ import { Chip, Stack } from "@mui/material";
 import RecommendRoundedIcon from "@mui/icons-material/RecommendRounded";
 import { useAuth } from "../auth";
 import StyledPagination from "./common/styled-pagination";
+import DropDown from "./common/forms/drop-down";
 import "./band-review-table.css";
 
 const BANDS_PER_PAGE = 10;
@@ -104,22 +105,44 @@ const ReadOnlyRatingCell = ({ getValue }) => {
   return <span className="review-static-value">{value ?? "—"}</span>;
 };
 
-const EditableRatingCell = ({ getValue, row, table }) => {
-  const initialValue = getValue();
+const RATING_SELECT_OPTIONS = [
+  { value: "", label: "—" },
+  { value: "1", label: "1" },
+  { value: "2", label: "2" },
+  { value: "3", label: "3" },
+  { value: "4", label: "4" },
+  { value: "5", label: "5" },
+];
 
-  const commit = (raw) => {
-    const trimmed = raw.trim();
-    const parsed = trimmed === "" ? null : Number(trimmed);
-    table.options.meta?.updateReviewerRating(row.original.band_id, Number.isFinite(parsed) ? parsed : null);
+// Factory rather than a fixed component: in Listening Party Mode a single
+// admin edits every reviewer's column, so each column's cell needs its own
+// userId baked in rather than always writing the logged-in user's rating.
+const makeEditableRatingCell = (userId) => {
+  const Cell = ({ getValue, row, table }) => {
+    const initialValue = getValue();
+
+    const handleChange = (e) => {
+      const raw = e.target.value;
+      const parsed = raw === "" ? null : Number(raw);
+      table.options.meta?.updateReviewerRating(row.original.band_id, userId, Number.isFinite(parsed) ? parsed : null);
+    };
+
+    return (
+      <DropDown
+        name={`rating-${row.original.band_id}-${userId}`}
+        value={initialValue == null ? "" : String(initialValue)}
+        onChange={handleChange}
+        options={RATING_SELECT_OPTIONS}
+      />
+    );
   };
-
-  return <EditableCell value={initialValue == null ? "" : String(initialValue)} onCommit={commit} />;
+  return Cell;
 };
 
 // Its own component (rather than inline in BandReviewTable) so it can be
 // force-remounted via a `key` prop whenever we need a genuinely fresh
 // useTable() instance — see the comment where it's rendered.
-const ReviewTableGrid = ({ columns, data, meta, hideOtherReviewers }) => {
+const ReviewTableGrid = ({ columns, data, meta, hideOtherReviewers, listeningPartyMode }) => {
   const table = useTable({
     key: "band-review-table",
     features,
@@ -128,9 +151,17 @@ const ReviewTableGrid = ({ columns, data, meta, hideOtherReviewers }) => {
     meta,
   });
 
+  const tableClassName = [
+    "review-table",
+    hideOtherReviewers && "hide-other-reviewers",
+    listeningPartyMode && "listening-party-mode",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div className="review-table-scroll">
-      <table className={`review-table${hideOtherReviewers ? " hide-other-reviewers" : ""}`}>
+      <table className={tableClassName}>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -158,7 +189,7 @@ const ReviewTableGrid = ({ columns, data, meta, hideOtherReviewers }) => {
   );
 };
 
-const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoading, festivalId, onStateChange, hideOtherReviewers = false }, ref) => {
+const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoading, festivalId, onStateChange, hideOtherReviewers = false, listeningPartyMode = false }, ref) => {
   const { user } = useAuth();
   const [bands, setBands] = useState(initialBands || []);
   const [reviewers, setReviewers] = useState([]);
@@ -333,19 +364,28 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
         header: "Description",
         cell: EditableDescriptionCell,
       },
-      {
-        id: "url",
-        accessorFn: (band) => bandFieldEdits[band.band_id]?.url ?? band.url ?? "",
-        header: "URL",
-        cell: EditableUrlCell,
-      },
-      {
-        id: "spotify_url",
-        accessorFn: (band) => bandFieldEdits[band.band_id]?.spotify_url ?? band.spotify_url ?? "",
-        header: "Spotify",
-        cell: EditableSpotifyUrlCell,
-      },
-      {
+    ];
+
+    // Listening Party Mode is for entering ratings live while a band plays —
+    // the URL/Spotify link fields aren't relevant there and just take up space.
+    if (!listeningPartyMode) {
+      cols.push(
+        {
+          id: "url",
+          accessorFn: (band) => bandFieldEdits[band.band_id]?.url ?? band.url ?? "",
+          header: "URL",
+          cell: EditableUrlCell,
+        },
+        {
+          id: "spotify_url",
+          accessorFn: (band) => bandFieldEdits[band.band_id]?.spotify_url ?? band.spotify_url ?? "",
+          header: "Spotify",
+          cell: EditableSpotifyUrlCell,
+        }
+      );
+    }
+
+    cols.push({
         id: "average_rating",
         accessorFn: (band) => band.average_rating,
         header: () => (
@@ -365,26 +405,25 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
             icon={<RecommendRoundedIcon fontSize="small" />}
           />
         ),
-      },
-    ];
+    });
 
     displayedReviewers.forEach((reviewer) => {
       const isOwnColumn = reviewer.id === user?.id;
+      const isEditable = isOwnColumn || listeningPartyMode;
       cols.push({
         id: `reviewer_${reviewer.id}`,
         accessorFn: (band) => {
-          if (isOwnColumn && ratingEdits[band.band_id] !== undefined) {
-            return ratingEdits[band.band_id];
-          }
+          const edited = ratingEdits[band.band_id]?.[reviewer.id];
+          if (edited !== undefined) return edited;
           return ratingsCache[band.band_id]?.[reviewer.id] ?? null;
         },
         header: reviewer.first_name || `User #${reviewer.id}`,
-        cell: isOwnColumn ? EditableRatingCell : ReadOnlyRatingCell,
+        cell: isEditable ? makeEditableRatingCell(reviewer.id) : ReadOnlyRatingCell,
       });
     });
 
     return cols;
-  }, [displayedReviewers, user?.id, ratingsCache, ratingEdits, bandFieldEdits, ratingSort]);
+  }, [displayedReviewers, user?.id, ratingsCache, ratingEdits, bandFieldEdits, ratingSort, listeningPartyMode]);
 
   // Guards against a double-fire (e.g. Enter then blur) creating the same row twice
   const creatingRowsRef = useRef(new Set());
@@ -479,14 +518,22 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
   };
 
   const tableMeta = {
-    updateReviewerRating: (bandId, newValue) => {
+    updateReviewerRating: (bandId, userId, newValue) => {
       setRatingEdits((old) => {
-        const originalValue = ratingsCache[bandId]?.[user.id] ?? null;
+        const originalValue = ratingsCache[bandId]?.[userId] ?? null;
         const next = { ...old };
+        const bandEdits = { ...(next[bandId] || {}) };
+
         if (!isNewRowId(bandId) && newValue === originalValue) {
+          delete bandEdits[userId];
+        } else {
+          bandEdits[userId] = newValue;
+        }
+
+        if (Object.keys(bandEdits).length === 0) {
           delete next[bandId];
         } else {
-          next[bandId] = newValue;
+          next[bandId] = bandEdits;
         }
         return next;
       });
@@ -526,7 +573,11 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
     .map((b) => (b.isNew || ratingsCache[b.band_id] ? "1" : "0"))
     .join("");
 
-  const dirtyCount = Object.keys(ratingEdits).length + Object.keys(bandFieldEdits).length;
+  const ratingEditCount = Object.values(ratingEdits).reduce(
+    (sum, byUser) => sum + Object.keys(byUser).length,
+    0
+  );
+  const dirtyCount = ratingEditCount + Object.keys(bandFieldEdits).length;
 
   const handleAddRow = () => {
     newRowCounterRef.current += 1;
@@ -603,23 +654,36 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
       }
 
       // Remap rating edits for temp ids to their new real band id; drop ones whose
-      // band was never actually created (still-blank new rows)
+      // band was never actually created (still-blank new rows). Flattened across
+      // users, since Listening Party Mode can edit more than just our own rating.
       const ratingsPayloadEntries = Object.entries(ratingEdits)
-        .map(([bandId, rating]) => {
+        .flatMap(([bandId, byUser]) => {
           const created = newBandByClientId.get(bandId);
           const realId = created ? created.id : Number(bandId);
-          return { key: bandId, band_id: realId, rating };
+          return Object.entries(byUser).map(([userId, rating]) => ({
+            key: bandId,
+            userId: Number(userId),
+            band_id: realId,
+            rating,
+          }));
         })
         .filter((entry) => Number.isFinite(entry.band_id));
 
+      // Our own ratings go through the regular reviewer endpoint; anyone
+      // else's (Listening Party Mode only, and only reachable by an admin)
+      // go through the admin-only endpoint that can write on their behalf.
+      const ownRatingsEntries = ratingsPayloadEntries.filter((e) => e.userId === user.id);
+      const otherRatingsEntries = ratingsPayloadEntries.filter((e) => e.userId !== user.id);
+
       let ratingsBatchResult = [];
-      if (ratingsPayloadEntries.length > 0) {
+
+      if (ownRatingsEntries.length > 0) {
         const res = await fetch("/api/ratings/batch", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({
-            ratings: ratingsPayloadEntries.map(({ band_id, rating }) => ({ band_id, rating })),
+            ratings: ownRatingsEntries.map(({ band_id, rating }) => ({ band_id, rating })),
           }),
         });
 
@@ -629,7 +693,30 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
         }
 
         const data = await res.json();
-        ratingsBatchResult = data.updated;
+        ratingsBatchResult = ratingsBatchResult.concat(data.updated);
+      }
+
+      if (otherRatingsEntries.length > 0) {
+        const res = await fetch("/api/ratings/batch-admin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            ratings: otherRatingsEntries.map(({ band_id, userId, rating }) => ({
+              band_id,
+              user_id: userId,
+              rating,
+            })),
+          }),
+        });
+
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.message || "Failed to save ratings");
+        }
+
+        const data = await res.json();
+        ratingsBatchResult = ratingsBatchResult.concat(data.updated);
       }
 
       // Merge results back into local rows
@@ -675,8 +762,8 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
       // Refresh the ratings cache with what was just saved
       setRatingsCache((old) => {
         const next = { ...old };
-        ratingsPayloadEntries.forEach(({ band_id, rating }) => {
-          next[band_id] = { ...(next[band_id] || {}), [user.id]: rating };
+        ratingsPayloadEntries.forEach(({ band_id, userId, rating }) => {
+          next[band_id] = { ...(next[band_id] || {}), [userId]: rating };
         });
         return next;
       });
@@ -703,10 +790,18 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
         return next;
       });
 
-      const successfulRatingKeys = ratingsPayloadEntries.map((e) => e.key);
       setRatingEdits((old) => {
         const next = { ...old };
-        successfulRatingKeys.forEach((k) => delete next[k]);
+        ratingsPayloadEntries.forEach(({ key, userId }) => {
+          if (!next[key]) return;
+          const bandEdits = { ...next[key] };
+          delete bandEdits[userId];
+          if (Object.keys(bandEdits).length === 0) {
+            delete next[key];
+          } else {
+            next[key] = bandEdits;
+          }
+        });
         return next;
       });
     } catch (e) {
@@ -758,6 +853,7 @@ const BandReviewTable = forwardRef(({ bands: initialBands, isLoading: bandsLoadi
         data={pagedBands}
         meta={tableMeta}
         hideOtherReviewers={hideOtherReviewers}
+        listeningPartyMode={listeningPartyMode}
       />
 
       <Stack alignItems="center" margin="20px">

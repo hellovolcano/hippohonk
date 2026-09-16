@@ -27,7 +27,7 @@ const AllBands = () => {
 
 
     return(
-        <BandList bands={bands} isLoading={isLoading} title="Bands" />
+        <BandList bands={bands} isLoading={isLoading} title="Bands" showAddToFestival />
     )
 }
 

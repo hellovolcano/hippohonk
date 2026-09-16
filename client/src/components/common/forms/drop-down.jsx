@@ -8,7 +8,9 @@ const DropDown = ({
   options = [],
   placeholder,
   required = false,
+  disabled = false,
   helperText,
+  className = "",
 }) => {
   return (
     <div className="input-wrapper">
@@ -22,10 +24,11 @@ const DropDown = ({
       <select
         id={name}
         name={name}
-        className="drop-down"
+        className={`drop-down ${className}`.trim()}
         value={value}
         onChange={onChange}
         required={required}
+        disabled={disabled}
       >
         {placeholder && (
           <option value="">

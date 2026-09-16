@@ -4,6 +4,7 @@ const sequelize = require('../../config/connection')
 const { Rating, User, Band } = require('../../models')
 const requireAuth = require('../../middleware/auth')
 const requireReviewer = require('../../middleware/reviewer')
+const requireAdmin = require('../../middleware/admin')
 
 // GET /api/ratings - optionally filter by band_id (comma-separated allowed) or user_id
 router.get('/', async (req, res) => {
@@ -92,6 +93,62 @@ router.post('/batch', requireReviewer, async (req, res) => {
       for (const change of ratings) {
         const bandId = change.band_id;
         if (!bandId) continue;
+
+        affectedBandIds.push(bandId);
+
+        if (change.rating === null || change.rating === undefined) {
+          await Rating.destroy({ where: { band_id: bandId, user_id: userId }, transaction: t });
+          continue;
+        }
+
+        const [existing] = await Rating.findOrCreate({
+          where: { band_id: bandId, user_id: userId },
+          defaults: { rating: change.rating },
+          transaction: t,
+        });
+
+        if (existing.rating !== change.rating) {
+          await existing.update({ rating: change.rating }, { transaction: t });
+        }
+      }
+    });
+
+    const bands = await Band.findAll({
+      where: { id: { [Op.in]: affectedBandIds } },
+      attributes: [
+        'id',
+        [sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('ratings.rating')), 1), 'average_rating'],
+      ],
+      include: [{ model: Rating, attributes: [] }],
+      group: ['bands.id'],
+    });
+
+    res.json({ updated: bands });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// POST /api/ratings/batch-admin
+// Body: { ratings: [{ band_id, user_id, rating }] }. rating null/undefined deletes the entry.
+// Admin-only: lets an admin set/clear a rating on behalf of any reviewer, for
+// Listening Party Mode, where one admin enters everyone's ratings live.
+// Returns recalculated average_rating per affected band.
+router.post('/batch-admin', requireAdmin, async (req, res) => {
+  try {
+    const { ratings } = req.body;
+    if (!Array.isArray(ratings) || ratings.length === 0) {
+      return res.status(400).json({ message: 'ratings array is required' });
+    }
+
+    const affectedBandIds = [];
+
+    await sequelize.transaction(async (t) => {
+      for (const change of ratings) {
+        const bandId = change.band_id;
+        const userId = change.user_id;
+        if (!bandId || !userId) continue;
 
         affectedBandIds.push(bandId);
 

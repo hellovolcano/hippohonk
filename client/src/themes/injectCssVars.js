@@ -14,6 +14,15 @@ const cssVarMap = {
     '--table-headings': tokens.color.surface,
     '--grey': tokens.color.grey,
     '--radius-card': `${tokens.radius.card}px`,
+
+    // Named color-scheme vars, used by components (e.g. Button) that
+    // support a `variant` prop to pick between them at render time.
+    '--scheme-primary': tokens.colorScheme.primary.base,
+    '--scheme-primary-dark': tokens.colorScheme.primary.dark,
+    '--scheme-secondary': tokens.colorScheme.secondary.base,
+    '--scheme-secondary-dark': tokens.colorScheme.secondary.dark,
+    '--scheme-accent': tokens.colorScheme.accent.base,
+    '--scheme-accent-dark': tokens.colorScheme.accent.dark,
 }
 
 export function injectCssVars() {

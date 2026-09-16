@@ -11,7 +11,7 @@ import './lineup.css'
 
 const SingleLineup = props => {
     const { slug } = useParams()
-    const { isLoggedIn, isReviewer } = useAuth()
+    const { isLoggedIn, isReviewer, isAdmin } = useAuth()
 
     const [bands, setBands] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -20,7 +20,15 @@ const SingleLineup = props => {
     const [reviewMode, setReviewMode] = useState(false)
     const [reviewState, setReviewState] = useState({ dirtyCount: 0, saving: false })
     const [hideOtherReviewers, setHideOtherReviewers] = useState(false)
+    const [listeningPartyMode, setListeningPartyMode] = useState(false)
     const reviewTableRef = useRef(null)
+
+    const toggleListeningPartyMode = () => {
+        setListeningPartyMode((mode) => !mode)
+        // Listening Party Mode needs every reviewer's column visible to enter
+        // their ratings, so it doesn't make sense alongside this.
+        setHideOtherReviewers(false)
+    }
 
 
     useEffect(() => {
@@ -56,9 +64,16 @@ const SingleLineup = props => {
                             <>
                                 <Button onClick={() => reviewTableRef.current?.addRow()}>+ Add Band</Button>
                                 <span className="toolbar-divider" aria-hidden="true" />
-                                <Button onClick={() => setHideOtherReviewers((v) => !v)}>
-                                    {hideOtherReviewers ? "Show All Reviewers" : "Hide Other Reviewers"}
-                                </Button>
+                                {!listeningPartyMode && (
+                                    <Button onClick={() => setHideOtherReviewers((v) => !v)}>
+                                        {hideOtherReviewers ? "Show All Reviewers" : "Hide Other Reviewers"}
+                                    </Button>
+                                )}
+                                {isAdmin && (
+                                    <Button variant="accent" onClick={toggleListeningPartyMode}>
+                                        {listeningPartyMode ? "Exit Listening Party Mode" : "Listening Party Mode"}
+                                    </Button>
+                                )}
                             </>
                         )}
                     </div>
@@ -66,6 +81,7 @@ const SingleLineup = props => {
                     <div className="lineup-toolbar-right">
                         {reviewMode && (
                             <Button
+                                variant="secondary"
                                 onClick={() => reviewTableRef.current?.save()}
                                 disabled={reviewState.saving || reviewState.dirtyCount === 0}
                             >
@@ -89,6 +105,7 @@ const SingleLineup = props => {
                     festivalId={festivalId}
                     onStateChange={setReviewState}
                     hideOtherReviewers={hideOtherReviewers}
+                    listeningPartyMode={listeningPartyMode && isAdmin}
                 />
             ) : (
                 <BandList bands={bands} isLoading={isLoading} title={title} />
