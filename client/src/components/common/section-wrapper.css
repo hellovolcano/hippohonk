@@ -1,17 +1,21 @@
 .section-wrapper {
   border: 2px solid var(--borders);
   padding-top: 0px;
-  border-radius: 2px;
-  margin: 10px;
+  border-radius: var(--radius-lg);
+  margin: var(--spacing-md);
+  /* .section-title is a flush-fitting child with its own solid background —
+     without this, its square corners paint over the wrapper's rounded top
+     corners and the radius above never shows. */
+  overflow: hidden;
 }
 
 .section-wrapper p {
-  padding: 10px;
+  padding: var(--spacing-md);
 }
 
 .section-title {
   background-color: var(--table-headings);
-  padding: 10px;
+  padding: var(--spacing-md);
   margin-bottom: 0;
   border-top-color: var(--borders);
   border-left-color: var(--borders);

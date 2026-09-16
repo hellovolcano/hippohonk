@@ -13,7 +13,7 @@
   background-color: var(--white);
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: var(--spacing-lg);
   border-bottom: 1px solid var(--grey);
   color: black;
 }
@@ -31,17 +31,17 @@
 
 .band-location {
   font-weight: 100;
-  margin-left: 8px;
+  margin-left: var(--spacing-md);
   font-size: 14px;
   color: var(--grey);
 }
 
 .band-details {
-  margin-top: 5px;
+  margin-top: var(--spacing-xs);
 }
 
 .band-description {
-  margin-left: 8px;
+  margin-left: var(--spacing-md);
   font-weight: 100;
 }
 
@@ -67,12 +67,12 @@
 }
 
 .band-search-wrapper {
-  padding: 10px 15px;
+  padding: var(--spacing-md) var(--spacing-lg);
 }
 
 .band-search-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--spacing-md) var(--spacing-md);
   border: 1px solid var(--borders);
   border-radius: 6px;
   font-size: 14px;
@@ -83,8 +83,8 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10px;
-  margin-top: 8px;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
 /* Layout wrapper only — the select itself is styled by the shared
@@ -95,16 +95,16 @@
 
 .add-to-festival-select .drop-down {
   font-size: 12px;
-  padding: 4px 8px;
+  padding: var(--spacing-xs) var(--spacing-md);
 }
 
 .band-container {
   display: flex;
-  margin-right: 5px;
+  margin-right: var(--spacing-xs);
 }
 
 .band-info {
-  margin-left: 10px;
+  margin-left: var(--spacing-md);
 }
 
 @media screen and (max-width: 700px) {

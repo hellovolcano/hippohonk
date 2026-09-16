@@ -58,7 +58,7 @@ const SingleLineup = props => {
     return(
         <div>
             {canReview && (
-                <div className="lineup-toolbar">
+                <div className={`lineup-toolbar${reviewMode ? " lineup-toolbar--review" : ""}`}>
                     <div className="lineup-toolbar-left">
                         {reviewMode && (
                             <>

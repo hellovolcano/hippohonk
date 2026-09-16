@@ -37,7 +37,7 @@
   /* Visual styling (tweak freely) */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  background: color-mix(in srgb, var(--black) 75%, transparent);
+  background: color-mix(in srgb, var(--darker-color) 92%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
 }
 
@@ -50,9 +50,9 @@
   height: 56px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-lg);
 
-  padding: 0 16px;
+  padding: 0 var(--spacing-lg);
   /* max-width: 1200px; */
   margin: 0 auto;
 }
@@ -78,15 +78,15 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-left: 10px;
+  gap: var(--spacing-md);
+  margin-left: var(--spacing-md);
 }
 
 .navLink {
   color: color-mix(in srgb, var(--white) 85%, transparent);
   text-decoration: none;
   font-size: 14px;
-  padding: 8px 10px;
+  padding: var(--spacing-md) var(--spacing-md);
   border-radius: 10px;
 }
 
@@ -100,7 +100,7 @@
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-md);
 }
 
 .btn {
@@ -108,7 +108,7 @@
   border: 0;
   color: var(--black);
   background: color-mix(in srgb, var(--white) 92%, transparent);
-  padding: 9px 12px;
+  padding: var(--spacing-md) var(--spacing-md);
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -168,8 +168,8 @@
   z-index: 61;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 10px 16px 16px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
   background: color-mix(in srgb, var(--black) 95%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--black) 25%, transparent);
@@ -206,7 +206,7 @@
     border-bottom: none;
     border-left: 1px solid color-mix(in srgb, var(--white) 10%, transparent);
     box-shadow: -8px 0 24px color-mix(in srgb, var(--black) 25%, transparent);
-    padding: 24px 20px;
+    padding: var(--spacing-xl) var(--spacing-xl);
 
     transform: translateX(100%);
     transition: transform 280ms ease;
@@ -239,7 +239,7 @@
   color: var(--white);
   font-weight: 700;
   font-size: 14px;
-  padding: 8px 10px;
+  padding: var(--spacing-md) var(--spacing-md);
   text-decoration: none;
   border-radius: 10px;
 }
@@ -251,7 +251,7 @@
 .menuDivider {
   height: 1px;
   background: color-mix(in srgb, var(--white) 14%, transparent);
-  margin: 6px 0;
+  margin: var(--spacing-xs) 0;
 }
 
 .menuActionLink {

@@ -25,14 +25,14 @@ main {
 /* Sections below */
 .festival-hero,
 .top-bands-hero {
-  padding: 16px;
+  padding: var(--spacing-lg);
 }
 
 /* Nice vertical rhythm */
 .festival-hero {
-  margin-top: 8px;
+  margin-top: var(--spacing-md);
 }
 
 .top-bands-hero {
-  margin-top: 8px;
+  margin-top: var(--spacing-md);
 }

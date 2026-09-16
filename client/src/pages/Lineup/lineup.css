@@ -1,10 +1,21 @@
+/* Matches .bandlist-wrapper's own width/centering (band-list.css) so the
+   toolbar lines up with the band list's side gutters when not in review
+   mode. */
 .lineup-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--spacing-sm);
+    width: 80%;
     margin: 1rem auto;
+}
+
+/* In review mode, go full-width to match .review-table-wrapper
+   (band-review-table.css), which has no side gutter of its own. */
+.lineup-toolbar--review {
+    width: 100%;
+    margin: 1rem 0;
 }
 
 .lineup-toolbar-left,
@@ -12,7 +23,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--spacing-sm);
 }
 
 .toolbar-divider {

@@ -1,5 +1,5 @@
 h1 {
-  margin: 0 0 10px 0;
+  margin: 0 0 var(--spacing-xl) 0;
   font-size: clamp(28px, 4vw, 56px);
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -11,13 +11,13 @@ h1 {
 
 .hero-empty {
   opacity: 0.7;
-  padding: 24px;
+  padding: var(--spacing-xl);
 }
 
 .hero-carousel {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
 .hero-carousel-viewport {
@@ -37,7 +37,7 @@ h1 {
   flex: 0 0 calc(100% / var(--visible-count, 1));
   display: flex;
   justify-content: center;
-  padding: 8px;
+  padding: var(--spacing-md);
   box-sizing: border-box;
 }
 
@@ -45,7 +45,7 @@ h1 {
   display: block;
   width: 100%;
   max-width: 320px;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-lg);
   background-color: var(--white);
   color: var(--black);
   text-decoration: none;
@@ -68,7 +68,7 @@ h1 {
 }
 
 .hero-card-name {
-  padding: 16px;
+  padding: var(--spacing-lg);
   font-weight: 700;
 }
 
@@ -93,8 +93,8 @@ h1 {
 .hero-carousel-dots {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
 .hero-carousel-dot {

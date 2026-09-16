@@ -9,7 +9,7 @@
   font-size: 11px;
   color: var(--grey);
   text-align: center;
-  margin-top: 4px;
+  margin-top: var(--spacing-xs);
 }
 
 .band-image-attribution a {

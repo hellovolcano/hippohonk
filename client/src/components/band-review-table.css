@@ -23,7 +23,7 @@
 
 .review-table th {
   text-align: left;
-  padding: 8px 4px;
+  padding: var(--spacing-md) var(--spacing-xs);
   border-bottom: 2px solid var(--borders);
 }
 
@@ -124,8 +124,11 @@
   color: var(--black);
 }
 
+/* Uses --highlight rather than --borders (primary): black text on primary
+   is only 5.82:1 (passes AA but not AAA), and the placeholder text below
+   blended over primary fails AA outright. Black-on-highlight is 10.13:1. */
 .review-table tbody tr:nth-child(odd) {
-  background-color: var(--borders);
+  background-color: var(--highlight);
 }
 
 .review-table tbody tr:nth-child(even) {
@@ -145,7 +148,7 @@
   height: 100%;
   min-height: 2.4em;
   box-sizing: border-box;
-  padding: 6px 8px;
+  padding: var(--spacing-xs) var(--spacing-md);
   font: inherit;
   color: inherit;
   outline: none;
@@ -163,14 +166,17 @@
   background: var(--table-headings);
 }
 
+/* 65% (not the more typical ~45%) so placeholder text still clears AA
+   contrast (4.5:1) once blended against either row background: 5.09:1 on
+   the highlight-colored odd rows, 7.00:1 on white even rows. */
 .editable-cell:empty::before {
   content: attr(data-placeholder);
-  color: color-mix(in srgb, var(--black) 45%, transparent);
+  color: color-mix(in srgb, var(--black) 65%, transparent);
 }
 
 /* Read-only values (e.g. other reviewers' ratings) get the same padding as
    editable cells so everything in a row lines up. */
 .review-static-value {
   display: block;
-  padding: 6px 8px;
+  padding: var(--spacing-xs) var(--spacing-md);
 }

@@ -26,11 +26,25 @@ export const colorScheme = {
 }
 
 export const radius = {
-    sm: 2,
-    card: 16,
+    sm: 4,
+    md: 8,
+    lg: 16,
 }
 
 export const spacingUnit = 8
+
+// General-purpose margin/padding scale for plain CSS (injected as
+// --spacing-* custom properties — see injectCssVars.js). Not strictly tied
+// to spacingUnit above (that one's just for MUI's theme.spacing()); this is
+// the set of values everyday layout code should reach for instead of
+// hardcoding pixel margins.
+export const spacing = {
+    xs: 4,
+    sm: 3,
+    md: 9,
+    lg: 15,
+    xl: 24,
+}
 
 export const font = {
     family: "'Montserrat', 'Helvetica', 'Arial', sans-serif",
@@ -42,6 +56,6 @@ export const font = {
     },
 }
 
-export const tokens = { color, colorScheme, radius, spacingUnit, font }
+export const tokens = { color, colorScheme, radius, spacingUnit, spacing, font }
 
 export default tokens

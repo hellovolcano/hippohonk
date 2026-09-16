@@ -12,13 +12,13 @@
 .single-band-divs {
   display: flex;
   align-items: flex-start;
-  gap: 20px;
+  gap: var(--spacing-xl);
 }
 
 .single-band-image .band-image img {
   width: 300px;
   height: 300px;
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-lg);
   border: none;
 }
 
@@ -44,11 +44,11 @@
 }
 
 .single-band-description {
-  padding: 10px 0 0;
+  padding: var(--spacing-md) 0 0;
 }
 
 .single-band-festivals {
-  padding: 10px 0 20px;
+  padding: var(--spacing-md) 0 var(--spacing-xl);
   display: flex;
   flex-wrap: wrap;
   align-items: center;

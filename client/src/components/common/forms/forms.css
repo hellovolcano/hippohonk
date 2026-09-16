@@ -5,15 +5,36 @@
   border: 2px solid var(--primary-color);
   color: var(--darker-color);
   background-color: var(--white);
-  padding: 13px;
+  padding: var(--spacing-md);
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
-  margin: 3px;
+  margin: var(--spacing-sm);
+}
+
+/* The small radius token, used for compact interactive controls. */
+.button, .drop-down {
+  border-radius: var(--radius-sm);
 }
 
 .button {
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  /* Always a solid white border, regardless of scheme — the primary
+     variant's background now matches the page background (primaryDark),
+     so without this the button has no visible edge at all. */
+  border: 2px solid var(--white);
+  /* Hard-edged (no blur), solid white, sitting exactly behind the button
+     (0 offset) at rest — so it's hidden until hover slides it out to the
+     bottom right, rather than just fading into view in place. box-shadow
+     is used (rather than a pseudo-element) specifically because it's the
+     one construct that reliably paints behind the button's own opaque
+     background at zero offset — a background-image on a descendant
+     pseudo-element can't achieve that same true "hidden behind" effect. */
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 1);
+  transition: background-color 0.3s ease, box-shadow 0.6s ease;
+}
+
+.button:hover:not(:disabled) {
+  box-shadow: 4px 4px 0 0 rgba(255, 255, 255, 1);
 }
 
 .button svg {
@@ -26,42 +47,40 @@
   opacity: 0.5;
 }
 
-/* Color schemes: default background + border of the scheme's base color
-   with white text, darkening to the scheme's dark color on hover. Select
-   one via Button's `variant` prop ("primary" | "secondary" | "accent"). */
+/* Color schemes: resting state uses the scheme's *dark* token as the
+   background, lightening to the scheme's base (bright) token on hover.
+   This is intentionally backwards from the token names' "base/dark"
+   pairing — white text on the bright base tones fails WCAG AA contrast
+   (e.g. white-on-accent is ~2:1), while white text on the dark tones
+   passes (or comes close). Select a scheme via Button's `variant` prop
+   ("primary" | "secondary" | "accent"). */
 .button--primary {
-  background-color: var(--scheme-primary);
-  border-color: var(--scheme-primary);
+  background-color: var(--scheme-primary-dark);
   color: var(--white);
 }
 
 .button--primary:hover:not(:disabled) {
-  background-color: var(--scheme-primary-dark);
-  border-color: var(--scheme-primary-dark);
+  background-color: var(--scheme-primary);
   color: var(--white);
 }
 
 .button--secondary {
-  background-color: var(--scheme-secondary);
-  border-color: var(--scheme-secondary);
+  background-color: var(--scheme-secondary-dark);
   color: var(--white);
 }
 
 .button--secondary:hover:not(:disabled) {
-  background-color: var(--scheme-secondary-dark);
-  border-color: var(--scheme-secondary-dark);
+  background-color: var(--scheme-secondary);
   color: var(--white);
 }
 
 .button--accent {
-  background-color: var(--scheme-accent);
-  border-color: var(--scheme-accent);
+  background-color: var(--scheme-accent-dark);
   color: var(--white);
 }
 
 .button--accent:hover:not(:disabled) {
-  background-color: var(--scheme-accent-dark);
-  border-color: var(--scheme-accent-dark);
+  background-color: var(--scheme-accent);
   color: var(--white);
 }
 
@@ -69,15 +88,15 @@
   display: flex;
   flex-direction: column;
   justify-content: left;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  margin-left: 3px;
+  margin-bottom: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+  margin-left: var(--spacing-sm);
 }
 
 .input-label {
   text-transform: uppercase;
-  margin-top: 5px;
-  margin-bottom: 2px;
-  margin-left: 4px;
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  margin-left: var(--spacing-xs);
   color: var(--primary-color);
 }
