@@ -24,17 +24,22 @@
   border: 2px solid var(--white);
   /* Hard-edged (no blur), solid white, sitting exactly behind the button
      (0 offset) at rest — so it's hidden until hover slides it out to the
-     bottom right, rather than just fading into view in place. box-shadow
-     is used (rather than a pseudo-element) specifically because it's the
-     one construct that reliably paints behind the button's own opaque
-     background at zero offset — a background-image on a descendant
-     pseudo-element can't achieve that same true "hidden behind" effect. */
+     bottom right, rather than just fading into view in place. */
   box-shadow: 0 0 0 0 rgba(255, 255, 255, 1);
-  transition: background-color 0.3s ease, box-shadow 0.6s ease;
+  transform: translate(0, 0);
+  transition: background-color 0.3s ease, box-shadow 0.6s ease, transform 0.1s ease;
 }
 
 .button:hover:not(:disabled) {
   box-shadow: 4px 4px 0 0 rgba(255, 255, 255, 1);
+}
+
+/* Pressed-down feel: the button moves toward where its own shadow sits and
+   the shadow collapses under it, like it's physically sinking onto it. Fast
+   (0.1s) so it reads as an immediate press, not an eased hover-style glide. */
+.button:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 1);
 }
 
 .button svg {
